@@ -57,24 +57,24 @@ def _subgraph(g, frozen):
         if u in sub and v in sub:
             sub.add_edge(u, v, **d)
 
-    # seeded layout on the sorted node order -> deterministic, reproducible positions
-    pos = nx.spring_layout(sub, seed=config.HELDOUT_SEED, k=1.1, iterations=200)
-    xs = [p[0] for p in pos.values()]
-    ys = [p[1] for p in pos.values()]
+    # seeded layout on the sorted node order -> deterministic, reproducible positions.
+    # Higher k = more repulsion so the dense nuclear-pore cluster does not pile up.
+    pos = nx.spring_layout(sub, seed=config.HELDOUT_SEED, k=2.4, iterations=400)
+    order = sorted(pos)
+    xs = [pos[n][0] for n in order]
+    ys = [pos[n][1] for n in order]
     minx, maxx, miny, maxy = min(xs), max(xs), min(ys), max(ys)
+    W, H, PADX, PADY = 1180, 720, 90, 80
 
-    def sx(x):
-        return round(120 + (x - minx) / (maxx - minx) * 900, 1)
-
-    def sy(y):
-        return round(90 + (y - miny) / (maxy - miny) * 620, 1)
+    px = {n: (PADX + (pos[n][0] - minx) / (maxx - minx) * W,
+              PADY + (pos[n][1] - miny) / (maxy - miny) * H) for n in order}
+    px = _deoverlap(px, order, min_dist=78.0, iters=140, bounds=(PADX, PADY, PADX + W, PADY + H))
 
     held = {tuple(e) for e in frozen["held_out"]}
     out_nodes = []
     for n, d in sub.nodes(data=True):
         cluster = CLUSTER.get(n)
         if cluster is None:
-            # assign prey to the cluster of its demo bait
             for b in DEMO_BAITS:
                 if g.has_edge(b, n):
                     cluster = CLUSTER[b]
@@ -82,9 +82,39 @@ def _subgraph(g, frozen):
         out_nodes.append({
             "id": n, "type": d["type"], "uniprot": d.get("uniprot", ""),
             "degree": g.degree(n), "cluster": cluster or "other",
-            "x": sx(pos[n][0]), "y": sy(pos[n][1]),
+            "x": round(px[n][0], 1), "y": round(px[n][1], 1),
         })
     return sub, out_nodes, held
+
+
+def _deoverlap(px, order, min_dist, iters, bounds):
+    """Deterministic pairwise de-overlap: push apart any two nodes closer than
+    min_dist. Keeps the hero cluster (dense nucleoporins) legible. Pure geometry,
+    seeded input -> reproducible output."""
+    import math
+    x0, y0, x1, y1 = bounds
+    p = {n: [px[n][0], px[n][1]] for n in order}
+    for _ in range(iters):
+        moved = False
+        for i in range(len(order)):
+            for j in range(i + 1, len(order)):
+                a, b = order[i], order[j]
+                dx = p[b][0] - p[a][0]
+                dy = p[b][1] - p[a][1]
+                dist = math.hypot(dx, dy) or 0.01
+                if dist < min_dist:
+                    push = (min_dist - dist) / 2.0
+                    ux, uy = dx / dist, dy / dist
+                    p[a][0] -= ux * push; p[a][1] -= uy * push
+                    p[b][0] += ux * push; p[b][1] += uy * push
+                    moved = True
+        # clamp to bounds
+        for n in order:
+            p[n][0] = min(max(p[n][0], x0), x1)
+            p[n][1] = min(max(p[n][1], y0), y1)
+        if not moved:
+            break
+    return {n: (p[n][0], p[n][1]) for n in order}
 
 
 def _build_dossier(edge_key, ranked_by_bait, structure_facts, frozen):

@@ -96,8 +96,8 @@
         "uniprot": "Q9UL15",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 823.9,
-        "y": 696.1
+        "x": 997.1,
+        "y": 767.8
       },
       {
         "id": "CHMP2A",
@@ -105,8 +105,8 @@
         "uniprot": "O43633",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 920.3,
-        "y": 690.8
+        "x": 1140.9,
+        "y": 755.9
       },
       {
         "id": "CSDE1",
@@ -114,8 +114,8 @@
         "uniprot": "O75534",
         "degree": 2,
         "cluster": "mitochondria",
-        "x": 871.8,
-        "y": 435.0
+        "x": 1019.1,
+        "y": 451.1
       },
       {
         "id": "CSNK2A2",
@@ -123,8 +123,8 @@
         "uniprot": "P19784",
         "degree": 2,
         "cluster": "stress-granule",
-        "x": 771.6,
-        "y": 305.5
+        "x": 927.2,
+        "y": 386.8
       },
       {
         "id": "CSNK2B",
@@ -132,8 +132,8 @@
         "uniprot": "P67870",
         "degree": 2,
         "cluster": "stress-granule",
-        "x": 814.1,
-        "y": 293.0
+        "x": 1053.9,
+        "y": 381.3
       },
       {
         "id": "DCAF7",
@@ -141,8 +141,8 @@
         "uniprot": "P61962",
         "degree": 2,
         "cluster": "nuclear-pore",
-        "x": 179.0,
-        "y": 698.7
+        "x": 181.3,
+        "y": 790.3
       },
       {
         "id": "DCTPP1",
@@ -150,8 +150,8 @@
         "uniprot": "Q9H773",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 916.5,
-        "y": 644.2
+        "x": 1158.3,
+        "y": 679.4
       },
       {
         "id": "DDX21",
@@ -159,8 +159,8 @@
         "uniprot": "Q9NR30",
         "degree": 1,
         "cluster": "stress-granule",
-        "x": 769.4,
-        "y": 190.1
+        "x": 895.9,
+        "y": 230.5
       },
       {
         "id": "DPH5",
@@ -168,8 +168,8 @@
         "uniprot": "Q9H2P9",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 738.3,
-        "y": 621.8
+        "x": 850.5,
+        "y": 589.0
       },
       {
         "id": "EIF4H",
@@ -177,8 +177,8 @@
         "uniprot": "Q15056",
         "degree": 1,
         "cluster": "nuclear-pore",
-        "x": 345.8,
-        "y": 560.0
+        "x": 418.8,
+        "y": 575.0
       },
       {
         "id": "FAM98A",
@@ -186,8 +186,8 @@
         "uniprot": "Q8NCA5",
         "degree": 1,
         "cluster": "stress-granule",
-        "x": 911.7,
-        "y": 90.0
+        "x": 1115.6,
+        "y": 80.0
       },
       {
         "id": "FBLN5",
@@ -195,8 +195,8 @@
         "uniprot": "Q9UBX5",
         "degree": 2,
         "cluster": "nuclear-pore",
-        "x": 136.6,
-        "y": 561.5
+        "x": 127.4,
+        "y": 587.6
       },
       {
         "id": "FBN1",
@@ -204,8 +204,8 @@
         "uniprot": "P35555",
         "degree": 3,
         "cluster": "nuclear-pore",
-        "x": 175.3,
-        "y": 598.4
+        "x": 184.1,
+        "y": 642.2
       },
       {
         "id": "FBN2",
@@ -213,8 +213,8 @@
         "uniprot": "P35556",
         "degree": 2,
         "cluster": "nuclear-pore",
-        "x": 120.0,
-        "y": 602.4
+        "x": 90,
+        "y": 656.1
       },
       {
         "id": "G3BP1",
@@ -222,8 +222,8 @@
         "uniprot": "Q13283",
         "degree": 4,
         "cluster": "stress-granule",
-        "x": 956.3,
-        "y": 179.2
+        "x": 1146.8,
+        "y": 181.4
       },
       {
         "id": "G3BP2",
@@ -231,8 +231,8 @@
         "uniprot": "Q9UN86",
         "degree": 2,
         "cluster": "stress-granule",
-        "x": 958.2,
-        "y": 124.0
+        "x": 1256.0,
+        "y": 161.2
       },
       {
         "id": "GTF2F2",
@@ -240,8 +240,8 @@
         "uniprot": "P13984",
         "degree": 1,
         "cluster": "nuclear-pore",
-        "x": 215.4,
-        "y": 710.0
+        "x": 258.7,
+        "y": 800.0
       },
       {
         "id": "LARP1",
@@ -249,8 +249,8 @@
         "uniprot": "Q6PKG0",
         "degree": 2,
         "cluster": "stress-granule",
-        "x": 978.2,
-        "y": 291.5
+        "x": 1181.0,
+        "y": 330.0
       },
       {
         "id": "MARK1",
@@ -258,8 +258,8 @@
         "uniprot": "Q9P0L2",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 725.1,
-        "y": 516.0
+        "x": 853.8,
+        "y": 511.1
       },
       {
         "id": "MARK2",
@@ -267,8 +267,8 @@
         "uniprot": "Q7KZI7",
         "degree": 2,
         "cluster": "mitochondria",
-        "x": 937.6,
-        "y": 584.8
+        "x": 1164.7,
+        "y": 601.6
       },
       {
         "id": "MARK3",
@@ -276,8 +276,8 @@
         "uniprot": "P27448",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 687.0,
-        "y": 544.2
+        "x": 828.4,
+        "y": 663.8
       },
       {
         "id": "MAT2B",
@@ -285,8 +285,8 @@
         "uniprot": "Q9NZL9",
         "degree": 1,
         "cluster": "nuclear-pore",
-        "x": 151.3,
-        "y": 676.6
+        "x": 104.5,
+        "y": 776.7
       },
       {
         "id": "MIB1",
@@ -294,8 +294,8 @@
         "uniprot": "Q86YT6",
         "degree": 1,
         "cluster": "nuclear-pore",
-        "x": 251.9,
-        "y": 679.2
+        "x": 296.2,
+        "y": 731.6
       },
       {
         "id": "MOV10",
@@ -303,8 +303,8 @@
         "uniprot": "Q9HCE1",
         "degree": 2,
         "cluster": "stress-granule",
-        "x": 890.1,
-        "y": 248.9
+        "x": 1090.2,
+        "y": 312.0
       },
       {
         "id": "MTCH1",
@@ -312,8 +312,8 @@
         "uniprot": "Q9NZJ7",
         "degree": 1,
         "cluster": "nuclear-pore",
-        "x": 416.5,
-        "y": 205.9
+        "x": 545.3,
+        "y": 157.9
       },
       {
         "id": "N",
@@ -321,8 +321,8 @@
         "uniprot": "P0DTC9",
         "degree": 15,
         "cluster": "stress-granule",
-        "x": 895.5,
-        "y": 209.0
+        "x": 1077.8,
+        "y": 225.0
       },
       {
         "id": "NEK9",
@@ -330,8 +330,8 @@
         "uniprot": "Q8TD19",
         "degree": 1,
         "cluster": "nuclear-pore",
-        "x": 337.6,
-        "y": 659.8
+        "x": 405.8,
+        "y": 732.0
       },
       {
         "id": "NHERF1",
@@ -339,8 +339,8 @@
         "uniprot": "O14745",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 873.7,
-        "y": 706.1
+        "x": 1071.4,
+        "y": 791.4
       },
       {
         "id": "NUP214",
@@ -348,8 +348,8 @@
         "uniprot": "P35658",
         "degree": 8,
         "cluster": "nuclear-pore",
-        "x": 233.9,
-        "y": 460.8
+        "x": 230.9,
+        "y": 461.5
       },
       {
         "id": "NUP54",
@@ -357,8 +357,8 @@
         "uniprot": "Q7Z3B4",
         "degree": 8,
         "cluster": "nuclear-pore",
-        "x": 210.8,
-        "y": 469.8
+        "x": 154.6,
+        "y": 445.1
       },
       {
         "id": "NUP58",
@@ -366,8 +366,8 @@
         "uniprot": "Q9BVL2",
         "degree": 7,
         "cluster": "nuclear-pore",
-        "x": 183.4,
-        "y": 489.4
+        "x": 169.8,
+        "y": 522.1
       },
       {
         "id": "NUP62",
@@ -375,8 +375,8 @@
         "uniprot": "P37198",
         "degree": 8,
         "cluster": "nuclear-pore",
-        "x": 249.9,
-        "y": 488.8
+        "x": 240.0,
+        "y": 556.2
       },
       {
         "id": "NUP88",
@@ -384,8 +384,8 @@
         "uniprot": "Q99567",
         "degree": 8,
         "cluster": "nuclear-pore",
-        "x": 193.5,
-        "y": 453.1
+        "x": 297.1,
+        "y": 502.8
       },
       {
         "id": "NUP98",
@@ -393,8 +393,8 @@
         "uniprot": "P52948",
         "degree": 8,
         "cluster": "nuclear-pore",
-        "x": 240.0,
-        "y": 407.0
+        "x": 292.2,
+        "y": 413.3
       },
       {
         "id": "Nsp9",
@@ -402,8 +402,8 @@
         "uniprot": "P0DTD1",
         "degree": 16,
         "cluster": "nuclear-pore",
-        "x": 223.7,
-        "y": 585.5
+        "x": 261.6,
+        "y": 633.1
       },
       {
         "id": "Orf6",
@@ -411,8 +411,8 @@
         "uniprot": "P0DTC6",
         "degree": 3,
         "cluster": "nuclear-pore",
-        "x": 348.1,
-        "y": 303.8
+        "x": 472.3,
+        "y": 291.1
       },
       {
         "id": "Orf9b",
@@ -420,8 +420,8 @@
         "uniprot": "P0DTD2",
         "degree": 11,
         "cluster": "mitochondria",
-        "x": 839.4,
-        "y": 594.5
+        "x": 1022.1,
+        "y": 636.2
       },
       {
         "id": "PABPC1",
@@ -429,8 +429,8 @@
         "uniprot": "P11940",
         "degree": 7,
         "cluster": "stress-granule",
-        "x": 946.1,
-        "y": 279.4
+        "x": 1147.8,
+        "y": 259.4
       },
       {
         "id": "PABPC4",
@@ -438,8 +438,8 @@
         "uniprot": "Q13310",
         "degree": 2,
         "cluster": "stress-granule",
-        "x": 1012.6,
-        "y": 200.3
+        "x": 1191.4,
+        "y": 117.4
       },
       {
         "id": "PTBP2",
@@ -447,8 +447,8 @@
         "uniprot": "Q9UKA9",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 779.0,
-        "y": 515.3
+        "x": 931.8,
+        "y": 510.7
       },
       {
         "id": "RAE1",
@@ -456,8 +456,8 @@
         "uniprot": "P78406",
         "degree": 6,
         "cluster": "nuclear-pore",
-        "x": 258.7,
-        "y": 381.2
+        "x": 344.9,
+        "y": 355.8
       },
       {
         "id": "RBM28",
@@ -465,8 +465,8 @@
         "uniprot": "Q9NW13",
         "degree": 1,
         "cluster": "stress-granule",
-        "x": 823.1,
-        "y": 108.5
+        "x": 996.2,
+        "y": 119.4
       },
       {
         "id": "RPL36",
@@ -474,8 +474,8 @@
         "uniprot": "Q9Y3U8",
         "degree": 5,
         "cluster": "stress-granule",
-        "x": 830.8,
-        "y": 141.8
+        "x": 920.9,
+        "y": 156.6
       },
       {
         "id": "RRP9",
@@ -483,8 +483,8 @@
         "uniprot": "O43818",
         "degree": 5,
         "cluster": "stress-granule",
-        "x": 905.9,
-        "y": 307.5
+        "x": 1131.4,
+        "y": 390.2
       },
       {
         "id": "SNIP1",
@@ -492,8 +492,8 @@
         "uniprot": "Q8TAD8",
         "degree": 2,
         "cluster": "stress-granule",
-        "x": 1020.0,
-        "y": 243.7
+        "x": 1270.0,
+        "y": 290.6
       },
       {
         "id": "SPART",
@@ -501,8 +501,8 @@
         "uniprot": "Q8N0X7",
         "degree": 1,
         "cluster": "nuclear-pore",
-        "x": 136.4,
-        "y": 644.3
+        "x": 145.8,
+        "y": 710.5
       },
       {
         "id": "TOMM70",
@@ -510,8 +510,8 @@
         "uniprot": "O94826",
         "degree": 2,
         "cluster": "mitochondria",
-        "x": 967.2,
-        "y": 644.4
+        "x": 1215.3,
+        "y": 732.7
       },
       {
         "id": "UPF1",
@@ -519,8 +519,8 @@
         "uniprot": "Q92900",
         "degree": 4,
         "cluster": "stress-granule",
-        "x": 959.8,
-        "y": 216.9
+        "x": 1220.2,
+        "y": 230.5
       },
       {
         "id": "ZNF503",
@@ -528,8 +528,8 @@
         "uniprot": "Q96F45",
         "degree": 1,
         "cluster": "nuclear-pore",
-        "x": 355.0,
-        "y": 616.1
+        "x": 479.2,
+        "y": 661.0
       }
     ],
     "edges": [
