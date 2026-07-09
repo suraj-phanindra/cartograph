@@ -14,3 +14,5 @@ cache/
 .playwright-mcp/
 /*.png
 frontend/*.png
+frontend/.datum/
+**/.datum/

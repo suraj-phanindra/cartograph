@@ -192,25 +192,28 @@ function buildLegend(){
 }
 
 /* ---------- ask / flagship animation ---------- */
+let queryToken=0;
 function runQuery(q){
+  const my=++queryToken;                          // cancel any in-flight animation
+  cy.elements().removeClass('dim pathlit');
   if(q==='orf9b'){ revealPredictedFor('Orf9b'); openDossier('Orf9b|TOMM70'); return; }
   if(q==='n'){ revealPredictedFor('N'); openDossier('N|G3BP1'); return; }
   // flagship: Orf6 -> RAE1 via the length-3 path
   const path = DATA.flagship.path;               // ['Orf6','NUP98','NUP214','RAE1']
-  toast(`<span class="k">Deterministic L3</span> asks: what edge is Orf6 missing? Walking the length-3 path <span class="k">${path.join(' → ')}</span> …`);
+  toast(`<span class="k">Deterministic L3</span> asks: what edge is Orf6 missing? Walking the length-3 path <span class="k">${esc(path.join(' → '))}</span> …`);
   cy.elements().addClass('dim');
   let i=0;
   const step=()=>{
+    if(my!==queryToken) return;                   // superseded by a newer query
     if(i<path.length){
       const n=cy.getElementById(path[i]); n.removeClass('dim').addClass('pathlit');
       if(i>0){ const e=edgeBetween(path[i-1],path[i]); if(e.nonempty()){ e.removeClass('dim hiddenEdge').addClass('pathlit'); e.style('display','element'); } }
       i++; setTimeout(step,650);
     } else {
-      // reveal the predicted Orf6-RAE1 edge (orientation-independent)
       const pe=edgeBetween('Orf6','RAE1');
       pe.removeClass('hiddenEdge dim').addClass('pathlit'); pe.style('display','element');
-      toast(`Graph proposes the missing edge <span class="k">Orf6 → RAE1</span> (L3 rank ${DATA.flagship.l3_rank}/${DATA.flagship.n_candidates}). Opening the structural dossier…`);
-      setTimeout(()=>{ cy.elements().removeClass('dim'); openDossier('Orf6|RAE1'); }, 900);
+      toast(`Graph proposes the missing edge <span class="k">Orf6 → RAE1</span> (L3 rank ${esc(DATA.flagship.l3_rank)}/${esc(DATA.flagship.n_candidates)}). Opening the structural dossier…`);
+      setTimeout(()=>{ if(my!==queryToken) return; cy.elements().removeClass('dim'); openDossier('Orf6|RAE1'); }, 900);
     }
   };
   step();
@@ -274,6 +277,7 @@ function runLoop(){
   if(confRow && !state.layers.confirmed){ state.layers.confirmed=true; confRow.classList.add('on'); confRow.setAttribute('aria-checked','true'); }
   toast(`<span class="k">Loop round</span>: confirm ${esc(lp.confirmed_edges.length)} recovered-true edges (each a real Gordon edge, each L3-rank #1; ${esc(nInView)} in this view), fold them back as known, re-score the still-hidden edges.`);
   const chip=document.getElementById('precision-chip');
+  chip.classList.remove('hidden');   // ensure visible even if the eval chip was dismissed
   const before=Math.round(lp.before_precision_at_20*100), after=Math.round(lp.after_precision_at_20*100);
   chip.innerHTML=`<button class="panel-close" aria-label="Dismiss loop panel" onclick="hideChip()">✕</button>
     <div class="lbl">Loop round · precision@20 on remaining held-out</div>
@@ -308,7 +312,7 @@ function openDossier(key){
     <span class="dz-badge" style="background:${hex2(badge[1],.16)};color:${badge[1]}">${esc(badge[0])}</span>
     <div class="dz-title">${esc(d.source)}<span class="arrow">→</span>${esc(d.target)}</div>
     <div class="dz-sub">${esc(d.provenance.proposed_by)} · Claude explained · ${esc(d.provenance.evaluator)}</div>
-    <button class="dz-report" onclick="exportDossierReport('${esc(key)}')" title="Download a self-contained report">⤓ Report</button>
+    <button class="dz-report" id="dz-report-btn" title="Download a self-contained report">⤓ Report</button>
   </div>
 
   <div class="dz-sec">
@@ -377,6 +381,8 @@ function openDossier(key){
     <b>structure</b> ${esc(d.provenance.structure_by)} · <b>scored by</b> ${esc(d.provenance.evaluator)}
   </div>`;
   document.getElementById('dossier-body').innerHTML=html;
+  // wire handlers in JS (no interpolated data in inline onclick -> no JS-context XSS)
+  const rb=document.getElementById('dz-report-btn'); if(rb) rb.onclick=()=>exportDossierReport(key);
   mountStructure(st);
 }
 
@@ -542,10 +548,14 @@ function wlRows(){
   if(wlState.onlyDossier) rows=rows.filter(r=>r.has_dossier);
   if(wlState.onlyRecovered) rows=rows.filter(r=>r.recovered);
   const k=wlState.sort, d=wlState.dir;
-  rows.sort((a,b)=>{ let x=a[k], y=b[k];
-    if(typeof x==='boolean'){ x=x?1:0; y=y?1:0; }
-    if(typeof x==='string'){ return d*x.localeCompare(y); }
-    return d*((x||0)-(y||0)); });
+  const norm=v=> v==null ? null : (typeof v==='boolean' ? (v?1:0) : v);
+  rows.sort((a,b)=>{ let x=norm(a[k]), y=norm(b[k]);
+    // nulls always sort last regardless of direction
+    if(x==null && y==null) return 0;
+    if(x==null) return 1;
+    if(y==null) return -1;
+    if(typeof x==='number' && typeof y==='number') return d*(x-y);
+    return d*String(x).localeCompare(String(y)); });
   return rows;
 }
 function renderWorklist(){
@@ -619,7 +629,9 @@ ${st.interface_residues.length?`<p>Interface residues (${esc(st.interface_source
 
 function exportWorklistCsv(){
   const cols=['bait','prey','l3_score','rank','recovered','structure','structure_source','has_mechanism','druggability','opentargets'];
-  const esc2=v=>{ const s=String(v==null?'':v); return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
+  const esc2=v=>{ let s=String(v==null?'':v);
+    if(/^[=+\-@]/.test(s)) s="'"+s;                    // block CSV formula injection
+    return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
   const lines=[cols.join(',')].concat(wlRows().map(r=>cols.map(c=>esc2(r[c])).join(',')));
   const blob=new Blob([lines.join('\n')],{type:'text/csv'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);

@@ -21,14 +21,13 @@ from backend import config
 from backend.graph.load import load_graph
 
 
-def _fetch_string_network(genes):
-    """Query STRING for physical interactions among `genes`. Chunked to stay
-    within request limits; returns raw edge dicts with STRING preferredNames."""
+def _fetch_string_network(genes, timeout=25):
+    """Query STRING for physical interactions among `genes` in one request.
+    Returns raw edge dicts with STRING preferredNames. Callers cap the number of
+    identifiers; timeout is short so a slow/held STRING host cannot pin a worker."""
     url = f"{config.STRING_API}/tsv/network"
     edges = []
     genes = sorted(set(genes))
-    # STRING maps the whole identifier list against the network of the set;
-    # send all at once (network endpoint handles the full prey set).
     resp = requests.post(
         url,
         data={
@@ -38,7 +37,7 @@ def _fetch_string_network(genes):
             "required_score": config.STRING_REQUIRED_SCORE,
             "caller_identity": "cartograph_build",
         },
-        timeout=90,
+        timeout=timeout,
     )
     resp.raise_for_status()
     lines = resp.text.strip().splitlines()

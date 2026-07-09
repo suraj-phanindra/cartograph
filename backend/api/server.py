@@ -14,14 +14,16 @@ Non-negotiables enforced here:
 
 from __future__ import annotations
 
+import logging
 import json
 import random
 import re
+import threading
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 import networkx as nx
 
@@ -31,13 +33,37 @@ from backend.predict.l3 import l3_scores, rank_of
 from backend.eval.evaluator import evaluate
 from backend.reason.hypothesis import read_edge, EDGE_TO_PACK
 
+log = logging.getLogger("cartograph.api")
 app = FastAPI(title="Cartograph API", version="1.0")
 
 # --- upload safety limits (trust boundary) ---------------------------------
 GENE_RE = re.compile(r"^[A-Za-z0-9_.\-]{1,40}$")
 MAX_EDGES = 2000
 MAX_NODES = 1200
-UPLOAD_SEED = 1234  # a SEPARATE seed; never the locked benchmark's seed
+MAX_BODY = 2_000_000          # bytes; reject oversized requests before reading them
+MAX_STRING_PREY = 600         # cap identifiers sent to STRING
+MAX_ENRICH_EDGES = 8000       # cap enrichment edges added to an uploaded graph
+UPLOAD_SEED = 1234            # a SEPARATE seed; never the locked benchmark's seed
+_upload_gate = threading.Semaphore(2)  # bound concurrent uploads (worker exhaustion)
+
+
+class _NoDotfiles(StaticFiles):
+    """StaticFiles that 404s dotfiles/dot-directories so stray files like
+    frontend/.datum/ are never served."""
+    def lookup_path(self, path):
+        if any(seg.startswith(".") for seg in str(path).split("/")):
+            return "", None
+        return super().lookup_path(path)
+
+
+@app.middleware("http")
+async def _guards(request: Request, call_next):
+    cl = request.headers.get("content-length")
+    if cl and cl.isdigit() and int(cl) > MAX_BODY:
+        return JSONResponse(status_code=413, content={"detail": "request body too large"})
+    resp = await call_next(request)
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    return resp
 
 
 # ---------------------------------------------------------------------------
@@ -96,7 +122,7 @@ def stream(edge: str):
 # bring-your-own-interactome upload
 # ---------------------------------------------------------------------------
 class UploadReq(BaseModel):
-    edges: str
+    edges: str = Field(max_length=1_000_000)  # pydantic rejects oversized before parsing
     heldout_fraction: float = 0.0
 
 
@@ -119,7 +145,9 @@ def _parse_edges(text: str):
         if i == 0 and a.lower() in ("bait", "source", "protein1") and b.lower() in ("prey", "target", "protein2"):
             continue  # header row
         if not GENE_RE.match(a) or not GENE_RE.match(b):
-            raise HTTPException(400, f"invalid gene name on line {i+1}: {a!r} or {b!r} "
+            # do NOT echo the raw (rejected) token back — it failed the allowlist and
+            # may contain arbitrary bytes. Report the line and the rule only.
+            raise HTTPException(400, f"invalid gene name on line {i+1} "
                                      f"(allowed: letters, digits, _ . - ; max 40 chars)")
         if a == b:
             continue
@@ -148,18 +176,22 @@ def _build_uploaded_graph(edges):
 
 
 def _enrich_uploaded(g):
-    """STRING-enrich among the uploaded human prey (live call; pinned params)."""
-    prey = [n for n, d in g.nodes(data=True) if d["type"] == "human"]
+    """STRING-enrich among the uploaded human prey (live call; pinned params).
+    Caps prey sent and enrichment edges added. Never leaks exception detail."""
+    prey = [n for n, d in g.nodes(data=True) if d["type"] == "human"][:MAX_STRING_PREY]
     if not prey:
         return 0
     try:
         raw = _fetch_string_network(prey)
     except Exception as e:  # network/STRING failure — honest, not fatal
-        g.graph["enrich_error"] = str(e)
+        log.warning("STRING enrichment failed: %s", e)          # detail stays server-side
+        g.graph["enrich_error"] = "enrichment unavailable (STRING request failed)"
         return 0
     present = {n.upper(): n for n in g.nodes}
     added = 0
     for e in raw:
+        if added >= MAX_ENRICH_EDGES:
+            break
         na, nb = present.get(e["a"].upper()), present.get(e["b"].upper())
         if na and nb and na != nb and not g.has_edge(na, nb):
             g.add_edge(na, nb, kind="enrichment", score=e["score"] / 1000.0, evidence_ref="string_v12")
@@ -194,6 +226,15 @@ def _own_eval(g, baits, fraction):
 
 @app.post("/api/upload")
 def upload(req: UploadReq):
+    if not _upload_gate.acquire(blocking=False):
+        raise HTTPException(429, "server busy; too many concurrent uploads, retry shortly")
+    try:
+        return _do_upload(req)
+    finally:
+        _upload_gate.release()
+
+
+def _do_upload(req: UploadReq):
     frac = max(0.0, min(0.5, req.heldout_fraction or 0.0))
     edges = _parse_edges(req.edges)
     g, baits = _build_uploaded_graph(edges)
@@ -223,7 +264,8 @@ def upload(req: UploadReq):
 
 
 # --- serve the static frontend from the same origin (so /api/* is same-site) --
-app.mount("/", StaticFiles(directory=str(config.REPO_ROOT / "frontend"), html=True), name="frontend")
+# _NoDotfiles 404s any dotfile/dot-dir so stray internal files are never exposed.
+app.mount("/", _NoDotfiles(directory=str(config.REPO_ROOT / "frontend"), html=True), name="frontend")
 
 
 @app.exception_handler(HTTPException)
