@@ -95,6 +95,19 @@ def test_evaluator_number_is_real_not_illustrative():
     assert m["roc_auc"] is not None and m["roc_auc"] > 0.5  # better than random
 
 
+def test_artifact_is_byte_identical_across_runs():
+    """The exported artifact must be reproducible regardless of Python's hash
+    seed (the demo's positions and ordering must not drift run to run)."""
+    import json
+    from backend.build_artifact import build
+    a, _ = build()
+    b, _ = build()
+    assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
+    # node ids are emitted in sorted order (the specific bug that was fixed)
+    ids = [n["id"] for n in a["graph"]["nodes"]]
+    assert ids == sorted(ids)
+
+
 # --- the locked boundary: reasoning/predict must not import the evaluator ----
 @pytest.mark.parametrize("pkg", ["backend/predict", "backend/reason"])
 def test_no_import_of_locked_evaluator(pkg):

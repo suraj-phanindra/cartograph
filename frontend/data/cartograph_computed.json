@@ -76,130 +76,13 @@
   "graph": {
     "nodes": [
       {
-        "id": "RRP9",
+        "id": "BAG5",
         "type": "human",
-        "uniprot": "O43818",
-        "degree": 5,
-        "cluster": "stress-granule",
-        "x": 843.4,
-        "y": 648.4
-      },
-      {
-        "id": "FBLN5",
-        "type": "human",
-        "uniprot": "Q9UBX5",
-        "degree": 2,
-        "cluster": "nuclear-pore",
-        "x": 342.2,
-        "y": 688.7
-      },
-      {
-        "id": "DDX21",
-        "type": "human",
-        "uniprot": "Q9NR30",
-        "degree": 1,
-        "cluster": "stress-granule",
-        "x": 767.3,
-        "y": 462.3
-      },
-      {
-        "id": "GTF2F2",
-        "type": "human",
-        "uniprot": "P13984",
-        "degree": 1,
-        "cluster": "nuclear-pore",
-        "x": 226.8,
-        "y": 706.0
-      },
-      {
-        "id": "MOV10",
-        "type": "human",
-        "uniprot": "Q9HCE1",
-        "degree": 2,
-        "cluster": "stress-granule",
-        "x": 919.1,
-        "y": 638.0
-      },
-      {
-        "id": "N",
-        "type": "viral",
-        "uniprot": "P0DTC9",
-        "degree": 15,
-        "cluster": "stress-granule",
-        "x": 882.1,
-        "y": 526.5
-      },
-      {
-        "id": "CSNK2A2",
-        "type": "human",
-        "uniprot": "P19784",
-        "degree": 2,
-        "cluster": "stress-granule",
-        "x": 963.8,
-        "y": 522.3
-      },
-      {
-        "id": "Nsp9",
-        "type": "viral",
-        "uniprot": "P0DTD1",
-        "degree": 16,
-        "cluster": "nuclear-pore",
-        "x": 299.5,
-        "y": 590.7
-      },
-      {
-        "id": "NUP214",
-        "type": "human",
-        "uniprot": "P35658",
-        "degree": 8,
-        "cluster": "nuclear-pore",
-        "x": 174.0,
-        "y": 584.6
-      },
-      {
-        "id": "MARK3",
-        "type": "human",
-        "uniprot": "P27448",
+        "uniprot": "Q9UL15",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 602.1,
-        "y": 90.0
-      },
-      {
-        "id": "SNIP1",
-        "type": "human",
-        "uniprot": "Q8TAD8",
-        "degree": 2,
-        "cluster": "stress-granule",
-        "x": 880.9,
-        "y": 413.6
-      },
-      {
-        "id": "NUP98",
-        "type": "human",
-        "uniprot": "P52948",
-        "degree": 8,
-        "cluster": "nuclear-pore",
-        "x": 146.2,
-        "y": 529.4
-      },
-      {
-        "id": "MARK2",
-        "type": "human",
-        "uniprot": "Q7KZI7",
-        "degree": 2,
-        "cluster": "mitochondria",
-        "x": 597.1,
-        "y": 331.5
-      },
-      {
-        "id": "NUP62",
-        "type": "human",
-        "uniprot": "P37198",
-        "degree": 8,
-        "cluster": "nuclear-pore",
-        "x": 184.6,
-        "y": 611.5
+        "x": 823.9,
+        "y": 696.1
       },
       {
         "id": "CHMP2A",
@@ -207,44 +90,8 @@
         "uniprot": "O43633",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 559.7,
-        "y": 102.5
-      },
-      {
-        "id": "MARK1",
-        "type": "human",
-        "uniprot": "Q9P0L2",
-        "degree": 1,
-        "cluster": "mitochondria",
-        "x": 678.1,
-        "y": 129.5
-      },
-      {
-        "id": "PABPC1",
-        "type": "human",
-        "uniprot": "P11940",
-        "degree": 7,
-        "cluster": "stress-granule",
-        "x": 842.8,
-        "y": 468.4
-      },
-      {
-        "id": "PABPC4",
-        "type": "human",
-        "uniprot": "Q13310",
-        "degree": 2,
-        "cluster": "stress-granule",
-        "x": 926.1,
-        "y": 522.9
-      },
-      {
-        "id": "DCAF7",
-        "type": "human",
-        "uniprot": "P61962",
-        "degree": 2,
-        "cluster": "nuclear-pore",
-        "x": 255.2,
-        "y": 490.9
+        "x": 920.3,
+        "y": 690.8
       },
       {
         "id": "CSDE1",
@@ -252,26 +99,17 @@
         "uniprot": "O75534",
         "degree": 2,
         "cluster": "mitochondria",
-        "x": 738.4,
-        "y": 325.7
+        "x": 871.8,
+        "y": 435.0
       },
       {
-        "id": "NHERF1",
+        "id": "CSNK2A2",
         "type": "human",
-        "uniprot": "O14745",
-        "degree": 1,
-        "cluster": "mitochondria",
-        "x": 510.0,
-        "y": 167.4
-      },
-      {
-        "id": "TOMM70",
-        "type": "human",
-        "uniprot": "O94826",
+        "uniprot": "P19784",
         "degree": 2,
-        "cluster": "mitochondria",
-        "x": 520.5,
-        "y": 339.8
+        "cluster": "stress-granule",
+        "x": 771.6,
+        "y": 305.5
       },
       {
         "id": "CSNK2B",
@@ -279,125 +117,17 @@
         "uniprot": "P67870",
         "degree": 2,
         "cluster": "stress-granule",
-        "x": 920.0,
-        "y": 582.4
+        "x": 814.1,
+        "y": 293.0
       },
       {
-        "id": "MTCH1",
+        "id": "DCAF7",
         "type": "human",
-        "uniprot": "Q9NZJ7",
-        "degree": 1,
-        "cluster": "nuclear-pore",
-        "x": 269.1,
-        "y": 322.7
-      },
-      {
-        "id": "G3BP2",
-        "type": "human",
-        "uniprot": "Q9UN86",
-        "degree": 2,
-        "cluster": "stress-granule",
-        "x": 919.3,
-        "y": 445.8
-      },
-      {
-        "id": "NUP58",
-        "type": "human",
-        "uniprot": "Q9BVL2",
-        "degree": 7,
-        "cluster": "nuclear-pore",
-        "x": 231.0,
-        "y": 581.2
-      },
-      {
-        "id": "MIB1",
-        "type": "human",
-        "uniprot": "Q86YT6",
-        "degree": 1,
-        "cluster": "nuclear-pore",
-        "x": 370.0,
-        "y": 702.5
-      },
-      {
-        "id": "Orf9b",
-        "type": "viral",
-        "uniprot": "P0DTD2",
-        "degree": 11,
-        "cluster": "mitochondria",
-        "x": 601.9,
-        "y": 218.2
-      },
-      {
-        "id": "FAM98A",
-        "type": "human",
-        "uniprot": "Q8NCA5",
-        "degree": 1,
-        "cluster": "stress-granule",
-        "x": 727.3,
-        "y": 501.6
-      },
-      {
-        "id": "FBN2",
-        "type": "human",
-        "uniprot": "P35556",
+        "uniprot": "P61962",
         "degree": 2,
         "cluster": "nuclear-pore",
-        "x": 311.6,
-        "y": 668.1
-      },
-      {
-        "id": "LARP1",
-        "type": "human",
-        "uniprot": "Q6PKG0",
-        "degree": 2,
-        "cluster": "stress-granule",
-        "x": 803.3,
-        "y": 554.8
-      },
-      {
-        "id": "SPART",
-        "type": "human",
-        "uniprot": "Q8N0X7",
-        "degree": 1,
-        "cluster": "nuclear-pore",
-        "x": 427.1,
-        "y": 506.2
-      },
-      {
-        "id": "DPH5",
-        "type": "human",
-        "uniprot": "Q9H2P9",
-        "degree": 1,
-        "cluster": "mitochondria",
-        "x": 563.1,
-        "y": 346.2
-      },
-      {
-        "id": "RAE1",
-        "type": "human",
-        "uniprot": "P78406",
-        "degree": 6,
-        "cluster": "nuclear-pore",
-        "x": 120.0,
-        "y": 506.6
-      },
-      {
-        "id": "NUP54",
-        "type": "human",
-        "uniprot": "Q7Z3B4",
-        "degree": 8,
-        "cluster": "nuclear-pore",
-        "x": 192.5,
-        "y": 558.5
-      },
-      {
-        "id": "NEK9",
-        "type": "human",
-        "uniprot": "Q8TD19",
-        "degree": 1,
-        "cluster": "nuclear-pore",
-        "x": 401.1,
-        "y": 463.6
+        "x": 179.0,
+        "y": 698.7
       },
       {
         "id": "DCTPP1",
@@ -405,98 +135,26 @@
         "uniprot": "Q9H773",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 504.1,
-        "y": 234.0
+        "x": 916.5,
+        "y": 644.2
       },
       {
-        "id": "G3BP1",
+        "id": "DDX21",
         "type": "human",
-        "uniprot": "Q13283",
-        "degree": 4,
+        "uniprot": "Q9NR30",
+        "degree": 1,
         "cluster": "stress-granule",
-        "x": 915.2,
-        "y": 486.0
+        "x": 769.4,
+        "y": 190.1
       },
       {
-        "id": "BAG5",
+        "id": "DPH5",
         "type": "human",
-        "uniprot": "Q9UL15",
+        "uniprot": "Q9H2P9",
         "degree": 1,
         "cluster": "mitochondria",
-        "x": 644.1,
-        "y": 98.0
-      },
-      {
-        "id": "ZNF503",
-        "type": "human",
-        "uniprot": "Q96F45",
-        "degree": 1,
-        "cluster": "nuclear-pore",
-        "x": 322.6,
-        "y": 528.6
-      },
-      {
-        "id": "PTBP2",
-        "type": "human",
-        "uniprot": "Q9UKA9",
-        "degree": 1,
-        "cluster": "mitochondria",
-        "x": 660.0,
-        "y": 242.2
-      },
-      {
-        "id": "Orf6",
-        "type": "viral",
-        "uniprot": "P0DTC6",
-        "degree": 3,
-        "cluster": "nuclear-pore",
-        "x": 160.6,
-        "y": 412.1
-      },
-      {
-        "id": "NUP88",
-        "type": "human",
-        "uniprot": "Q99567",
-        "degree": 8,
-        "cluster": "nuclear-pore",
-        "x": 173.7,
-        "y": 556.4
-      },
-      {
-        "id": "FBN1",
-        "type": "human",
-        "uniprot": "P35555",
-        "degree": 3,
-        "cluster": "nuclear-pore",
-        "x": 307.1,
-        "y": 710.0
-      },
-      {
-        "id": "RBM28",
-        "type": "human",
-        "uniprot": "Q9NW13",
-        "degree": 1,
-        "cluster": "stress-granule",
-        "x": 1020.0,
-        "y": 507.2
-      },
-      {
-        "id": "MAT2B",
-        "type": "human",
-        "uniprot": "Q9NZL9",
-        "degree": 1,
-        "cluster": "nuclear-pore",
-        "x": 256.7,
-        "y": 544.3
-      },
-      {
-        "id": "UPF1",
-        "type": "human",
-        "uniprot": "Q92900",
-        "degree": 4,
-        "cluster": "stress-granule",
-        "x": 885.5,
-        "y": 566.3
+        "x": 738.3,
+        "y": 621.8
       },
       {
         "id": "EIF4H",
@@ -504,8 +162,296 @@
         "uniprot": "Q15056",
         "degree": 1,
         "cluster": "nuclear-pore",
-        "x": 460.0,
-        "y": 547.2
+        "x": 345.8,
+        "y": 560.0
+      },
+      {
+        "id": "FAM98A",
+        "type": "human",
+        "uniprot": "Q8NCA5",
+        "degree": 1,
+        "cluster": "stress-granule",
+        "x": 911.7,
+        "y": 90.0
+      },
+      {
+        "id": "FBLN5",
+        "type": "human",
+        "uniprot": "Q9UBX5",
+        "degree": 2,
+        "cluster": "nuclear-pore",
+        "x": 136.6,
+        "y": 561.5
+      },
+      {
+        "id": "FBN1",
+        "type": "human",
+        "uniprot": "P35555",
+        "degree": 3,
+        "cluster": "nuclear-pore",
+        "x": 175.3,
+        "y": 598.4
+      },
+      {
+        "id": "FBN2",
+        "type": "human",
+        "uniprot": "P35556",
+        "degree": 2,
+        "cluster": "nuclear-pore",
+        "x": 120.0,
+        "y": 602.4
+      },
+      {
+        "id": "G3BP1",
+        "type": "human",
+        "uniprot": "Q13283",
+        "degree": 4,
+        "cluster": "stress-granule",
+        "x": 956.3,
+        "y": 179.2
+      },
+      {
+        "id": "G3BP2",
+        "type": "human",
+        "uniprot": "Q9UN86",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 958.2,
+        "y": 124.0
+      },
+      {
+        "id": "GTF2F2",
+        "type": "human",
+        "uniprot": "P13984",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 215.4,
+        "y": 710.0
+      },
+      {
+        "id": "LARP1",
+        "type": "human",
+        "uniprot": "Q6PKG0",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 978.2,
+        "y": 291.5
+      },
+      {
+        "id": "MARK1",
+        "type": "human",
+        "uniprot": "Q9P0L2",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 725.1,
+        "y": 516.0
+      },
+      {
+        "id": "MARK2",
+        "type": "human",
+        "uniprot": "Q7KZI7",
+        "degree": 2,
+        "cluster": "mitochondria",
+        "x": 937.6,
+        "y": 584.8
+      },
+      {
+        "id": "MARK3",
+        "type": "human",
+        "uniprot": "P27448",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 687.0,
+        "y": 544.2
+      },
+      {
+        "id": "MAT2B",
+        "type": "human",
+        "uniprot": "Q9NZL9",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 151.3,
+        "y": 676.6
+      },
+      {
+        "id": "MIB1",
+        "type": "human",
+        "uniprot": "Q86YT6",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 251.9,
+        "y": 679.2
+      },
+      {
+        "id": "MOV10",
+        "type": "human",
+        "uniprot": "Q9HCE1",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 890.1,
+        "y": 248.9
+      },
+      {
+        "id": "MTCH1",
+        "type": "human",
+        "uniprot": "Q9NZJ7",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 416.5,
+        "y": 205.9
+      },
+      {
+        "id": "N",
+        "type": "viral",
+        "uniprot": "P0DTC9",
+        "degree": 15,
+        "cluster": "stress-granule",
+        "x": 895.5,
+        "y": 209.0
+      },
+      {
+        "id": "NEK9",
+        "type": "human",
+        "uniprot": "Q8TD19",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 337.6,
+        "y": 659.8
+      },
+      {
+        "id": "NHERF1",
+        "type": "human",
+        "uniprot": "O14745",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 873.7,
+        "y": 706.1
+      },
+      {
+        "id": "NUP214",
+        "type": "human",
+        "uniprot": "P35658",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 233.9,
+        "y": 460.8
+      },
+      {
+        "id": "NUP54",
+        "type": "human",
+        "uniprot": "Q7Z3B4",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 210.8,
+        "y": 469.8
+      },
+      {
+        "id": "NUP58",
+        "type": "human",
+        "uniprot": "Q9BVL2",
+        "degree": 7,
+        "cluster": "nuclear-pore",
+        "x": 183.4,
+        "y": 489.4
+      },
+      {
+        "id": "NUP62",
+        "type": "human",
+        "uniprot": "P37198",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 249.9,
+        "y": 488.8
+      },
+      {
+        "id": "NUP88",
+        "type": "human",
+        "uniprot": "Q99567",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 193.5,
+        "y": 453.1
+      },
+      {
+        "id": "NUP98",
+        "type": "human",
+        "uniprot": "P52948",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 240.0,
+        "y": 407.0
+      },
+      {
+        "id": "Nsp9",
+        "type": "viral",
+        "uniprot": "P0DTD1",
+        "degree": 16,
+        "cluster": "nuclear-pore",
+        "x": 223.7,
+        "y": 585.5
+      },
+      {
+        "id": "Orf6",
+        "type": "viral",
+        "uniprot": "P0DTC6",
+        "degree": 3,
+        "cluster": "nuclear-pore",
+        "x": 348.1,
+        "y": 303.8
+      },
+      {
+        "id": "Orf9b",
+        "type": "viral",
+        "uniprot": "P0DTD2",
+        "degree": 11,
+        "cluster": "mitochondria",
+        "x": 839.4,
+        "y": 594.5
+      },
+      {
+        "id": "PABPC1",
+        "type": "human",
+        "uniprot": "P11940",
+        "degree": 7,
+        "cluster": "stress-granule",
+        "x": 946.1,
+        "y": 279.4
+      },
+      {
+        "id": "PABPC4",
+        "type": "human",
+        "uniprot": "Q13310",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 1012.6,
+        "y": 200.3
+      },
+      {
+        "id": "PTBP2",
+        "type": "human",
+        "uniprot": "Q9UKA9",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 779.0,
+        "y": 515.3
+      },
+      {
+        "id": "RAE1",
+        "type": "human",
+        "uniprot": "P78406",
+        "degree": 6,
+        "cluster": "nuclear-pore",
+        "x": 258.7,
+        "y": 381.2
+      },
+      {
+        "id": "RBM28",
+        "type": "human",
+        "uniprot": "Q9NW13",
+        "degree": 1,
+        "cluster": "stress-granule",
+        "x": 823.1,
+        "y": 108.5
       },
       {
         "id": "RPL36",
@@ -513,23 +459,77 @@
         "uniprot": "Q9Y3U8",
         "degree": 5,
         "cluster": "stress-granule",
-        "x": 993.1,
-        "y": 559.0
+        "x": 830.8,
+        "y": 141.8
+      },
+      {
+        "id": "RRP9",
+        "type": "human",
+        "uniprot": "O43818",
+        "degree": 5,
+        "cluster": "stress-granule",
+        "x": 905.9,
+        "y": 307.5
+      },
+      {
+        "id": "SNIP1",
+        "type": "human",
+        "uniprot": "Q8TAD8",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 1020.0,
+        "y": 243.7
+      },
+      {
+        "id": "SPART",
+        "type": "human",
+        "uniprot": "Q8N0X7",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 136.4,
+        "y": 644.3
+      },
+      {
+        "id": "TOMM70",
+        "type": "human",
+        "uniprot": "O94826",
+        "degree": 2,
+        "cluster": "mitochondria",
+        "x": 967.2,
+        "y": 644.4
+      },
+      {
+        "id": "UPF1",
+        "type": "human",
+        "uniprot": "Q92900",
+        "degree": 4,
+        "cluster": "stress-granule",
+        "x": 959.8,
+        "y": 216.9
+      },
+      {
+        "id": "ZNF503",
+        "type": "human",
+        "uniprot": "Q96F45",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 355.0,
+        "y": 616.1
       }
     ],
     "edges": [
       {
-        "source": "N",
-        "target": "RRP9",
-        "kind": "known",
-        "score": 0.53,
+        "source": "CSDE1",
+        "target": "PABPC1",
+        "kind": "enrichment",
+        "score": 0.001,
         "held_out": false
       },
       {
-        "source": "Nsp9",
-        "target": "FBLN5",
-        "kind": "known",
-        "score": 0.53,
+        "source": "CSNK2A2",
+        "target": "CSNK2B",
+        "kind": "enrichment",
+        "score": 0.001,
         "held_out": false
       },
       {
@@ -540,24 +540,38 @@
         "held_out": false
       },
       {
-        "source": "N",
-        "target": "DDX21",
-        "kind": "known",
-        "score": 0.87,
+        "source": "FBN1",
+        "target": "FBN2",
+        "kind": "enrichment",
+        "score": 0.001,
         "held_out": false
       },
       {
-        "source": "Nsp9",
-        "target": "GTF2F2",
-        "kind": "known",
-        "score": 0.73,
+        "source": "G3BP1",
+        "target": "G3BP2",
+        "kind": "enrichment",
+        "score": 0.001,
         "held_out": false
       },
       {
-        "source": "N",
-        "target": "MOV10",
-        "kind": "known",
-        "score": 0.91,
+        "source": "G3BP1",
+        "target": "PABPC1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "G3BP1",
+        "target": "UPF1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "LARP1",
+        "target": "PABPC1",
+        "kind": "enrichment",
+        "score": 0.001,
         "held_out": false
       },
       {
@@ -566,13 +580,6 @@
         "kind": "enrichment",
         "score": 0.001,
         "held_out": false
-      },
-      {
-        "source": "N",
-        "target": "PABPC1",
-        "kind": "known",
-        "score": 0.8,
-        "held_out": true
       },
       {
         "source": "N",
@@ -590,23 +597,9 @@
       },
       {
         "source": "N",
-        "target": "G3BP1",
+        "target": "DDX21",
         "kind": "known",
-        "score": 0.98,
-        "held_out": true
-      },
-      {
-        "source": "N",
-        "target": "PABPC4",
-        "kind": "known",
-        "score": 0.73,
-        "held_out": false
-      },
-      {
-        "source": "N",
-        "target": "LARP1",
-        "kind": "known",
-        "score": 0.79,
+        "score": 0.87,
         "held_out": false
       },
       {
@@ -618,23 +611,44 @@
       },
       {
         "source": "N",
-        "target": "SNIP1",
+        "target": "G3BP1",
         "kind": "known",
-        "score": 0.64,
+        "score": 0.98,
         "held_out": true
-      },
-      {
-        "source": "N",
-        "target": "UPF1",
-        "kind": "known",
-        "score": 0.64,
-        "held_out": false
       },
       {
         "source": "N",
         "target": "G3BP2",
         "kind": "known",
         "score": 0.97,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "LARP1",
+        "kind": "known",
+        "score": 0.79,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "MOV10",
+        "kind": "known",
+        "score": 0.91,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "PABPC1",
+        "kind": "known",
+        "score": 0.8,
+        "held_out": true
+      },
+      {
+        "source": "N",
+        "target": "PABPC4",
+        "kind": "known",
+        "score": 0.73,
         "held_out": false
       },
       {
@@ -652,38 +666,157 @@
         "held_out": true
       },
       {
-        "source": "CSNK2A2",
-        "target": "CSNK2B",
+        "source": "N",
+        "target": "RRP9",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "SNIP1",
+        "kind": "known",
+        "score": 0.64,
+        "held_out": true
+      },
+      {
+        "source": "N",
+        "target": "UPF1",
+        "kind": "known",
+        "score": 0.64,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "NUP54",
         "kind": "enrichment",
         "score": 0.001,
         "held_out": false
       },
       {
-        "source": "Nsp9",
-        "target": "FBN1",
-        "kind": "known",
-        "score": 0.53,
+        "source": "NUP214",
+        "target": "NUP58",
+        "kind": "enrichment",
+        "score": 0.001,
         "held_out": false
       },
       {
-        "source": "Nsp9",
-        "target": "FBN2",
-        "kind": "known",
-        "score": 0.53,
-        "held_out": false
-      },
-      {
-        "source": "Nsp9",
-        "target": "NUP214",
-        "kind": "known",
-        "score": 0.53,
-        "held_out": true
-      },
-      {
-        "source": "Nsp9",
+        "source": "NUP214",
         "target": "NUP62",
-        "kind": "known",
-        "score": 0.53,
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "NUP98",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "RAE1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP54",
+        "target": "NUP58",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP54",
+        "target": "NUP62",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP54",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP54",
+        "target": "NUP98",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP54",
+        "target": "RAE1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP58",
+        "target": "NUP62",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP58",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP58",
+        "target": "NUP98",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP62",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP62",
+        "target": "NUP98",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP88",
+        "target": "NUP98",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP88",
+        "target": "RAE1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP98",
+        "target": "RAE1",
+        "kind": "enrichment",
+        "score": 0.001,
         "held_out": false
       },
       {
@@ -702,7 +835,35 @@
       },
       {
         "source": "Nsp9",
-        "target": "NUP54",
+        "target": "FBLN5",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "FBN1",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "FBN2",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "GTF2F2",
+        "kind": "known",
+        "score": 0.73,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "MAT2B",
         "kind": "known",
         "score": 0.66,
         "held_out": false
@@ -716,14 +877,49 @@
       },
       {
         "source": "Nsp9",
-        "target": "SPART",
+        "target": "NEK9",
         "kind": "known",
         "score": 0.64,
         "held_out": false
       },
       {
         "source": "Nsp9",
-        "target": "NEK9",
+        "target": "NUP214",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": true
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP54",
+        "kind": "known",
+        "score": 0.66,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP58",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP62",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP88",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "SPART",
         "kind": "known",
         "score": 0.64,
         "held_out": false
@@ -736,71 +932,8 @@
         "held_out": false
       },
       {
-        "source": "Nsp9",
-        "target": "NUP88",
-        "kind": "known",
-        "score": 0.53,
-        "held_out": false
-      },
-      {
-        "source": "Nsp9",
-        "target": "NUP58",
-        "kind": "known",
-        "score": 0.53,
-        "held_out": false
-      },
-      {
-        "source": "Nsp9",
-        "target": "MAT2B",
-        "kind": "known",
-        "score": 0.66,
-        "held_out": false
-      },
-      {
-        "source": "NUP214",
-        "target": "NUP58",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP214",
-        "target": "NUP62",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP214",
-        "target": "NUP88",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP214",
-        "target": "RAE1",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP214",
-        "target": "NUP54",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP214",
-        "target": "NUP98",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "Orf9b",
-        "target": "MARK3",
+        "source": "Orf6",
+        "target": "MTCH1",
         "kind": "known",
         "score": 0.53,
         "held_out": false
@@ -813,71 +946,43 @@
         "held_out": false
       },
       {
-        "source": "NUP98",
-        "target": "NUP54",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP98",
-        "target": "NUP58",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP98",
-        "target": "NUP62",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP98",
-        "target": "NUP88",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP98",
+        "source": "Orf6",
         "target": "RAE1",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
+        "kind": "known",
+        "score": 0.93,
+        "held_out": true
       },
       {
         "source": "Orf9b",
-        "target": "MARK2",
+        "target": "BAG5",
         "kind": "known",
         "score": 0.53,
         "held_out": false
       },
       {
-        "source": "NUP62",
-        "target": "NUP54",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP62",
-        "target": "NUP58",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP62",
-        "target": "NUP88",
-        "kind": "enrichment",
-        "score": 0.001,
+        "source": "Orf9b",
+        "target": "CHMP2A",
+        "kind": "known",
+        "score": 0.53,
         "held_out": false
       },
       {
         "source": "Orf9b",
-        "target": "CHMP2A",
+        "target": "CSDE1",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": true
+      },
+      {
+        "source": "Orf9b",
+        "target": "DCTPP1",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "DPH5",
         "kind": "known",
         "score": 0.53,
         "held_out": false
@@ -890,50 +995,29 @@
         "held_out": false
       },
       {
-        "source": "PABPC1",
-        "target": "CSDE1",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "PABPC1",
-        "target": "G3BP1",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "PABPC1",
-        "target": "LARP1",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "PABPC1",
-        "target": "PABPC4",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "PABPC1",
-        "target": "UPF1",
-        "kind": "enrichment",
-        "score": 0.001,
+        "source": "Orf9b",
+        "target": "MARK2",
+        "kind": "known",
+        "score": 0.53,
         "held_out": false
       },
       {
         "source": "Orf9b",
-        "target": "CSDE1",
+        "target": "MARK3",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "NHERF1",
         "kind": "known",
         "score": 0.53,
         "held_out": true
       },
       {
         "source": "Orf9b",
-        "target": "NHERF1",
+        "target": "PTBP2",
         "kind": "known",
         "score": 0.53,
         "held_out": true
@@ -946,98 +1030,14 @@
         "held_out": false
       },
       {
-        "source": "Orf6",
-        "target": "MTCH1",
-        "kind": "known",
-        "score": 0.53,
-        "held_out": false
-      },
-      {
-        "source": "G3BP2",
-        "target": "G3BP1",
+        "source": "PABPC1",
+        "target": "PABPC4",
         "kind": "enrichment",
         "score": 0.001,
         "held_out": false
       },
       {
-        "source": "NUP58",
-        "target": "NUP54",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP58",
-        "target": "NUP88",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "Orf9b",
-        "target": "DPH5",
-        "kind": "known",
-        "score": 0.53,
-        "held_out": false
-      },
-      {
-        "source": "Orf9b",
-        "target": "DCTPP1",
-        "kind": "known",
-        "score": 0.53,
-        "held_out": false
-      },
-      {
-        "source": "Orf9b",
-        "target": "PTBP2",
-        "kind": "known",
-        "score": 0.53,
-        "held_out": true
-      },
-      {
-        "source": "Orf9b",
-        "target": "BAG5",
-        "kind": "known",
-        "score": 0.53,
-        "held_out": false
-      },
-      {
-        "source": "FBN2",
-        "target": "FBN1",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "Orf6",
-        "target": "RAE1",
-        "kind": "known",
-        "score": 0.93,
-        "held_out": true
-      },
-      {
-        "source": "RAE1",
-        "target": "NUP54",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "RAE1",
-        "target": "NUP88",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "NUP54",
-        "target": "NUP88",
-        "kind": "enrichment",
-        "score": 0.001,
-        "held_out": false
-      },
-      {
-        "source": "G3BP1",
+        "source": "PABPC1",
         "target": "UPF1",
         "kind": "enrichment",
         "score": 0.001,

@@ -40,12 +40,24 @@ def _literature_word(n):
 
 
 def _subgraph(g, frozen):
-    """Induced subgraph over demo baits + their preys + enrichment among them."""
-    nodes = set(DEMO_BAITS)
+    """Induced subgraph over demo baits + their preys + enrichment among them.
+
+    Built with a SORTED node order so the layout (and thus the whole artifact) is
+    byte-identical across runs, independent of Python's set/hash iteration order.
+    """
+    node_ids = set(DEMO_BAITS)
     for b in DEMO_BAITS:
-        nodes |= {n for n in g.neighbors(b) if g.nodes[n]["type"] == "human"}
-    sub = g.subgraph(nodes).copy()
-    # seeded layout -> deterministic, reproducible positions
+        node_ids |= {n for n in g.neighbors(b) if g.nodes[n]["type"] == "human"}
+    node_ids = sorted(node_ids)  # deterministic order, hash-independent
+
+    sub = nx.Graph()
+    for n in node_ids:
+        sub.add_node(n, **g.nodes[n])
+    for u, v, d in g.edges(data=True):
+        if u in sub and v in sub:
+            sub.add_edge(u, v, **d)
+
+    # seeded layout on the sorted node order -> deterministic, reproducible positions
     pos = nx.spring_layout(sub, seed=config.HELDOUT_SEED, k=1.1, iterations=200)
     xs = [p[0] for p in pos.values()]
     ys = [p[1] for p in pos.values()]
@@ -155,6 +167,7 @@ def build():
             "score": round(d.get("score", 0.0), 3),
             "held_out": heldout_true,
         })
+    edges.sort(key=lambda e: (e["source"], e["target"]))  # deterministic order
 
     # visible L3 predictions (missing edges the graph proposes among visible nodes)
     visible = {n["id"] for n in nodes}
