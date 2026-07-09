@@ -79,6 +79,25 @@ function buildGraph(){
   cy.fit(undefined, 60);
   cy.on('tap','node', evt=> selectNode(evt.target.id()));
   cy.on('tap','edge', evt=>{ const id=evt.target.id(); if(DATA.dossiers[id]) openDossier(id); });
+
+  // hover: pointer cursor + tooltip so clickability is discoverable (a11y)
+  const tip=document.getElementById('cy-tip');
+  const container=cy.container();
+  cy.on('mouseover','node', evt=>{
+    container.style.cursor='pointer';
+    const n=evt.target.data();
+    tip.innerHTML=`<b>${esc(n.id)}</b> · ${n.type==='viral'?'viral bait':'human prey'}`
+      +(n.uniprot?`<br>${esc(n.uniprot)} · deg ${esc(n.degree)}`:'')
+      +`<br><span style="color:#8a97ad">click for ${DATA.dossiers && Object.keys(DATA.dossiers).some(k=>k.split('|').includes(n.id))?'dossier':'node details'}</span>`;
+    tip.classList.remove('hidden');
+  });
+  cy.on('mouseover','edge', evt=>{ container.style.cursor = DATA.dossiers[evt.target.id()]?'pointer':'default'; });
+  cy.on('mousemove', evt=>{
+    if(tip.classList.contains('hidden')) return;
+    const oe=evt.originalEvent; tip.style.left=(oe.clientX+14)+'px'; tip.style.top=(oe.clientY+14)+'px';
+  });
+  cy.on('mouseout','node', ()=>{ container.style.cursor='default'; tip.classList.add('hidden'); });
+  cy.on('mouseout','edge', ()=>{ container.style.cursor='default'; });
 }
 
 function cyStyle(){
@@ -125,8 +144,11 @@ function buildControls(){
   const wrap=document.getElementById('layer-toggles'); wrap.innerHTML='';
   for(const [k,label,c] of defs){
     const row=document.createElement('div'); row.className='layer-row on'; row.dataset.k=k;
+    row.setAttribute('role','switch'); row.setAttribute('aria-checked','true');
+    row.setAttribute('tabindex','0'); row.setAttribute('aria-label',`${label} layer`);
     row.innerHTML=`<span class="sw"></span><span class="dot" style="background:${c}"></span>${label}<span class="cnt">${cnt(k)}</span>`;
     row.onclick=()=>toggleLayer(k,row);
+    row.onkeydown=(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleLayer(k,row); } };
     wrap.appendChild(row);
   }
   document.querySelectorAll('.ask-preset').forEach(b=> b.onclick=()=>runQuery(b.dataset.q));
@@ -141,7 +163,9 @@ function buildControls(){
 }
 
 function toggleLayer(k,row){
-  state.layers[k]=!state.layers[k]; row.classList.toggle('on',state.layers[k]);
+  state.layers[k]=!state.layers[k];
+  row.classList.toggle('on',state.layers[k]);
+  row.setAttribute('aria-checked', state.layers[k]?'true':'false');
   const sel = k==='confirmed' ? 'edge.confirmed'
     : k==='predicted' ? 'edge[kind="predicted"]'
     : `edge[kind="${k}"]`;
@@ -149,6 +173,11 @@ function toggleLayer(k,row){
     if(e.hasClass('hiddenEdge')) return;
     e.style('display', state.layers[k]?'element':'none');
   });
+}
+
+function updateLayerCount(k, n){
+  const row=document.querySelector(`.layer-row[data-k="${k}"] .cnt`);
+  if(row) row.textContent=n;
 }
 
 function buildLegend(){
@@ -214,7 +243,8 @@ function showPrecision(){
   const pk=b.precision_at_k, np=b.without_pinned;
   const pct=v=>Math.round(v*100)+'%';
   const chip=document.getElementById('precision-chip'); chip.classList.remove('hidden');
-  chip.innerHTML=`<div class="lbl">Locked evaluator · precision@${esc(b.headline_k)}</div>
+  chip.innerHTML=`<button class="panel-close" aria-label="Dismiss evaluator panel" onclick="hideChip()">✕</button>
+    <div class="lbl">Locked evaluator · precision@${esc(b.headline_k)}</div>
     <div class="big">${pct(b.headline_precision_at_k)}</div>
     <div class="sub">precision@10 <b>${pct(pk['10'])}</b> · @20 <b>${pct(pk['20'])}</b> · @50 <b>${pct(pk['50'])}</b><br>
     ROC-AUC <b>${esc(b.roc_auc)}</b> · AP <b>${esc(b.average_precision)}</b> · recall@50 <b>${pct(b.recall_at_k['50'])}</b><br>
@@ -233,10 +263,16 @@ function runLoop(){
   // confirm the recovered-true greens -> turn confirmed, densify (in-view ones animate)
   cy.edges('edge.hit').addClass('confirmed');
   for(const [s,t] of lp.confirmed_edges){ const e=edgeBetween(s,t); if(e.nonempty()) e.addClass('confirmed'); }
+  // make the fold-back visible in the legend counts (P1.2)
+  const nConfirmed=cy.edges('edge.confirmed').length;
+  updateLayerCount('confirmed', nConfirmed);
+  const confRow=document.querySelector('.layer-row[data-k="confirmed"]');
+  if(confRow && !state.layers.confirmed){ state.layers.confirmed=true; confRow.classList.add('on'); confRow.setAttribute('aria-checked','true'); }
   toast(`<span class="k">Loop round</span>: confirm ${esc(lp.confirmed_edges.length)} recovered-true edges (each a real Gordon edge, each L3-rank #1; ${esc(nInView)} in this view), fold them back as known, re-score the still-hidden edges.`);
   const chip=document.getElementById('precision-chip');
   const before=Math.round(lp.before_precision_at_20*100), after=Math.round(lp.after_precision_at_20*100);
-  chip.innerHTML=`<div class="lbl">Loop round · precision@20 on remaining held-out</div>
+  chip.innerHTML=`<button class="panel-close" aria-label="Dismiss loop panel" onclick="hideChip()">✕</button>
+    <div class="lbl">Loop round · precision@20 on remaining held-out</div>
     <div class="big">${before}% → ${after}%</div>
     <div class="sub">confirmed <b>${esc(lp.confirmed_edges.length)}</b> edges, folded back as known<br>
     reachable set unchanged (${esc(lp.before_recoverable)} → ${esc(lp.after_recoverable)}); the gain is honest <b>re-ranking</b><br>
@@ -264,6 +300,7 @@ function openDossier(key){
   const skClass = ['pass','downgrade','veto'].includes(d.skeptic.verdict)?d.skeptic.verdict:'pass';
   const html=`
   <div class="dz-head">
+    <button class="panel-close" aria-label="Close dossier" onclick="closeDossier()">✕</button>
     <span class="dz-badge" style="background:${hex2(badge[1],.16)};color:${badge[1]}">${esc(badge[0])}</span>
     <div class="dz-title">${esc(d.source)}<span class="arrow">→</span>${esc(d.target)}</div>
     <div class="dz-sub">${esc(d.provenance.proposed_by)} · Claude explained · ${esc(d.provenance.evaluator)}</div>
@@ -271,8 +308,7 @@ function openDossier(key){
 
   <div class="dz-sec">
     <div class="dz-sec-h">Structure</div>
-    <div id="molstar-wrap"><div class="struct-chip" style="background:${st.kind==='experimental'?hex2(COL.human,.9):hex2(COL.predicted,.9)};color:#05121a">
-      ${st.kind==='experimental'?'EXPERIMENTAL · '+esc(st.source):'PREDICTED · '+esc(st.source)}</div></div>
+    <div id="molstar-wrap"></div>
     <div class="struct-meta">
       <span class="lbl">method</span> ${esc(st.method)}
       &nbsp;·&nbsp; <span class="lbl">${esc(st.confidence.type)}</span> ${esc(st.confidence.value)} ${esc(st.confidence.unit||'')}
@@ -357,9 +393,10 @@ function drugColor(l){ return l==='LOW'?COL.viral:(l==='MODERATE'?COL.topology:C
 function drugPct(l){ return l==='LOW'?30:(l==='MODERATE'?55:80); }
 function hex2(hex,a){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; }
 
-/* ---------- Mol* ---------- */
-function mountStructure(st){
-  const wrap=document.getElementById('molstar-wrap'); if(!wrap) return;
+/* ---------- Mol* : trimmed controls + app-owned fullscreen (P0 fix) ---------- */
+let currentStruct=null, fsReturnFocus=null;
+
+function makeMolstar(st){
   const el=document.createElement('pdbe-molstar');
   el.setAttribute('custom-data-url', st.url);
   el.setAttribute('custom-data-format','cif');
@@ -368,15 +405,71 @@ function mountStructure(st){
   el.setAttribute('bg-color-r','5'); el.setAttribute('bg-color-g','7'); el.setAttribute('bg-color-b','14');
   el.setAttribute('landscape','true');
   if(st.kind==='predicted') el.setAttribute('alphafold-view','true');
-  wrap.appendChild(el);
+  return el;
 }
+// call an instance method safely once the viewer has initialised
+function molCall(el, fn){
+  try { const v=el && el.viewerInstance; if(v) fn(v); } catch(e){ /* viewer not ready or API changed */ }
+}
+function molControlBar(getEl, onExpand){
+  const bar=document.createElement('div'); bar.className='mol-controls';
+  const mk=(label,title,handler)=>{ const b=document.createElement('button'); b.type='button';
+    b.textContent=label; b.title=title; b.setAttribute('aria-label',title); b.onclick=handler; return b; };
+  bar.append(
+    mk('⟳','Toggle spin', ()=>molCall(getEl(), v=>v.visual.toggleSpin && v.visual.toggleSpin())),
+    mk('⤢','Reset view', ()=>molCall(getEl(), v=>v.visual.reset && v.visual.reset({camera:true}))),
+    mk('⛶','Expand (fullscreen)', onExpand),
+  );
+  return bar;
+}
+
+function mountStructure(st){
+  const wrap=document.getElementById('molstar-wrap'); if(!wrap) return;
+  currentStruct=st;
+  wrap.innerHTML=`<div class="struct-chip" style="background:${st.kind==='experimental'?hex2(COL.human,.9):hex2(COL.predicted,.9)};color:#05121a">${st.kind==='experimental'?'EXPERIMENTAL · '+esc(st.source):'PREDICTED · '+esc(st.source)}</div><div class="dz-loading" style="padding:16px"><span class="spin"></span>loading structure…</div>`;
+  const el=makeMolstar(st);
+  el.addEventListener('load', ()=>{ const l=wrap.querySelector('.dz-loading'); if(l) l.remove(); }, {once:true});
+  wrap.appendChild(el);
+  wrap.appendChild(molControlBar(()=>el, ()=>openFullscreen(st)));
+  // safety: remove the loading placeholder even if the load event never fires
+  setTimeout(()=>{ const l=wrap.querySelector('.dz-loading'); if(l) l.remove(); }, 4000);
+}
+
+function openFullscreen(st){
+  const ov=document.getElementById('struct-fullscreen');
+  document.getElementById('fs-title').textContent =
+    `${st.kind==='experimental'?'Experimental':'Predicted'} · ${st.source}`;
+  const resid=document.getElementById('fs-resid');
+  resid.innerHTML = st.interface_residues && st.interface_residues.length
+    ? 'interface residues: '+st.interface_residues.map(r=>`<span class="r">${esc(r)}</span>`).join('')
+    : esc(st.interface_source||'');
+  const mount=document.getElementById('fs-mount'); mount.innerHTML='';
+  const el=makeMolstar(st); mount.appendChild(el);
+  document.getElementById('fs-spin').onclick=()=>molCall(el, v=>v.visual.toggleSpin && v.visual.toggleSpin());
+  document.getElementById('fs-reset').onclick=()=>molCall(el, v=>v.visual.reset && v.visual.reset({camera:true}));
+  fsReturnFocus=document.activeElement;
+  ov.classList.remove('hidden');
+  document.body.style.overflow='hidden';
+  document.getElementById('fs-close').focus();
+}
+function closeFullscreen(){
+  const ov=document.getElementById('struct-fullscreen');
+  if(ov.classList.contains('hidden')) return false;
+  ov.classList.add('hidden');
+  document.getElementById('fs-mount').innerHTML='';   // dispose the viewer
+  document.body.style.overflow='';
+  if(fsReturnFocus && fsReturnFocus.focus) fsReturnFocus.focus();
+  return true;
+}
+function fsOpen(){ return !document.getElementById('struct-fullscreen').classList.contains('hidden'); }
 
 /* ---------- panels ---------- */
 function renderNodePanel(id){
   const n=DATA.graph.nodes.find(x=>x.id===id)||{};
   const partners=DATA.graph.edges.filter(e=>e.source===id||e.target===id);
   document.getElementById('dossier-body').innerHTML=`
-    <div class="dz-head"><div class="dz-title">${esc(id)}</div>
+    <div class="dz-head"><button class="panel-close" aria-label="Close panel" onclick="closeDossier()">✕</button>
+    <div class="dz-title">${esc(id)}</div>
     <div class="dz-sub">${n.type==='viral'?'SARS-CoV-2 viral bait':'human prey'} · ${esc(n.uniprot||'')} · degree ${esc(n.degree||0)}</div></div>
     <div class="dz-sec"><div class="dz-sec-h">Incident edges</div>
     <div class="kv">${partners.map(e=>`${esc(e.source)} → ${esc(e.target)} <span style="color:${COL.mut}">(${esc(e.kind)})</span>`).join('<br>')||'—'}</div></div>`;
@@ -389,12 +482,35 @@ function renderIdle(){
       <h2>An AP-MS hit becomes a structural, cited, testable hypothesis.</h2>
       <p>The graph proposes missing edges deterministically. Claude reads the literature and explains. A locked evaluator measures how often the hidden true edges come back.</p>
       <div class="step s1"><b>Ask the map</b> — "what interaction is Orf6 missing?"</div>
-      <div class="step s2"><b>Length-3 path</b> — ${f.path.join(' → ')} (genuine L3, never the 2-edge shortcut)</div>
+      <div class="step s2"><b>Length-3 path</b> — ${esc(f.path.join(' → '))} (genuine L3, never the 2-edge shortcut)</div>
       <div class="step s3"><b>Structural dossier</b> — real 3D, interface residues, a mechanism where every clause opens to a paper, a proposed wet-lab test</div>
-      <div class="step s4"><b>Locked evaluator</b> — held-out Gordon edges snap green; precision@${b.headline_k} = ${Math.round(b.headline_precision_at_k*100)}%, ROC-AUC ${b.roc_auc}</div>
+      <div class="step s4"><b>Locked evaluator</b> — held-out Gordon edges snap green; precision@${esc(b.headline_k)} = ${Math.round(b.headline_precision_at_k*100)}%, ROC-AUC ${esc(b.roc_auc)}</div>
       <div class="step s5"><b>One loop round</b> — confirm recovered edges, fold back, re-score</div>
       <p style="margin-top:20px;color:${COL.mut};font-size:11px">Start with <b style="color:${COL.predicted}">"What interaction is Orf6 missing?"</b> on the left.</p>
     </div>`;
 }
 
-boot();
+/* ---------- panel lifecycle: one system for every transient panel ---------- */
+function closeDossier(){
+  if(cy){ cy.nodes().removeClass('dossier-target'); }
+  renderIdle();
+}
+function hideChip(){ document.getElementById('precision-chip').classList.add('hidden'); }
+function hideToast(){ document.getElementById('ask-toast').classList.add('hidden'); }
+
+function wireGlobalHandlers(){
+  document.getElementById('fs-close').onclick=closeFullscreen;
+  // Escape closes, in priority order: fullscreen > chip > toast > dossier
+  document.addEventListener('keydown', (e)=>{
+    if(e.key!=='Escape') return;
+    if(closeFullscreen()) return;
+    const chip=document.getElementById('precision-chip');
+    if(!chip.classList.contains('hidden')){ hideChip(); return; }
+    if(!document.getElementById('ask-toast').classList.contains('hidden')){ hideToast(); return; }
+    closeDossier();
+  });
+  // click empty graph background -> dismiss dossier + chip (click-away)
+  cy.on('tap', (evt)=>{ if(evt.target===cy){ closeDossier(); hideChip(); hideToast(); } });
+}
+
+boot().then(()=>{ if(cy) wireGlobalHandlers(); });

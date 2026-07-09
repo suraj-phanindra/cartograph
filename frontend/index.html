@@ -70,10 +70,28 @@
     </div>
 
     <!-- right dossier panel -->
-    <aside id="dossier" class="scroll">
+    <aside id="dossier" class="scroll" role="complementary" aria-label="edge dossier">
       <div id="dossier-body"></div>
     </aside>
   </div>
+
+  <!-- app-owned fullscreen structure viewer. Replaces Mol*'s native expand so no
+       app panel can ever occlude the exit control (fixes the P0 expanded trap). -->
+  <div id="struct-fullscreen" class="hidden" role="dialog" aria-modal="true" aria-label="expanded 3D structure">
+    <div class="fs-bar">
+      <span id="fs-title" class="fs-title"></span>
+      <div class="fs-actions">
+        <button id="fs-spin" class="fs-btn" title="Toggle spin">⟳ Spin</button>
+        <button id="fs-reset" class="fs-btn" title="Reset view">⤢ Reset</button>
+        <button id="fs-close" class="fs-btn fs-close" title="Exit fullscreen (Esc)">✕ Close</button>
+      </div>
+    </div>
+    <div id="fs-mount"></div>
+    <div id="fs-resid" class="fs-resid"></div>
+  </div>
+
+  <!-- lightweight graph hover tooltip -->
+  <div id="cy-tip" class="cy-tip hidden" role="tooltip"></div>
 </div>
 <script src="app.js"></script>
 </body>
