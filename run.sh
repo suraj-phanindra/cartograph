@@ -32,8 +32,14 @@ case "${1:-serve}" in
   serve)
     setup; build
     echo ""
-    echo "==> serving the demo at http://127.0.0.1:${PORT}/index.html"
-    echo "    (Ctrl-C to stop)"
+    echo "==> serving the STATIC demo at http://127.0.0.1:${PORT}/index.html"
+    echo "    (offline, no API; Ctrl-C to stop)"
     cd frontend && exec ../.venv/bin/python -m http.server "$PORT" --bind 127.0.0.1 ;;
-  *) echo "usage: ./run.sh [serve|build|test]"; exit 1 ;;
+  api)
+    setup; build
+    echo ""
+    echo "==> serving the demo + LIVE API at http://127.0.0.1:${PORT}/index.html"
+    echo "    (adds /api/* incl. upload; Ctrl-C to stop)"
+    exec ./.venv/bin/python -m uvicorn backend.api.server:app --host 127.0.0.1 --port "$PORT" ;;
+  *) echo "usage: ./run.sh [serve|build|test|api]"; exit 1 ;;
 esac
