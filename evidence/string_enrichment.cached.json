@@ -1,0 +1,806 @@
+{
+  "source": "STRING",
+  "version": "12.0",
+  "network_type": "physical",
+  "required_score": 700,
+  "species": 9606,
+  "retrieved": "2026-07-08",
+  "n_edges": 159,
+  "edges": [
+    {
+      "a": "ACADM",
+      "b": "ETFA",
+      "score": 0.947
+    },
+    {
+      "a": "AKAP9",
+      "b": "GOLGA2",
+      "score": 0.928
+    },
+    {
+      "a": "AKAP9",
+      "b": "PCNT",
+      "score": 0.74
+    },
+    {
+      "a": "AKAP9",
+      "b": "PDE4DIP",
+      "score": 0.924
+    },
+    {
+      "a": "AP2A2",
+      "b": "AP2M1",
+      "score": 0.999
+    },
+    {
+      "a": "ATP6V1A",
+      "b": "ATP6AP1",
+      "score": 0.972
+    },
+    {
+      "a": "BRD4",
+      "b": "BRD2",
+      "score": 0.899
+    },
+    {
+      "a": "BRD4",
+      "b": "ELOC",
+      "score": 0.886
+    },
+    {
+      "a": "BRD4",
+      "b": "NSD2",
+      "score": 0.714
+    },
+    {
+      "a": "CDK5RAP2",
+      "b": "AKAP9",
+      "score": 0.748
+    },
+    {
+      "a": "CDK5RAP2",
+      "b": "PCNT",
+      "score": 0.845
+    },
+    {
+      "a": "CDK5RAP2",
+      "b": "TUBGCP2",
+      "score": 0.943
+    },
+    {
+      "a": "CIT",
+      "b": "RHOA",
+      "score": 0.703
+    },
+    {
+      "a": "CNTRL",
+      "b": "NIN",
+      "score": 0.874
+    },
+    {
+      "a": "CSNK2A2",
+      "b": "CSNK2B",
+      "score": 0.988
+    },
+    {
+      "a": "CUL2",
+      "b": "ELOC",
+      "score": 0.999
+    },
+    {
+      "a": "CYB5B",
+      "b": "CYB5R3",
+      "score": 0.994
+    },
+    {
+      "a": "CYB5B",
+      "b": "POR",
+      "score": 0.979
+    },
+    {
+      "a": "DNMT1",
+      "b": "HDAC2",
+      "score": 0.997
+    },
+    {
+      "a": "ECSIT",
+      "b": "ACAD9",
+      "score": 0.998
+    },
+    {
+      "a": "ECSIT",
+      "b": "TRIM59",
+      "score": 0.93
+    },
+    {
+      "a": "EIF4E2",
+      "b": "GIGYF2",
+      "score": 0.998
+    },
+    {
+      "a": "ELOB",
+      "b": "BRD4",
+      "score": 0.886
+    },
+    {
+      "a": "ELOB",
+      "b": "CUL2",
+      "score": 0.999
+    },
+    {
+      "a": "ELOB",
+      "b": "ELOC",
+      "score": 0.999
+    },
+    {
+      "a": "ELOB",
+      "b": "ZYG11B",
+      "score": 0.957
+    },
+    {
+      "a": "ERLEC1",
+      "b": "FAM8A1",
+      "score": 0.861
+    },
+    {
+      "a": "ERLEC1",
+      "b": "OS9",
+      "score": 0.761
+    },
+    {
+      "a": "EXOSC2",
+      "b": "EXOSC8",
+      "score": 0.999
+    },
+    {
+      "a": "EXOSC3",
+      "b": "EXOSC2",
+      "score": 0.999
+    },
+    {
+      "a": "EXOSC3",
+      "b": "EXOSC8",
+      "score": 0.999
+    },
+    {
+      "a": "EXOSC5",
+      "b": "EXOSC2",
+      "score": 0.999
+    },
+    {
+      "a": "EXOSC5",
+      "b": "EXOSC3",
+      "score": 0.999
+    },
+    {
+      "a": "EXOSC5",
+      "b": "EXOSC8",
+      "score": 0.999
+    },
+    {
+      "a": "FAM8A1",
+      "b": "OS9",
+      "score": 0.976
+    },
+    {
+      "a": "FBN1",
+      "b": "FBLN5",
+      "score": 0.881
+    },
+    {
+      "a": "FBN1",
+      "b": "FBN2",
+      "score": 0.81
+    },
+    {
+      "a": "G3BP1",
+      "b": "UPF1",
+      "score": 0.877
+    },
+    {
+      "a": "G3BP2",
+      "b": "G3BP1",
+      "score": 0.963
+    },
+    {
+      "a": "GNG5",
+      "b": "GNB1",
+      "score": 0.892
+    },
+    {
+      "a": "GOLGB1",
+      "b": "RAB1A",
+      "score": 0.722
+    },
+    {
+      "a": "GORASP1",
+      "b": "GOLGA2",
+      "score": 0.999
+    },
+    {
+      "a": "HMOX1",
+      "b": "POR",
+      "score": 0.793
+    },
+    {
+      "a": "LARP4B",
+      "b": "RPL36",
+      "score": 0.9
+    },
+    {
+      "a": "MEPCE",
+      "b": "LARP7",
+      "score": 0.999
+    },
+    {
+      "a": "MOV10",
+      "b": "UPF1",
+      "score": 0.783
+    },
+    {
+      "a": "MPHOSPH10",
+      "b": "AATF",
+      "score": 0.97
+    },
+    {
+      "a": "MPHOSPH10",
+      "b": "NGDN",
+      "score": 0.957
+    },
+    {
+      "a": "MPHOSPH10",
+      "b": "NOL10",
+      "score": 0.984
+    },
+    {
+      "a": "MRPS2",
+      "b": "MRPS27",
+      "score": 0.993
+    },
+    {
+      "a": "MRPS25",
+      "b": "MRPS2",
+      "score": 0.98
+    },
+    {
+      "a": "MRPS25",
+      "b": "MRPS27",
+      "score": 0.989
+    },
+    {
+      "a": "MRPS25",
+      "b": "MRPS5",
+      "score": 0.996
+    },
+    {
+      "a": "MRPS5",
+      "b": "MRPS2",
+      "score": 0.998
+    },
+    {
+      "a": "MRPS5",
+      "b": "MRPS27",
+      "score": 0.994
+    },
+    {
+      "a": "NDUFAF1",
+      "b": "ACAD9",
+      "score": 0.997
+    },
+    {
+      "a": "NDUFAF1",
+      "b": "ECSIT",
+      "score": 0.997
+    },
+    {
+      "a": "NDUFAF1",
+      "b": "NDUFB9",
+      "score": 0.967
+    },
+    {
+      "a": "NDUFB9",
+      "b": "NDUFAF2",
+      "score": 0.882
+    },
+    {
+      "a": "NGDN",
+      "b": "AATF",
+      "score": 0.987
+    },
+    {
+      "a": "NOL10",
+      "b": "AATF",
+      "score": 0.991
+    },
+    {
+      "a": "NOL10",
+      "b": "NGDN",
+      "score": 0.996
+    },
+    {
+      "a": "NUP210",
+      "b": "NUP214",
+      "score": 0.958
+    },
+    {
+      "a": "NUP210",
+      "b": "NUP54",
+      "score": 0.895
+    },
+    {
+      "a": "NUP210",
+      "b": "NUP58",
+      "score": 0.895
+    },
+    {
+      "a": "NUP210",
+      "b": "NUP62",
+      "score": 0.929
+    },
+    {
+      "a": "NUP210",
+      "b": "NUP88",
+      "score": 0.958
+    },
+    {
+      "a": "NUP210",
+      "b": "NUP98",
+      "score": 0.895
+    },
+    {
+      "a": "NUP210",
+      "b": "RAE1",
+      "score": 0.8
+    },
+    {
+      "a": "NUP214",
+      "b": "NUP58",
+      "score": 0.964
+    },
+    {
+      "a": "NUP214",
+      "b": "NUP62",
+      "score": 0.996
+    },
+    {
+      "a": "NUP214",
+      "b": "NUP88",
+      "score": 0.999
+    },
+    {
+      "a": "NUP214",
+      "b": "RAE1",
+      "score": 0.96
+    },
+    {
+      "a": "NUP54",
+      "b": "NUP214",
+      "score": 0.941
+    },
+    {
+      "a": "NUP54",
+      "b": "NUP58",
+      "score": 0.999
+    },
+    {
+      "a": "NUP54",
+      "b": "NUP62",
+      "score": 0.999
+    },
+    {
+      "a": "NUP54",
+      "b": "NUP88",
+      "score": 0.909
+    },
+    {
+      "a": "NUP54",
+      "b": "NUP98",
+      "score": 0.989
+    },
+    {
+      "a": "NUP54",
+      "b": "RAE1",
+      "score": 0.788
+    },
+    {
+      "a": "NUP58",
+      "b": "NUP62",
+      "score": 0.999
+    },
+    {
+      "a": "NUP58",
+      "b": "NUP88",
+      "score": 0.931
+    },
+    {
+      "a": "NUP88",
+      "b": "NUP62",
+      "score": 0.997
+    },
+    {
+      "a": "NUP98",
+      "b": "NUP214",
+      "score": 0.994
+    },
+    {
+      "a": "NUP98",
+      "b": "NUP58",
+      "score": 0.961
+    },
+    {
+      "a": "NUP98",
+      "b": "NUP62",
+      "score": 0.972
+    },
+    {
+      "a": "NUP98",
+      "b": "NUP88",
+      "score": 0.996
+    },
+    {
+      "a": "NUP98",
+      "b": "RAE1",
+      "score": 0.999
+    },
+    {
+      "a": "NUTF2",
+      "b": "NUP62",
+      "score": 0.953
+    },
+    {
+      "a": "OS9",
+      "b": "FOXRED2",
+      "score": 0.83
+    },
+    {
+      "a": "PABPC1",
+      "b": "CSDE1",
+      "score": 0.928
+    },
+    {
+      "a": "PABPC1",
+      "b": "G3BP1",
+      "score": 0.95
+    },
+    {
+      "a": "PABPC1",
+      "b": "LARP1",
+      "score": 0.77
+    },
+    {
+      "a": "PABPC1",
+      "b": "LARP4B",
+      "score": 0.971
+    },
+    {
+      "a": "PABPC1",
+      "b": "PABPC4",
+      "score": 0.811
+    },
+    {
+      "a": "PABPC1",
+      "b": "UPF1",
+      "score": 0.954
+    },
+    {
+      "a": "PIGS",
+      "b": "GPAA1",
+      "score": 0.994
+    },
+    {
+      "a": "PMPCB",
+      "b": "PMPCA",
+      "score": 0.998
+    },
+    {
+      "a": "POLA1",
+      "b": "PRIM2",
+      "score": 0.999
+    },
+    {
+      "a": "POLA2",
+      "b": "POLA1",
+      "score": 0.999
+    },
+    {
+      "a": "POLA2",
+      "b": "PRIM1",
+      "score": 0.999
+    },
+    {
+      "a": "POLA2",
+      "b": "PRIM2",
+      "score": 0.999
+    },
+    {
+      "a": "PPIL3",
+      "b": "CWC27",
+      "score": 0.8
+    },
+    {
+      "a": "PPIL3",
+      "b": "SLU7",
+      "score": 0.73
+    },
+    {
+      "a": "PRIM1",
+      "b": "POLA1",
+      "score": 0.999
+    },
+    {
+      "a": "PRIM1",
+      "b": "PRIM2",
+      "score": 0.999
+    },
+    {
+      "a": "PRKACA",
+      "b": "AKAP9",
+      "score": 0.968
+    },
+    {
+      "a": "PRKAR2A",
+      "b": "PRKACA",
+      "score": 0.987
+    },
+    {
+      "a": "PRKAR2A",
+      "b": "PRKAR2B",
+      "score": 0.974
+    },
+    {
+      "a": "PRKAR2B",
+      "b": "AKAP9",
+      "score": 0.709
+    },
+    {
+      "a": "PRKAR2B",
+      "b": "PRKACA",
+      "score": 0.983
+    },
+    {
+      "a": "RAB10",
+      "b": "RAB8A",
+      "score": 0.775
+    },
+    {
+      "a": "RAB1A",
+      "b": "GOLGA2",
+      "score": 0.716
+    },
+    {
+      "a": "RAB2A",
+      "b": "VPS39",
+      "score": 0.704
+    },
+    {
+      "a": "RAB7A",
+      "b": "FYCO1",
+      "score": 0.933
+    },
+    {
+      "a": "RAB7A",
+      "b": "VPS39",
+      "score": 0.705
+    },
+    {
+      "a": "RAE1",
+      "b": "NUP88",
+      "score": 0.872
+    },
+    {
+      "a": "RAP1GDS1",
+      "b": "RHOA",
+      "score": 0.822
+    },
+    {
+      "a": "RBX1",
+      "b": "CUL2",
+      "score": 0.999
+    },
+    {
+      "a": "RBX1",
+      "b": "DCAF7",
+      "score": 0.9
+    },
+    {
+      "a": "RBX1",
+      "b": "ELOB",
+      "score": 0.999
+    },
+    {
+      "a": "RBX1",
+      "b": "ELOC",
+      "score": 0.999
+    },
+    {
+      "a": "RBX1",
+      "b": "ZYG11B",
+      "score": 0.947
+    },
+    {
+      "a": "RIPK1",
+      "b": "ELOB",
+      "score": 0.8
+    },
+    {
+      "a": "RIPK1",
+      "b": "ELOC",
+      "score": 0.8
+    },
+    {
+      "a": "RIPK1",
+      "b": "TBK1",
+      "score": 0.944
+    },
+    {
+      "a": "RNF41",
+      "b": "MARK2",
+      "score": 0.734
+    },
+    {
+      "a": "RPL36",
+      "b": "SRP72",
+      "score": 0.869
+    },
+    {
+      "a": "RRP9",
+      "b": "AATF",
+      "score": 0.945
+    },
+    {
+      "a": "RRP9",
+      "b": "MPHOSPH10",
+      "score": 0.995
+    },
+    {
+      "a": "RRP9",
+      "b": "NGDN",
+      "score": 0.957
+    },
+    {
+      "a": "RRP9",
+      "b": "NOL10",
+      "score": 0.957
+    },
+    {
+      "a": "SIL1",
+      "b": "HYOU1",
+      "score": 0.908
+    },
+    {
+      "a": "SNIP1",
+      "b": "CWC27",
+      "score": 0.985
+    },
+    {
+      "a": "SRP19",
+      "b": "RPL36",
+      "score": 0.866
+    },
+    {
+      "a": "SRP19",
+      "b": "SRP54",
+      "score": 0.999
+    },
+    {
+      "a": "SRP19",
+      "b": "SRP72",
+      "score": 0.999
+    },
+    {
+      "a": "SRP54",
+      "b": "RPL36",
+      "score": 0.844
+    },
+    {
+      "a": "SRP54",
+      "b": "SRP72",
+      "score": 0.999
+    },
+    {
+      "a": "TBK1",
+      "b": "TBKBP1",
+      "score": 0.987
+    },
+    {
+      "a": "TIMM10",
+      "b": "TIMM29",
+      "score": 0.981
+    },
+    {
+      "a": "TIMM10",
+      "b": "TIMM8B",
+      "score": 0.738
+    },
+    {
+      "a": "TIMM10",
+      "b": "TIMM9",
+      "score": 0.999
+    },
+    {
+      "a": "TIMM10B",
+      "b": "TIMM10",
+      "score": 0.997
+    },
+    {
+      "a": "TIMM10B",
+      "b": "TIMM29",
+      "score": 0.996
+    },
+    {
+      "a": "TIMM10B",
+      "b": "TIMM8B",
+      "score": 0.72
+    },
+    {
+      "a": "TIMM10B",
+      "b": "TIMM9",
+      "score": 0.991
+    },
+    {
+      "a": "TIMM29",
+      "b": "TIMM9",
+      "score": 0.978
+    },
+    {
+      "a": "TIMM9",
+      "b": "TIMM8B",
+      "score": 0.849
+    },
+    {
+      "a": "TLE1",
+      "b": "TLE3",
+      "score": 0.971
+    },
+    {
+      "a": "TLE5",
+      "b": "TLE1",
+      "score": 0.87
+    },
+    {
+      "a": "TLE5",
+      "b": "TLE3",
+      "score": 0.873
+    },
+    {
+      "a": "TOMM70",
+      "b": "DNAJC11",
+      "score": 0.72
+    },
+    {
+      "a": "TUBGCP3",
+      "b": "TUBGCP2",
+      "score": 0.999
+    },
+    {
+      "a": "UBAP2L",
+      "b": "HDAC2",
+      "score": 0.9
+    },
+    {
+      "a": "VPS39",
+      "b": "VPS11",
+      "score": 0.999
+    },
+    {
+      "a": "WFS1",
+      "b": "ATP1B1",
+      "score": 0.708
+    },
+    {
+      "a": "ZDHHC5",
+      "b": "GOLGA7",
+      "score": 0.982
+    },
+    {
+      "a": "ZYG11B",
+      "b": "CUL2",
+      "score": 0.959
+    },
+    {
+      "a": "ZYG11B",
+      "b": "ELOC",
+      "score": 0.864
+    }
+  ]
+}
