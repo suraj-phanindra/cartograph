@@ -454,7 +454,7 @@ function openFullscreen(st){
   document.getElementById('fs-reset').onclick=()=>molCall(el, v=>v.visual.reset && v.visual.reset({camera:true}));
   fsReturnFocus=document.activeElement;
   ov.classList.remove('hidden');
-  setInert(true);                       // trap focus: background is inert while open
+  refreshInert();  // trap focus: background inert while any dialog is open
   document.body.style.overflow='hidden';
   document.getElementById('fs-close').focus();
 }
@@ -463,13 +463,16 @@ function closeFullscreen(){
   if(ov.classList.contains('hidden')) return false;
   ov.classList.add('hidden');
   document.getElementById('fs-mount').innerHTML='';   // dispose the viewer
-  setInert(false);
+  refreshInert();
   document.body.style.overflow='';
   if(fsReturnFocus && fsReturnFocus.focus) fsReturnFocus.focus();
   return true;
 }
-// make the rest of the app inert (out of tab + a11y tree) while a dialog is open
-function setInert(on){
+// make the rest of the app inert (out of tab + a11y tree) while ANY dialog is open.
+// Derived from state (not a boolean toggle) so nested/overlapping dialogs can never
+// leave the background stuck-inert.
+function refreshInert(){
+  const on = fsOpen() || modalOpen();
   for(const id of ['topbar','main']){ const el=document.getElementById(id); if(el) el.inert=on; }
 }
 function fsOpen(){ return !document.getElementById('struct-fullscreen').classList.contains('hidden'); }
@@ -508,7 +511,7 @@ function openModal(title, actionsHtml, bodyHtml){
   document.getElementById('modal-body').innerHTML=bodyHtml||'';
   modalReturnFocus=document.activeElement;
   const m=document.getElementById('modal'); m.classList.remove('hidden');
-  setInert(true);
+  refreshInert();
   document.getElementById('modal-close').focus();
   return m;
 }
@@ -518,7 +521,7 @@ function closeModal(){
   if(m.classList.contains('hidden')) return false;
   m.classList.add('hidden');
   document.getElementById('modal-body').innerHTML='';
-  setInert(false);
+  refreshInert();
   if(modalReturnFocus && modalReturnFocus.focus) modalReturnFocus.focus();
   return true;
 }
