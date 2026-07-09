@@ -109,7 +109,8 @@ function cyStyle(){
       'text-outline-width':2,'text-outline-color':COL.void,'border-width':2 } },
     { selector:'node[type="viral"]', style:{
       'shape':'hexagon','background-color':COL.viral,'border-color':'#ffd9a8',
-      'text-outline-color':'#3a2a10','color':'#1a1206' } },
+      'font-size':'13px','font-weight':800,'text-outline-width':0,'color':'#231400',
+      'width':'mapData(degree,1,20,34,58)','height':'mapData(degree,1,20,34,58)' } },
     { selector:'node[type="human"]', style:{
       'shape':'ellipse','background-color':'#16233f','border-color':COL.human,'color':COL.ink } },
     { selector:'node.dim', style:{ 'opacity':0.22 } },
