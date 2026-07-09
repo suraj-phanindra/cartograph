@@ -29,6 +29,8 @@ The 3-minute path:
 4. **Locked evaluator** runs in-map: real held-out Gordon edges snap green, misses flash red, and the honest precision shows — **precision@20 = 45%, ROC-AUC = 0.845** on 57 real held-out edges.
 5. **One loop round**: confirm the recovered-true edges, fold them back, re-score the still-hidden edges — **precision@20 0.30 → 0.35** on the remainder.
 
+![the locked evaluator running in-map: real held-out Gordon edges snap green, precision computed live](docs/demo_evaluator.png)
+
 ## The honest headline numbers (computed, not illustrative)
 
 | metric | value | on |
