@@ -12,4 +12,5 @@ cache/
 .DS_Store
 
 .playwright-mcp/
-*.png
+/*.png
+frontend/*.png

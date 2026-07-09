@@ -1,78 +1,100 @@
 # Cartograph
 
-The navigation layer for a protein interaction map. Cartograph predicts the edges that should be there but are not yet drawn, proves each one with the literature and a 3D structure, and measures how often it is right against a locked held-out benchmark.
+The navigation layer for a protein interaction map. Cartograph loads an
+experimentally-derived interactome, **deterministically proposes the edges that
+should be there but are not yet drawn**, proves each one with the literature and
+a 3D structure, and **measures how often it is right against a locked held-out
+benchmark of real edges**.
 
-Built with Claude: Life Sciences (Anthropic x Gladstone). Build track, solo. Due Jul 13, 2026, 9:00 PM ET. Open source (MIT).
+Built with Claude: Life Sciences (Anthropic x Gladstone). Build track, solo. Open source (MIT).
 
-## To build
-Paste `docs/CLAUDE_CODE_KICKOFF.md` into Claude Code at this repo root. It runs the full autonomous workflow (plan, PRDs, implement, test, adversarial review, iterate). The Claude Design prototype of record is `design/Cartograph.dc.html`; read `design/CARRY_FORWARD.md` before building the frontend.
+![the flagship dossier: Orf6 -> RAE1, recovered by topology, confirmed by the experimental 7VPH structure](docs/demo_dossier.png)
 
-## Read these first, in order
-1. `CLAUDE.md` — operational build context, locked decisions, and the non-negotiable rules. Start here.
-2. `docs/Cartograph_7Day_Plan.md` — plan of record: the demo-critical core, the phase-two ladder, and the Day-4 decision gate.
-3. `docs/Cartograph_BUILD_SPEC.md` — architecture, data contracts, module interfaces, and the evaluator spec.
+## The one-screen demo (runs offline, reproducibly)
 
-## What to build (the demo-critical core)
-An interactive SARS-CoV-2 to human interactome. A plain-English query triggers a deterministic prediction of a missing edge; clicking that edge opens a structural dossier (a real 3D structure in Mol*, the interface, a Claude-written mechanism where every clause opens to a paper, and a proposed wet-lab test); a locked evaluator runs in the map so held-out true edges snap green and misses flash red; and one self-improving loop round folds a confirmed edge back in. That is the whole product. Everything else is upside (see the phase-two ladder in the plan).
-
-## Repo map
-```
-cartograph/
-  README.md                 you are here
-  CLAUDE.md                 build context + rules (read first)
-  LICENSE                   MIT
-  .gitignore
-  docs/
-    Cartograph_BUILD_SPEC.md            architecture, data contracts, evaluator spec
-    Cartograph_7Day_Plan.md             plan of record (core vs phase-two, Day-4 gate)
-    Cartograph_Day1_Strategy.md         master decision record + differentiation
-    Cartograph_Winning_Playbook.md      winner analysis + the visual demo design
-    Cartograph_Claude_Design_brief.md   the brief sent to Claude Design
-    Cartograph_Science_Evidence_Checklist.md   how the evidence was gathered
-    Cartograph_evidence_review.md        review + corrections to the evidence pack
-  design/
-    wow_moment_mock.html      visual North Star (open in a browser)
-    README.md                 Claude Design exports drop here
-  evidence/
-    EVIDENCE_MANIFEST.json    catalog + provenance + verification status (read first)
-    gordon2020_edges.csv      GROUND TRUTH: 332 bait->prey edges (graph + evaluator input)
-    gordon2020_counts.json    verified counts + reconciliation
-    demo_protein_shortlist.md ranked demo proteins (Orf6, Orf9b, N top)
-    worked_example_orf6.json  flagship held-out example + cited chain (see honesty note)
-    crispr_gold_standard.csv  27-gene cross-screen consensus (Option B validation)
-    crispr_screens.json       per-screen provenance
-    cartograph_domain.json    domain priors (the moat): complexes, family priors, FP patterns
-    literature_map.md/.csv    subfield landscape (positioning)
-    edge_packs/
-      orf6_nup98.json         cited evidence pack
-      orf9b_tom70.json        cited evidence pack
-      n_g3bp1.json            cited evidence pack
+```bash
+./run.sh            # builds the computed artifact, then serves the demo
+# open http://127.0.0.1:8791/index.html
 ```
 
-## Build order (eval first, demo path first)
-1. Freeze the held-out split and write the locked evaluator harness against `evidence/gordon2020_edges.csv`. This is the first commit.
-2. Load the edge list into networkx. Confirm counts (332 edges, 26 baits).
-3. Enrich with STRING among the prey. Implement degree-normalized L3. Get a baseline evaluator number from structure alone, no LLM. That is the honest floor.
-4. Literature retrieval, cached, plus Reader / Skeptic / Curator subagents that produce a cited hypothesis (they read from `evidence/edge_packs/`).
-5. Close the loop: fold confirmed edges back, re-run the evaluator, capture before and after.
-6. Frontend: the living map (Cytoscape.js), the structural dossier (Mol*), the eval-as-green-edges spectacle.
-7. Bulletproof the 3-minute demo path. Cache everything on it. Rehearse.
-8. Record the video (reserve the last day), write the summary, finalize the repo, submit.
+`run.sh` creates the venv, installs `requirements.txt`, freezes the locked
+evaluator split, loads the cached STRING enrichment, computes the artifact, and
+serves the single-page app. The demo makes **zero live network calls** — every
+structure, citation, and number is baked in at build time.
 
-## Data usage
-Everything in `evidence/` was gathered and verified during the event (provenance in `EVIDENCE_MANIFEST.json`). Use `gordon2020_edges.csv` as the graph and evaluator ground truth. On the demo path, read from `evidence/`, never from a live network call.
+The 3-minute path:
+1. **Ask the map** — "what interaction is Orf6 missing?"
+2. **Deterministic L3** walks a genuine length-3 path `Orf6 → NUP98 → NUP214 → RAE1` and proposes the missing edge `Orf6 → RAE1`.
+3. **Structural dossier** opens: the real experimental structure (PDB **7VPH**) in Mol\*, structure-derived interface residues (E55 / M58 / D61), a mechanism where **every clause opens to a real PubMed paper**, and a proposed wet-lab test.
+4. **Locked evaluator** runs in-map: real held-out Gordon edges snap green, misses flash red, and the honest precision shows — **precision@20 = 45%, ROC-AUC = 0.845** on 57 real held-out edges.
+5. **One loop round**: confirm the recovered-true edges, fold them back, re-score the still-hidden edges — **precision@20 0.30 → 0.35** on the remainder.
 
-## Design
-`design/wow_moment_mock.html` is the visual target. Claude Design exports will be added to `design/`; wire the frontend to match them and the brief.
+## The honest headline numbers (computed, not illustrative)
 
-## Integrity rules (non-negotiable, these earn scientist trust)
-- The graph proposes edges deterministically. Claude never invents an edge from its weights.
-- Every claim opens to a paper. A hypothesis with no citation does not render.
-- Predicted structures are always labeled predicted, with a confidence number. Never present a prediction as experimental fact.
-- The evaluator is locked and separate from the agents, committed before any prediction.
+| metric | value | on |
+|---|---|---|
+| precision@20 (baseline, topology only) | **0.45** | 57 real held-out Gordon edges |
+| precision@10 | 0.30 | " |
+| recall@50 | 0.93 | " |
+| ROC-AUC | **0.845** | all candidate edges |
+| loop round (precision@20 on remaining) | 0.30 → **0.35** | after folding back 4 confirmed edges |
+| flagship `Orf6–RAE1` | recovered, L3 rank 7/8 | via genuine length-3 path |
 
-## Flagship honesty check (do not skip)
-`evidence/worked_example_orf6.json` labels the path ORF6 -> NUP98 -> RAE1 as "L3", but that path is length 2 (a common-neighbor signal, the thing L3 is meant to beat). Recover ORF6-RAE1 via a genuine length-3 path (enrich STRING around the nucleoporins) and report the L3 rank, or call the 2-edge case complex completion. Full detail in `CLAUDE.md` and `docs/Cartograph_evidence_review.md`.
+Only 14 of 57 held-out edges are reachable by a length-3 path at all — that is
+the honest topology ceiling on this sparse bipartite AP-MS graph. When L3 can
+reach a held-out edge, its median rank among its bait's candidates is **2**.
+
+## Integrity rules (non-negotiable, and enforced by tests)
+
+- **Deterministic critical path.** The graph proposes edges via degree-normalized L3 (`backend/predict/l3.py`). Claude reads, adjudicates, explains. Claude never invents an edge from model weights.
+- **Eval-first, locked, separate.** The held-out split was frozen and committed as the **first commit**, in `backend/eval/`, with a sha256 checksum. A test (`test_no_import_of_locked_evaluator`) proves the predictor and reasoning layers cannot import it.
+- **No citation, no render.** Every mechanistic clause references a PMID that must exist in the verified edge pack; if it does not, the clause is dropped (`backend/reason/hypothesis.py`).
+- **Predicted is always labeled predicted.** Experimental structures (7VPH, 7DHG) and predicted models (AlphaFold, with a real pLDDT) are never conflated.
+- **Interface residues are structure-derived**, computed from the deposited coordinates (`backend/structure/interface.py`), not copied from prose. The prototype's wrong ORF9b S55/K46 were repaired to the real contacts S53/R58/E65.
+
+## Architecture
+
+One deterministic engine, exposed as a computed artifact the frontend loads.
+
+```
+backend/
+  config.py         single source of truth (seed, STRING pin, demo edges)
+  graph/            load.py (332 edges/26 baits), enrich.py (STRING v12.0, cached)
+  predict/          l3.py — degree-normalized L3 (Kovacs 2019), deterministic
+  eval/             LOCKED: freeze_split.py + heldout.frozen.json (committed first),
+                    evaluator.py (precision@k / recall / ROC-AUC / AP)
+  reason/           hypothesis.py — Reader / Skeptic / Curator, no-citation-no-render
+  structure/        interface.py (contacts from coords), resolve.py (dossier blocks)
+  build_artifact.py runs the whole engine -> frontend/data/cartograph_computed.json
+  tests/            24 tests: counts, determinism, L3, eval, boundary, honesty
+frontend/           index.html + app.js + style.css (Cytoscape + Mol*), vendored libs
+evidence/           (provided) ground truth + cited packs + domain priors
+```
+
+Data flow: `gordon2020_edges.csv` → networkx graph → STRING enrichment → L3
+candidates → locked evaluator scores them → reasoning layer assembles cited
+dossiers → `build_artifact.py` freezes it all into one JSON → the frontend
+animates the demo.
+
+## Commands
+
+```bash
+./run.sh            # build + serve the demo
+./run.sh build      # just rebuild frontend/data/cartograph_computed.json
+./run.sh test       # run the test suite (24 tests)
+```
+
+Reproducibility: the STRING enrichment is pinned to v12.0 (physical channel,
+score ≥ 700) and cached in `evidence/`; the held-out seed is 42; the computed
+artifact is **byte-identical across runs** regardless of Python's hash seed.
+Network is needed exactly once (STRING + the three structures) and the results
+are committed so the demo runs offline forever after.
+
+## What is real vs. what is a disclosed simplification
+
+- **Real:** the graph, the STRING enrichment, the L3 predictor, the locked evaluator and every number it reports, the two experimental structures (7VPH, 7DHG) and their computed interface residues, every citation (verified against NCBI), the AlphaFold-predicted G3BP1 model and its pLDDT.
+- **Disclosed simplification:** the reasoning-layer mechanism prose is Claude-authored at build time, grounded strictly in the verified packs (no live API on the demo path). The N–G3BP1 3D is the predicted G3BP1 *monomer* (the complex is not deposited), labeled predicted, with no fabricated contact residues. The map renders a real induced subgraph of the flagship neighborhoods for legibility; the headline metrics are computed on the full held-out set.
 
 ## License
-MIT. All work in this repository is produced during the hackathon.
+
+MIT. All work produced during the hackathon.
