@@ -1,0 +1,81 @@
+{
+  "Orf6|RAE1": {
+    "kind": "experimental",
+    "source": "PDB 7VPH",
+    "pdb": "7VPH",
+    "url": "data/structures/7VPH.cif",
+    "method": "X-ray diffraction",
+    "resolution_A": 2.8,
+    "confidence": {
+      "type": "resolution",
+      "value": 2.8,
+      "unit": "\u00c5 (X-ray)"
+    },
+    "chains": "SARS-CoV-2 ORF6 C-terminal tail + human RAE1 + human NUP98",
+    "interface_residues": [
+      "E55",
+      "Q56",
+      "M58",
+      "E59",
+      "D61"
+    ],
+    "interface_source": "computed: ORF6 heavy-atom contacts with RAE1 <= 3.0 \u00c5 in PDB 7VPH",
+    "note": "Experimental structure. ORF6 directly contacts RAE1 at the mRNA-export groove; the graph independently re-proposed this held-out edge and the structure confirms it."
+  },
+  "Orf6|NUP98": {
+    "kind": "experimental",
+    "source": "PDB 7VPH",
+    "pdb": "7VPH",
+    "url": "data/structures/7VPH.cif",
+    "method": "X-ray diffraction",
+    "resolution_A": 2.8,
+    "confidence": {
+      "type": "resolution",
+      "value": 2.8,
+      "unit": "\u00c5 (X-ray)"
+    },
+    "chains": "SARS-CoV-2 ORF6 C-terminal tail + human NUP98",
+    "interface_residues": [],
+    "interface_source": "computed: ORF6 heavy-atom contacts with NUP98 <= 3.0 \u00c5 in PDB 7VPH",
+    "note": "Experimental; known AP-MS edge shown for calibration."
+  },
+  "Orf9b|TOMM70": {
+    "kind": "experimental",
+    "source": "PDB 7DHG",
+    "pdb": "7DHG",
+    "url": "data/structures/7DHG.cif",
+    "method": "X-ray diffraction",
+    "resolution_A": 2.2,
+    "confidence": {
+      "type": "resolution",
+      "value": 2.2,
+      "unit": "\u00c5 (X-ray)"
+    },
+    "chains": "SARS-CoV-2 ORF9b + human TOM70 (TOMM70)",
+    "interface_residues": [
+      "I44",
+      "S53",
+      "R58",
+      "E65"
+    ],
+    "interface_source": "computed: ORF9b heavy-atom contacts with TOM70 <= 3.0 \u00c5 in PDB 7DHG",
+    "note": "Experimental. S53 (the phospho-regulated serine) confirmed as a real contact; the prototype's S55/K46 are NOT contacts and were repaired."
+  },
+  "N|G3BP1": {
+    "kind": "predicted",
+    "source": "AlphaFold DB (AF-Q13283, G3BP1)",
+    "pdb": null,
+    "model_id": "AF-Q13283-F1",
+    "url": "data/structures/AF-Q13283-G3BP1.cif",
+    "method": "AlphaFold2 monomer (predicted)",
+    "confidence": {
+      "type": "pLDDT",
+      "value": 66.8,
+      "unit": "mean pLDDT"
+    },
+    "chains": "human G3BP1 (predicted monomer; the N\u2013G3BP1 complex is not deposited)",
+    "interface_residues": [],
+    "interface_source": "no deposited complex; specific N-protein contact residues are not shown (would be unverified). Binding is via the literature-verified ITFG/\u03a6xFG G3BP1-binding motif.",
+    "note": "PREDICTED structure of the human G3BP1 target, shown to demonstrate the predicted-vs-experimental integrity path. Not the complex; not experimental fact."
+  }
+}
