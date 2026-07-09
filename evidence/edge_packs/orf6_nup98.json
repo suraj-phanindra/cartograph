@@ -1,0 +1,73 @@
+{
+  "edge": "Orf6\u2013NUP98",
+  "papers": [
+    {
+      "pmid": "33097660",
+      "doi": "10.1073/pnas.2016650117",
+      "one_line_mechanism": "SARS-CoV-2 Orf6 binds the Nup98\u2013Rae1 complex at the nuclear pore to block STAT1/STAT2 nuclear import, antagonizing interferon signaling (Miorin et al. 2020 PNAS).",
+      "title": "SARS-CoV-2 Orf6 hijacks Nup98 to block STAT nuclear import and antagonize interferon signaling.",
+      "journal": "Proc Natl Acad Sci U S A",
+      "year": "2020"
+    },
+    {
+      "pmid": "33849972",
+      "doi": "10.1128/mBio.00065-21",
+      "one_line_mechanism": "Orf6 docks onto the Rae1\u2013Nup98 nucleoporin complex and disrupts bidirectional nucleocytoplasmic transport, inhibiting both host mRNA export and protein import.",
+      "title": "SARS-CoV-2 ORF6 Disrupts Bidirectional Nucleocytoplasmic Transport through Interactions with Rae1 and Nup98.",
+      "journal": "mBio",
+      "year": "2021"
+    },
+    {
+      "pmid": "35970938",
+      "doi": "10.1038/s41467-022-32489-5",
+      "one_line_mechanism": "Crystal structure of the SARS-CoV-2 Orf6 C-terminus bound to Rae1\u2013Nup98 shows Orf6 inserts a methionine into the Rae1 mRNA-binding groove to sterically block nucleocytoplasmic transport.",
+      "title": "Structural basis for Sarbecovirus ORF6 mediated blockage of nucleocytoplasmic transport.",
+      "journal": "Nat Commun",
+      "year": "2022"
+    },
+    {
+      "pmid": "38507240",
+      "doi": "10.1091/mbc.E23-10-0386",
+      "one_line_mechanism": "Orf6 is anchored within the nuclear pore complex by Rae1 (not free Nup98), and this positioning is required for its inhibition of nucleocytoplasmic transport.",
+      "title": "SARS-CoV-2 Orf6 is positioned in the nuclear pore complex by Rae1 to inhibit nucleocytoplasmic transport.",
+      "journal": "Mol Biol Cell",
+      "year": "2024"
+    },
+    {
+      "pmid": "33360543",
+      "doi": "10.1016/j.bbrc.2020.11.115",
+      "one_line_mechanism": "Overexpression of SARS-CoV-2 Orf6 physically dislocates RAE1 and NUP98 away from the nuclear pore complex, disrupting nuclear pore integrity.",
+      "title": "Overexpression of SARS-CoV-2 protein ORF6 dislocates RAE1 and NUP98 from the nuclear pore complex.",
+      "journal": "Biochem Biophys Res Commun",
+      "year": "2021"
+    }
+  ],
+  "neighbor_edge": "NUP98\u2013RAE1",
+  "neighbor_papers": [
+    {
+      "pmid": "20498086",
+      "doi": "10.1073/pnas.1005389107",
+      "one_line_mechanism": "Structural and functional analysis of the Nup98\u2013Rae1 complex defines the GLEBS-motif interface through which Rae1 binds Nup98 to form the mRNA-export module targeted by viral proteins.",
+      "title": "Structural and functional analysis of the interaction between the nucleoporin Nup98 and the mRNA export factor Rae1.",
+      "journal": "Proc Natl Acad Sci U S A",
+      "year": "2010"
+    },
+    {
+      "pmid": "10209021",
+      "doi": "10.1083/jcb.145.2.237",
+      "one_line_mechanism": "RAE1 is a shuttling mRNA export factor that binds directly to a GLEBS-like motif in the nucleoporin Nup98, establishing the Rae1\u2013Nup98 mRNA-export complex.",
+      "title": "RAE1 is a shuttling mRNA export factor that binds to a GLEBS-like NUP98 motif at the nuclear pore complex through multiple domains.",
+      "journal": "J Cell Biol",
+      "year": "1999"
+    },
+    {
+      "pmid": "33033226",
+      "doi": "10.1073/pnas.2007774117",
+      "one_line_mechanism": "Herpesvirus (HSV-1) protein ORF10 selectively inhibits host mRNA nuclear export by binding the Rae1\u2013Nup98 complex, the same nucleoporin module later targeted by SARS-CoV-2 Orf6.",
+      "title": "Molecular mechanism underlying selective inhibition of mRNA nuclear export by herpesvirus protein ORF10.",
+      "journal": "Proc Natl Acad Sci U S A",
+      "year": "2020"
+    }
+  ],
+  "confidence": "high"
+}

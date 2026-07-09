@@ -1,0 +1,73 @@
+{
+  "edge": "N\u2013G3BP1",
+  "papers": [
+    {
+      "pmid": "34780058",
+      "doi": "10.1002/1873-3468.14229",
+      "one_line_mechanism": "SARS-CoV-2 nucleocapsid protein interacts with stress-granule proteins including G3BP1 and undergoes phase separation, sequestering the G3BP scaffold to modulate stress-granule assembly.",
+      "title": "SARS-CoV-2 nucleocapsid protein interacts with immunoregulators and stress granules and phase separates to form liquid droplets.",
+      "journal": "FEBS Lett",
+      "year": "2021"
+    },
+    {
+      "pmid": "33495715",
+      "doi": "10.1016/j.scib.2021.01.013",
+      "one_line_mechanism": "SARS-CoV-2 N protein phase-separates with G3BP1/G3BP2, disassembling host stress granules by co-condensing the G3BP scaffold away from stress-granule seeds.",
+      "title": "SARS-CoV-2 nucleocapsid protein phase separates with G3BPs to disassemble stress granules and facilitate viral production.",
+      "journal": "Sci Bull (Beijing)",
+      "year": "2021"
+    },
+    {
+      "pmid": "35652658",
+      "doi": "10.1128/jvi.00412-22",
+      "one_line_mechanism": "SARS-CoV-2 N protein antagonizes stress-granule assembly through its interaction with G3BP1, suppressing the stress-granule-associated interferon response.",
+      "title": "SARS-CoV-2 N Protein Antagonizes Stress Granule Assembly and IFN Production by Interacting with G3BPs to Facilitate Viral Replication.",
+      "journal": "J Virol",
+      "year": "2022"
+    },
+    {
+      "pmid": "39638802",
+      "doi": "10.1038/s41467-024-54996-3",
+      "one_line_mechanism": "SARS-CoV-2 N protein recruits G3BP to double-membrane vesicles at viral replication sites, relocalizing the stress-granule scaffold to promote replication.",
+      "title": "SARS-CoV-2 N protein recruits G3BP to double membrane vesicles to promote translation of viral mRNAs.",
+      "journal": "Nat Commun",
+      "year": "2024"
+    },
+    {
+      "pmid": "40936503",
+      "doi": "10.1093/ve/veaf063",
+      "one_line_mechanism": "Betacoronavirus nucleocapsid proteins convergently evolved an ITFG (\u03a6xFG-like) G3BP1-binding motif that mediates the N\u2013G3BP1 interaction and stress-granule antagonism.",
+      "title": "Convergent evolution of the G3BP1-binding motif in betacoronavirus nucleocapsid proteins.",
+      "journal": "Virus Evol",
+      "year": "2025"
+    }
+  ],
+  "neighbor_edge": "G3BP1\u2013G3BP2 (stress-granule core complex)",
+  "neighbor_papers": [
+    {
+      "pmid": "32302571",
+      "doi": "10.1016/j.cell.2020.03.046",
+      "one_line_mechanism": "G3BP1 acts as a tunable molecular switch whose RNA-dependent conformational change triggers liquid\u2013liquid phase separation to nucleate stress granules, with G3BP2 acting redundantly.",
+      "title": "G3BP1 Is a Tunable Switch that Triggers Phase Separation to Assemble Stress Granules.",
+      "journal": "Cell",
+      "year": "2020"
+    },
+    {
+      "pmid": "32302572",
+      "doi": "10.1016/j.cell.2020.03.049",
+      "one_line_mechanism": "RNA-induced conformational switching and clustering of the G3BP1/G3BP2 dimer drives stress-granule condensation via a protein\u2013RNA percolation network.",
+      "title": "RNA-Induced Conformational Switching and Clustering of G3BP Drive Stress Granule Assembly by Condensation.",
+      "journal": "Cell",
+      "year": "2020"
+    },
+    {
+      "pmid": "32302570",
+      "doi": "10.1016/j.cell.2020.03.050",
+      "one_line_mechanism": "Competing protein\u2013RNA interaction networks centered on G3BP1/G3BP2 control multiphase stress-granule organization, defining G3BP as the central assembly node.",
+      "title": "Competing Protein-RNA Interaction Networks Control Multiphase Intracellular Organization.",
+      "journal": "Cell",
+      "year": "2020"
+    }
+  ],
+  "confidence": "high"
+}

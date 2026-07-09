@@ -1,0 +1,44 @@
+{
+  "Wei 2020/2021 Cell": {
+    "pmid": "33147444",
+    "doi": "10.1016/j.cell.2020.10.028",
+    "cell_line": "Vero-E6 (+ Calu-3 secondary)",
+    "n_top_hits_captured": 18
+  },
+  "Daniloski 2020 Cell": {
+    "pmid": "33147445",
+    "doi": "10.1016/j.cell.2020.10.030",
+    "cell_line": "A549-ACE2",
+    "n_top_hits_captured": 40
+  },
+  "Schneider 2020 Cell": {
+    "pmid": "33382968",
+    "doi": "10.1016/j.cell.2020.12.006",
+    "cell_line": "Huh7.5",
+    "n_top_hits_captured": 57
+  },
+  "Wang 2020 Cell": {
+    "pmid": "33333024",
+    "doi": "10.1016/j.cell.2020.12.004",
+    "cell_line": "Huh7.5.1 (+ A549-ACE2, Calu-3)",
+    "n_top_hits_captured": 28
+  },
+  "Baggen 2021 Nat Genet": {
+    "pmid": "33686287",
+    "doi": "10.1038/s41588-021-00805-2",
+    "cell_line": "Huh7",
+    "n_top_hits_captured": 11
+  },
+  "Zhu 2021 Nat Commun": {
+    "pmid": "33574281",
+    "doi": "10.1038/s41467-021-21213-4",
+    "cell_line": "HeLa-ACE2",
+    "n_top_hits_captured": 14
+  },
+  "Biering 2022 Nat Genet": {
+    "pmid": "35879412",
+    "doi": "10.1038/s41588-022-01131-x",
+    "cell_line": "Calu-3",
+    "n_top_hits_captured": 30
+  }
+}

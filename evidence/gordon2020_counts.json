@@ -1,0 +1,72 @@
+{
+  "source": "IntAct/IMEx record IM-27814 for Gordon et al. 2020 (PMID 32353859, DOI 10.1038/s41586-020-2286-9), retrieved via EBI PSICQUIC MITAB2.7",
+  "retrieved": "2026-07-08",
+  "high_confidence_interactions": 332,
+  "viral_baits": 26,
+  "bait_list": [
+    "E",
+    "M",
+    "N",
+    "Nsp1",
+    "Nsp10",
+    "Nsp11",
+    "Nsp12",
+    "Nsp13",
+    "Nsp14",
+    "Nsp15",
+    "Nsp2",
+    "Nsp4",
+    "Nsp5",
+    "Nsp6",
+    "Nsp7",
+    "Nsp8",
+    "Nsp9",
+    "Orf10",
+    "Orf3a",
+    "Orf3b",
+    "Orf6",
+    "Orf7a",
+    "Orf8",
+    "Orf9b",
+    "Orf9c",
+    "Spike"
+  ],
+  "unique_human_preys": 332,
+  "preys_shared_across_baits": 0,
+  "canonical_numbers_check": {
+    "baits_26": {
+      "expected": 26,
+      "observed": 26,
+      "match": true,
+      "note": "Match. IntAct collapses Nsp1-16 into the pp1ab polyprotein (P0DTD1) by default; recovered per-Nsp identity via UniProt PRO_ chain feature ids to reconstruct all 26 named baits."
+    },
+    "interactions_332": {
+      "expected": 332,
+      "observed": 332,
+      "match": true
+    },
+    "druggable_66": {
+      "expected": 66,
+      "observed": 66,
+      "match": true,
+      "note": "Confirmed from the paper full text (abstract): '66 druggable human proteins or host factors targeted by 69 compounds (of which 29 drugs are approved [FDA])'. This is a curated druggability annotation from Gordon Table, separate from the 332 PPI interaction record."
+    },
+    "drugs_69": {
+      "expected": 69,
+      "observed": 69,
+      "match": true,
+      "note": "Confirmed from paper: 69 compounds targeting the 66 proteins; 29 are FDA-approved drugs."
+    }
+  },
+  "demo_anchor_edges_confirmed": {
+    "Orf6-NUP98": true,
+    "Orf6-RAE1": true,
+    "Orf9b-TOMM70": true,
+    "N-G3BP1": true,
+    "N-G3BP2": true,
+    "E-BRD2": true,
+    "E-BRD4": true,
+    "Orf3a-VPS39": true
+  },
+  "worked_example_validity": "Orf6 binds BOTH NUP98 and RAE1 in ground truth; holding out Orf6-RAE1 while keeping Orf6-NUP98 and adding the NUP98-RAE1 human complex edge (STRING) gives a valid L3 recovery path."
+}

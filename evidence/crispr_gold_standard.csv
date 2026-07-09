@@ -1,0 +1,28 @@
+gene,n_screens_hit,screens,in_gordon_prey
+ACE2,6,Biering 2022 Nat Genet;Daniloski 2020 Cell;Schneider 2020 Cell;Wang 2020 Cell;Wei 2020/2021 Cell;Zhu 2021 Nat Commun,False
+CTSL,4,Daniloski 2020 Cell;Schneider 2020 Cell;Wei 2020/2021 Cell;Zhu 2021 Nat Commun,False
+EXT1,3,Baggen 2021 Nat Genet;Schneider 2020 Cell;Wang 2020 Cell,False
+TMEM106B,3,Baggen 2021 Nat Genet;Schneider 2020 Cell;Wang 2020 Cell,False
+B3GALT6,2,Schneider 2020 Cell;Wang 2020 Cell,False
+B3GAT3,2,Schneider 2020 Cell;Wang 2020 Cell,False
+B4GALT7,2,Schneider 2020 Cell;Wang 2020 Cell,False
+CCDC22,2,Daniloski 2020 Cell;Zhu 2021 Nat Commun,False
+COMMD3,2,Daniloski 2020 Cell;Zhu 2021 Nat Commun,False
+EXOC1,2,Schneider 2020 Cell;Wang 2020 Cell,False
+EXOC2,2,Schneider 2020 Cell;Wang 2020 Cell,False
+EXOC4,2,Schneider 2020 Cell;Wang 2020 Cell,False
+EXT2,2,Schneider 2020 Cell;Wang 2020 Cell,False
+EXTL3,2,Schneider 2020 Cell;Wang 2020 Cell,False
+MBTPS1,2,Schneider 2020 Cell;Wang 2020 Cell,False
+MBTPS2,2,Schneider 2020 Cell;Wang 2020 Cell,False
+NDST1,2,Schneider 2020 Cell;Wang 2020 Cell,False
+NPC1,2,Daniloski 2020 Cell;Zhu 2021 Nat Commun,False
+PIK3C3,2,Baggen 2021 Nat Genet;Daniloski 2020 Cell,False
+SCAP,2,Schneider 2020 Cell;Wang 2020 Cell,True
+SLC35B2,2,Schneider 2020 Cell;Wang 2020 Cell,False
+TMEM41B,2,Baggen 2021 Nat Genet;Schneider 2020 Cell,False
+VAC14,2,Schneider 2020 Cell;Wang 2020 Cell,False
+VPS29,2,Daniloski 2020 Cell;Zhu 2021 Nat Commun,False
+VPS35,2,Daniloski 2020 Cell;Zhu 2021 Nat Commun,False
+WDR81,2,Daniloski 2020 Cell;Zhu 2021 Nat Commun,False
+XYLT2,2,Schneider 2020 Cell;Wang 2020 Cell,False

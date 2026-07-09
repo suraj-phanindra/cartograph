@@ -1,0 +1,79 @@
+{
+  "held_out_edge": "Orf6-RAE1",
+  "kept_edge": "Orf6-NUP98",
+  "bridge_edge": "NUP98-RAE1",
+  "chain": [
+    {
+      "link": "Orf6-NUP98 (viral bait -> human prey; KEPT edge)",
+      "claim": "SARS-CoV-2 Orf6 binds the nucleoporin Nup98. Orf6's C-terminal acidic tail docks onto the Nup98-Rae1 complex; Miorin et al. show Orf6 hijacks Nup98 to block STAT1/STAT2 nuclear import and antagonize interferon signaling. Present as a high-confidence AP-MS interaction in the Gordon interactome.",
+      "pmids": [
+        "32353859",
+        "33097660",
+        "33849972",
+        "35970938"
+      ],
+      "dois": [
+        "10.1038/s41586-020-2286-9",
+        "10.1073/pnas.2016650117",
+        "10.1128/mBio.00065-21",
+        "10.1038/s41467-022-32489-5"
+      ]
+    },
+    {
+      "link": "Orf6-RAE1 (viral bait -> human prey; HELD-OUT edge to recover)",
+      "claim": "SARS-CoV-2 Orf6 also directly engages Rae1. Addetia et al. (mBio) show Orf6 interacts with Rae1 (and Nup98) to disrupt bidirectional nucleocytoplasmic transport; Li et al. (Mol Biol Cell) show Orf6 is positioned in the nuclear pore complex by Rae1; Kehrer/Gao structural work resolves the Orf6 C-terminus bound at the Rae1-Nup98 interface.",
+      "pmids": [
+        "33849972",
+        "38507240",
+        "35970938",
+        "35096974"
+      ],
+      "dois": [
+        "10.1128/mBio.00065-21",
+        "10.1091/mbc.E23-10-0386",
+        "10.1038/s41467-022-32489-5",
+        "10.3389/fmolb.2021.813248"
+      ]
+    },
+    {
+      "link": "NUP98-RAE1 (human-human bridge; STRING edge that enables L3 recovery)",
+      "claim": "Nup98 and Rae1 form a documented, conserved mRNA-export complex at the nuclear pore. Rae1 (mrnp41) is a shuttling mRNA export factor that binds a GLEBS-like motif of Nup98 (Pritchard 1999); Ren et al. solved the crystal structure of the Nup98-Rae1 complex (2010); the same Rae1-Nup98 nucleic-acid-binding surface is targeted by viral antagonists such as VSV matrix protein (Quan 2014), the mechanistic precedent Orf6 mimics.",
+      "pmids": [
+        "10209021",
+        "20498086",
+        "24927547"
+      ],
+      "dois": [
+        "10.1083/jcb.145.2.237",
+        "10.1073/pnas.1005389107",
+        "10.1073/pnas.1409076111"
+      ]
+    }
+  ],
+  "mechanism_summary": "Rae1 and Nup98 form a conserved heterodimeric mRNA-export platform at the cytoplasmic face of the nuclear pore complex (Pritchard 1999 PMID 10209021; Ren 2010 PMID 20498086). SARS-CoV-2 Orf6 docks its short acidic C-terminal tail (Met58/di-acidic motif) directly onto this Rae1-Nup98 complex, occupying the same interface used by cellular transport factors and by the VSV matrix protein (Quan 2014 PMID 24927547). By tethering to Rae1-Nup98 at the pore, Orf6 blocks bidirectional nucleocytoplasmic transport (Addetia 2021 PMID 33849972; Li 2024 PMID 38507240), preventing import of activated STAT1/STAT2 and thereby antagonizing type I/III interferon signaling (Miorin 2020 PMID 33097660). Because Orf6 binds BOTH partners of the same human complex, holding out Orf6-RAE1 while keeping Orf6-NUP98 and adding the human NUP98-RAE1 bridge yields the length-3 path Orf6 -> NUP98 -> RAE1, so degree-normalized L3 recovers the held-out Orf6-RAE1 edge. The bridge is mechanistically real (a physical complex), not a coincidental network shortcut.",
+  "backup_example": {
+    "held_out_edge": "Orf9b-TOMM70",
+    "note": "Alternative worked example in a mitochondrial/innate-immunity neighborhood.",
+    "chain": [
+      {
+        "link": "Orf9b-TOMM70 (viral bait -> human prey)",
+        "claim": "SARS-CoV-2 Orf9b binds the mitochondrial import receptor TOM70 (TOMM70). Reported in the Gordon AP-MS map and resolved structurally (cryo-EM Orf9b-Tom70) in Gordon 2020 Science; Jiang 2020 shows Orf9b suppresses type I interferon by targeting TOM70; Orf9b binding blocks the TOM70-HSP90 interaction needed for MAVS/TBK1-IRF3 signaling.",
+        "pmids": [
+          "32353859",
+          "33060197",
+          "32728199",
+          "35643212"
+        ],
+        "dois": [
+          "10.1038/s41586-020-2286-9",
+          "10.1126/science.abe9403",
+          "10.1038/s41423-020-0514-8",
+          "10.1016/j.biochi.2022.05.016"
+        ]
+      }
+    ],
+    "candidate_bridge": "TOMM70-HSP90AA1 (human chaperone-receptor interaction) would serve as the L3 bridge if Orf9b-TOMM70 were held out and an Orf9b->HSP90->TOMM70 path exists in the enriched graph.",
+    "mechanism_summary": "Orf9b occupies the substrate-binding pocket of TOM70, displacing HSP90 and blunting TOM70-dependent activation of the MAVS antiviral signaling axis, suppressing type I IFN (Jiang 2020 PMID 32728199; Ayinde 2022 PMID 35643212)."
+  },
+  "verification_method": "Every PMID resolved via NCBI E-utilities esummary (db=pubmed, JSON); each record's title and DOI were read from the same authoritative PubMed record, co-verifying PMID<->DOI<->title. PMC8092196 resolved to PMID 33849972 / DOI 10.1128/mBio.00065-21 via NCBI ID Converter."
+}

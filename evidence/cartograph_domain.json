@@ -1,0 +1,520 @@
+{
+  "_description": "Cartograph biology-priors domain file. Priors for scoring candidate SARS-CoV-2 viral\u2013host PPI edges. Grounded in the Gordon et al. 2020 Nature AP-MS map (26 baits, 332 hi-confidence edges) enriched with human-human PPIs. Every PMID/DOI verified via NCBI E-utilities esummary + CrossRef.",
+  "_provenance": {
+    "ground_truth": "Gordon et al. 2020 Nature, PMID 32353859, DOI 10.1038/s41586-020-2286-9 (IMEx IM-27814)",
+    "prey_source": "prey_gene column of gordon2020_edges.csv (332 unique human preys)",
+    "verification": "All identifiers confirmed with NCBI E-utilities esummary (PubMed) and CrossRef works API on the date of assembly."
+  },
+  "known_prey_complexes": [
+    {
+      "name": "NUP98\u2013RAE1 mRNA export complex",
+      "members": [
+        "NUP98",
+        "RAE1"
+      ],
+      "corum_reactome": "CORUM: Nup98-Rae1; Reactome mRNA nuclear export",
+      "evidence_pmids": [
+        35970938,
+        35096974
+      ],
+      "evidence_dois": [
+        "10.1038/s41467-022-32489-5",
+        "10.3389/fmolb.2021.813248"
+      ],
+      "relevance": "Both are Orf6 prey and form an obligate heterodimer at the nuclear pore mediating mRNA export; SARS-CoV/CoV-2 Orf6 binds the RAE1\u2013NUP98 interface to block nucleocytoplasmic transport and antagonize interferon. High-confidence anchor edge; a candidate touching one member strongly implies the other.",
+      "n_members_in_map": 2
+    },
+    {
+      "name": "Nuclear pore complex (nucleoporins)",
+      "members": [
+        "NUP210",
+        "NUP214",
+        "NUP54",
+        "NUP58",
+        "NUP62",
+        "NUP88",
+        "NUP98",
+        "RAE1"
+      ],
+      "corum_reactome": "CORUM/Reactome: Nuclear pore complex; NUP54/58/62 central FG-channel subcomplex",
+      "evidence_pmids": [
+        25938906
+      ],
+      "evidence_dois": [
+        "10.1016/j.ceb.2015.04.009"
+      ],
+      "relevance": "Nsp9 prey are enriched for FG-nucleoporins (NUP54/58/62/88/214), Nsp4 additionally captured the transmembrane nucleoporin NUP210, and Orf6 captured NUP98/RAE1. Nucleoporins are strongly co-complexed; candidates within this set are prior-boosted, but note FG-nups are also known AP-MS sticky proteins (see false-positive patterns).",
+      "n_members_in_map": 8
+    },
+    {
+      "name": "HOPS / CORVET endolysosomal tethering complex",
+      "members": [
+        "VPS11",
+        "VPS39"
+      ],
+      "corum_reactome": "CORUM: HOPS complex (VPS11/16/18/33A/39/41); CORVET shares VPS11/16/18/33A core",
+      "evidence_pmids": [
+        40187049
+      ],
+      "evidence_dois": [
+        "10.1016/j.ceb.2025.102504"
+      ],
+      "relevance": "VPS11 (shared core) and VPS39 (HOPS-specific) are Orf3a prey. Full HOPS is a hexamer (VPS11/16/18/33A/39/41); only VPS11/VPS39 were captured here, so VPS16/VPS18/VPS33A/VPS41 are high-priority missing-edge candidates for Orf3a. Orf3a modulation of HOPS impairs autophagosome\u2013lysosome fusion.",
+      "n_members_in_map": 2
+    },
+    {
+      "name": "Stress-granule G3BP nucleating core",
+      "members": [
+        "G3BP1",
+        "G3BP2"
+      ],
+      "corum_reactome": "CORUM: G3BP1/G3BP2-containing stress granule assemblies",
+      "evidence_pmids": [
+        38492217
+      ],
+      "evidence_dois": [
+        "10.1016/j.celrep.2024.113965"
+      ],
+      "relevance": "G3BP1 and G3BP2 are paralogous stress-granule nucleators and both N-protein prey. SARS-CoV-2 N binds G3BP1/2 to disassemble/sequester stress granules; other N prey (PABPC1/PABPC4, LARP1, MOV10, UPF1) are RNA-granule associated, so N candidates in this RNP set are prior-boosted.",
+      "n_members_in_map": 2
+    },
+    {
+      "name": "TOM/TIM mitochondrial protein-import machinery",
+      "members": [
+        "TOMM70",
+        "TIMM9",
+        "TIMM10",
+        "TIMM10B",
+        "TIMM29"
+      ],
+      "corum_reactome": "CORUM: TIM9-TIM10 complex; Reactome mitochondrial protein import (TOM/TIM)",
+      "evidence_pmids": [
+        32353859
+      ],
+      "evidence_dois": [
+        "10.1038/s41586-020-2286-9"
+      ],
+      "relevance": "TOMM70 (Orf9b) is the outer-membrane import receptor; the small TIM chaperones (TIMM9/10/10B/29, Nsp4 prey) form the intermembrane-space carrier pathway. Orf9b binds TOMM70 to suppress MAVS/interferon signaling. TOMM70 is a documented anchor edge.",
+      "n_members_in_map": 5
+    },
+    {
+      "name": "CRL2 Cullin-RING ubiquitin ligase (Elongin BC\u2013CUL2\u2013RBX1)",
+      "members": [
+        "CUL2",
+        "ELOB",
+        "ELOC",
+        "RBX1",
+        "ZYG11B"
+      ],
+      "corum_reactome": "CORUM: Cullin2-RING (CRL2) / Elongin BC complex",
+      "evidence_pmids": [
+        33827988
+      ],
+      "evidence_dois": [
+        "10.1073/pnas.2023157118"
+      ],
+      "relevance": "All five are Orf10 prey and constitute a canonical CRL2 module: scaffold CUL2, RING RBX1, adaptor Elongin B/C (ELOB/ELOC), and substrate receptor ZYG11B. Any candidate contacting one CRL2 subunit implies the assembled ligase. (Note: the cited work reports the Orf10\u2013CRL2 complex is dispensable for replication \u2014 evidence the interaction is real, biological effect debated.)",
+      "n_members_in_map": 5
+    },
+    {
+      "name": "RNA exosome (EXOSC ribonuclease core)",
+      "members": [
+        "EXOSC2",
+        "EXOSC3",
+        "EXOSC5",
+        "EXOSC8"
+      ],
+      "corum_reactome": "CORUM/Reactome: cytoplasmic and nuclear RNA exosome (9-subunit core EXOSC1-9)",
+      "evidence_pmids": [
+        24189234
+      ],
+      "evidence_dois": [
+        "10.1107/S0907444913011438"
+      ],
+      "relevance": "Four EXOSC subunits are Nsp8 prey. The exosome core is a 9-subunit barrel (EXOSC1\u20139); captured members EXOSC2/3/5/8 make EXOSC1/4/6/7/9 and the catalytic DIS3 high-priority missing-edge candidates.",
+      "n_members_in_map": 4
+    },
+    {
+      "name": "Signal recognition particle (SRP)",
+      "members": [
+        "SRP19",
+        "SRP54",
+        "SRP72"
+      ],
+      "corum_reactome": "CORUM/Reactome: signal recognition particle (SRP9/14/19/54/68/72 + 7SL RNA)",
+      "evidence_pmids": [
+        30649417
+      ],
+      "evidence_dois": [
+        "10.1093/nar/gky1324"
+      ],
+      "relevance": "SRP19, SRP54 (signal-peptide GTPase) and SRP72 are Nsp8 prey. Co-membership predicts remaining SRP subunits (SRP9/14/68) as candidates; couples to co-translational ER targeting.",
+      "n_members_in_map": 3
+    },
+    {
+      "name": "Casein kinase 2 (CK2) holoenzyme",
+      "members": [
+        "CSNK2A2",
+        "CSNK2B"
+      ],
+      "corum_reactome": "CORUM: CK2 holoenzyme (two CSNK2A catalytic + two CSNK2B regulatory)",
+      "evidence_pmids": [
+        24594356
+      ],
+      "evidence_dois": [
+        "10.1016/j.jmb.2014.02.018"
+      ],
+      "relevance": "CK2 is an \u03b12\u03b22 tetramer; catalytic CSNK2A2 and regulatory CSNK2B are both N-protein prey, so the paralog CSNK2A1 is a strong missing-edge candidate. N is a CK2 substrate and CK2 was flagged as a druggable node in Gordon et al.",
+      "n_members_in_map": 2
+    },
+    {
+      "name": "Adaptor protein complex 2 (AP-2, clathrin adaptor)",
+      "members": [
+        "AP2A2",
+        "AP2M1"
+      ],
+      "corum_reactome": "CORUM: AP-2 adaptor complex (AP2A1/A2, AP2B1, AP2M1, AP2S1)",
+      "evidence_pmids": [
+        32353859
+      ],
+      "evidence_dois": [
+        "10.1038/s41586-020-2286-9"
+      ],
+      "relevance": "AP2A2 (alpha) and AP2M1 (mu) are Nsp10 prey; the AP-2 heterotetramer's remaining AP2B1/AP2S1 are candidate edges. Links to clathrin-mediated endocytosis.",
+      "n_members_in_map": 2
+    },
+    {
+      "name": "Mitochondrial processing peptidase (MPP) / matrix proteases",
+      "members": [
+        "PMPCA",
+        "PMPCB",
+        "PITRM1"
+      ],
+      "corum_reactome": "CORUM: mitochondrial processing peptidase (PMPCA\u2013PMPCB heterodimer)",
+      "evidence_pmids": [
+        32353859
+      ],
+      "evidence_dois": [
+        "10.1038/s41586-020-2286-9"
+      ],
+      "relevance": "PMPCA/PMPCB form the presequence-cleaving MPP heterodimer; both are M-protein prey (with matrix peptidase PITRM1), a coherent mitochondrial-matrix protease module.",
+      "n_members_in_map": 3
+    },
+    {
+      "name": "DNA polymerase alpha\u2013primase",
+      "members": [
+        "POLA1",
+        "POLA2",
+        "PRIM1",
+        "PRIM2"
+      ],
+      "corum_reactome": "CORUM/Reactome: DNA polymerase alpha:primase complex (POLA1/POLA2/PRIM1/PRIM2)",
+      "evidence_pmids": [
+        32353859
+      ],
+      "evidence_dois": [
+        "10.1038/s41586-020-2286-9"
+      ],
+      "relevance": "All four subunits of the pol-\u03b1/primase heterotetramer are Nsp1 prey \u2014 an internally complete, high-coherence complex; strong intra-complex edge prior.",
+      "n_members_in_map": 4
+    }
+  ],
+  "interaction_priors_by_viral_family": {
+    "structural_proteins": {
+      "members_in_map": [
+        "Spike",
+        "E",
+        "M",
+        "N"
+      ],
+      "typical_interaction_types": [
+        "N (nucleocapsid): RNA-binding proteins, stress-granule/RNP components (G3BP1/2, PABPC1/4, LARP1, MOV10, UPF1) and CK2 kinase \u2014 reflects genome packaging and phase-separation control.",
+        "M (membrane): ER/Golgi membrane proteins, mitochondrial import/matrix proteases (PMPC), vacuolar-ATPase and transporters \u2014 assembly/budding at ERGIC.",
+        "E (envelope): trafficking/scaffold adaptors (AP3B1), bromodomain proteins (BRD2/BRD4) \u2014 ion-channel/scaffolding roles.",
+        "Spike: Golgi-resident palmitoyl-transferase machinery (ZDHHC5, GOLGA7) \u2014 post-translational modification and trafficking of the glycoprotein."
+      ],
+      "rationale": "Structural proteins localize to membranes and RNP granules; expect enrichment for membrane-trafficking, lipid-modification, and RNA-binding partners rather than catalytic enzyme complexes."
+    },
+    "nonstructural_proteins_nsp": {
+      "members_in_map": [
+        "Nsp1",
+        "Nsp2",
+        "Nsp4",
+        "Nsp5",
+        "Nsp6",
+        "Nsp7",
+        "Nsp8",
+        "Nsp9",
+        "Nsp10",
+        "Nsp11",
+        "Nsp12",
+        "Nsp13",
+        "Nsp14",
+        "Nsp15"
+      ],
+      "typical_interaction_types": [
+        "Replication-transcription complex components (Nsp7/8/9/10/12/13/14) engage RNA-processing and nucleic-acid machinery: DNA pol-\u03b1/primase (Nsp1), SRP and RNA exosome (Nsp8), nucleoporins (Nsp9), centrosome/Golgi structural proteins and PKA (Nsp13).",
+        "Nsp7: vesicular trafficking small GTPases (RAB1A/2A/5C/7A/8A/10/14/18, RHOA, RALA) \u2014 membrane remodeling for replication organelles.",
+        "Nsp5 (3CL protease): chromatin/epigenetic factors (HDAC2, TRMT1).",
+        "Nsp13 (helicase): microtubule/centrosome and Golgi structural network plus PKA holoenzyme and TBK1 innate-immune kinase."
+      ],
+      "rationale": "Nsps build the membrane-bound replication organelle and RNA-synthesis machinery; expect enzyme complexes, RNA-processing machines, cytoskeletal/centrosomal scaffolds, and innate-immune kinases. Interactions are often enzymatic-substrate or scaffolding rather than stable stoichiometric complexes."
+    },
+    "accessory_orfs": {
+      "members_in_map": [
+        "Orf3a",
+        "Orf3b",
+        "Orf6",
+        "Orf7a",
+        "Orf8",
+        "Orf9b",
+        "Orf9c",
+        "Orf10"
+      ],
+      "typical_interaction_types": [
+        "Immune antagonism and trafficking: Orf6\u2192NUP98/RAE1 (nuclear export block); Orf9b\u2192TOMM70 (MAVS/interferon suppression); Orf3a\u2192HOPS (VPS11/VPS39, autophagy).",
+        "Ubiquitin/degradation hijack: Orf10\u2192CRL2 module (CUL2/ELOB/ELOC/RBX1/ZYG11B).",
+        "Secretory/ER-quality-control and glycosylation: Orf8\u2192ER lumenal chaperones and glycosyltransferases (HYOU1, SDF2, EDEM3, FKBP7/10, POGLUT/POFUT); Orf9c\u2192ER/mitochondrial membrane and OXPHOS-assembly factors (NDUFAF1, ECSIT, NLRX1)."
+      ],
+      "rationale": "Accessory ORFs are specialized host-antagonism effectors: expect discrete, mechanistically-focused targets in innate-immune, nucleocytoplasmic-transport, autophagy/endolysosomal, ubiquitin-ligase and ER-secretory pathways \u2014 often hijacking a defined host complex."
+    }
+  },
+  "ap_ms_false_positive_patterns": [
+    {
+      "pattern": "Frequent-flyer contaminants (CRAPome)",
+      "description": "Proteins that co-purify non-specifically across many unrelated baits (heat-shock/chaperones HSPA/HSPD, tubulins, actin, ribosomal proteins, translation factors, keratins, TCP1/CCT). The CRAPome quantifies how often each prey appears in negative/GFP controls; high-frequency preys should be down-weighted regardless of MiST/score.",
+      "evidence_pmids": [
+        23921808
+      ],
+      "evidence_dois": [
+        "10.1038/nmeth.2557"
+      ]
+    },
+    {
+      "pattern": "Abundant/sticky proteins and specificity scoring",
+      "description": "Highly abundant cellular proteins yield spectral counts by mass action, not specific binding. Specificity-aware scores (SAINT, MiST, CompPASS) model prey abundance/reproducibility across controls; interactions not enriched over controls are probable false positives. Gordon et al. used MiST + SAINTexpress + PPI-scoring to filter, but residual abundant-protein bias remains.",
+      "evidence_pmids": [
+        21131968,
+        32353859
+      ],
+      "evidence_dois": [
+        "10.1038/nmeth.1541",
+        "10.1038/s41586-020-2286-9"
+      ]
+    },
+    {
+      "pattern": "Ribosomal, chaperone and cytoskeletal bias",
+      "description": "Ribosomal subunits (RPL/RPS, MRPS), chaperones (HSP70/90, FKBP, prefoldin), and cytoskeletal proteins (tubulin/actin, keratin) are recurrent AP-MS background. A lone ribosomal or chaperone prey without co-complex partners should be treated as low-prior; enrichment of an entire coherent complex is more credible than a single sticky subunit.",
+      "evidence_pmids": [
+        23921808
+      ],
+      "evidence_dois": [
+        "10.1038/nmeth.2557"
+      ]
+    },
+    {
+      "pattern": "Overexpression / tagging and mislocalization artifacts",
+      "description": "Baits are epitope-tagged and over-expressed (here in HEK293T), which can force non-physiological interactions, mislocalize the bait, or expose surfaces that recruit spurious partners. Interactions should ideally be corroborated by orthogonal evidence (reciprocal pulldown, endogenous co-IP, structure, or independent screen) before high confidence.",
+      "evidence_pmids": [
+        32353859
+      ],
+      "evidence_dois": [
+        "10.1038/s41586-020-2286-9"
+      ]
+    },
+    {
+      "pattern": "Indirect / co-complex membership vs direct binding",
+      "description": "AP-MS captures co-complex membership, not direct binary contact; a prey may associate through a bridging protein. For link prediction this inflates apparent direct-edge density within complexes. Treat within-complex edges as co-membership priors, not proof of direct interaction.",
+      "evidence_pmids": [
+        21131968
+      ],
+      "evidence_dois": [
+        "10.1038/nmeth.1541"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "key": "gordon2020",
+      "pmid": 32353859,
+      "doi": "10.1038/s41586-020-2286-9",
+      "title": "A SARS-CoV-2 protein interaction map reveals targets for drug repurposing.",
+      "year": "2020",
+      "journal": "Nature",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "crapome",
+      "pmid": 23921808,
+      "doi": "10.1038/nmeth.2557",
+      "title": "The CRAPome: a contaminant repository for affinity purification-mass spectrometry data.",
+      "year": "2013",
+      "journal": "Nat Methods",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "saint",
+      "pmid": 21131968,
+      "doi": "10.1038/nmeth.1541",
+      "title": "SAINT: probabilistic scoring of affinity purification-mass spectrometry data.",
+      "year": "2011",
+      "journal": "Nat Methods",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "corum",
+      "pmid": 36382402,
+      "doi": "10.1093/nar/gkac1015",
+      "title": "CORUM: the comprehensive resource of mammalian protein complexes-2022.",
+      "year": "2023",
+      "journal": "Nucleic Acids Res",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "reactome2024",
+      "pmid": 37941124,
+      "doi": "10.1093/nar/gkad1025",
+      "title": "The Reactome Pathway Knowledgebase 2024.",
+      "year": "2024",
+      "journal": "Nucleic Acids Res",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "orf6_nup98_struct",
+      "pmid": 35096974,
+      "doi": "10.3389/fmolb.2021.813248",
+      "title": "Molecular Mechanism of SARS-CoVs Orf6 Targeting the Rae1-Nup98 Complex to Compete With mRNA Nuclear Export.",
+      "year": "2021",
+      "journal": "Front Mol Biosci",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "orf6_nup98_natcomm",
+      "pmid": 35970938,
+      "doi": "10.1038/s41467-022-32489-5",
+      "title": "Structural basis for Sarbecovirus ORF6 mediated blockage of nucleocytoplasmic transport.",
+      "year": "2022",
+      "journal": "Nat Commun",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "hops_corvet_2025",
+      "pmid": 40187049,
+      "doi": "10.1016/j.ceb.2025.102504",
+      "title": "Structuring of the endolysosomal system by HOPS and CORVET tethering complexes.",
+      "year": "2025",
+      "journal": "Curr Opin Cell Biol",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "exosome_struct",
+      "pmid": 24189234,
+      "doi": "10.1107/S0907444913011438",
+      "title": "Structure determination of an 11-subunit exosome in complex with RNA by molecular replacement.",
+      "year": "2013",
+      "journal": "Acta Crystallogr D Biol Crystallogr",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "srp_recon",
+      "pmid": 30649417,
+      "doi": "10.1093/nar/gky1324",
+      "title": "Reconstitution of the human SRP system and quantitative and systematic analysis of its ribosome interactions.",
+      "year": "2019",
+      "journal": "Nucleic Acids Res",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "ck2_holo",
+      "pmid": 24594356,
+      "doi": "10.1016/j.jmb.2014.02.018",
+      "title": "The protein kinase CK2(Andante) holoenzyme structure supports proposed models of autoregulation and trans-autophosphorylation.",
+      "year": "2014",
+      "journal": "J Mol Biol",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "g3bp_covid",
+      "pmid": 38492217,
+      "doi": "10.1016/j.celrep.2024.113965",
+      "title": "Interaction between host G3BP and viral nucleocapsid protein regulates SARS-CoV-2 replication and pathogenicity.",
+      "year": "2024",
+      "journal": "Cell Rep",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "npc_arch",
+      "pmid": 25938906,
+      "doi": "10.1016/j.ceb.2015.04.009",
+      "title": "Towards understanding nuclear pore complex architecture and dynamics in the age of integrative structural analysis.",
+      "year": "2015",
+      "journal": "Curr Opin Cell Biol",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "orf10_cul2",
+      "pmid": 33827988,
+      "doi": "10.1073/pnas.2023157118",
+      "title": "ORF10-Cullin-2-ZYG11B complex is not required for SARS-CoV-2 infection.",
+      "year": "2021",
+      "journal": "Proc Natl Acad Sci U S A",
+      "verified": {
+        "esummary": true,
+        "crossref": true
+      }
+    },
+    {
+      "key": "corum_db",
+      "resource": "CORUM (comprehensive resource of mammalian protein complexes)",
+      "pmid": 36382402,
+      "doi": "10.1093/nar/gkac1015",
+      "note": "Complex-membership reference"
+    },
+    {
+      "key": "reactome_db",
+      "resource": "Reactome Pathway Knowledgebase",
+      "pmid": 37941124,
+      "doi": "10.1093/nar/gkad1025",
+      "note": "Pathway/complex reference"
+    }
+  ]
+}

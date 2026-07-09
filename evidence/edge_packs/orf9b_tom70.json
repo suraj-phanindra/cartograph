@@ -1,0 +1,73 @@
+{
+  "edge": "Orf9b\u2013TOMM70",
+  "papers": [
+    {
+      "pmid": "33990585",
+      "doi": "10.1038/s41467-021-23118-8",
+      "one_line_mechanism": "Crystal structure of SARS-CoV-2 Orf9b bound to human TOM70 shows Orf9b occupies the TOM70 cytosolic C-terminal HSP70/HSP90-binding pocket, suggesting displacement of chaperone-mediated preprotein import.",
+      "title": "Crystal structure of SARS-CoV-2 Orf9b in complex with human TOM70 suggests unusual virus-host interactions.",
+      "journal": "Nat Commun",
+      "year": "2021"
+    },
+    {
+      "pmid": "35643212",
+      "doi": "10.1016/j.biochi.2022.05.016",
+      "one_line_mechanism": "Biophysical characterization confirms SARS-CoV-2 Orf9b binds the mitochondrial translocase receptor TOM70, occupying its chaperone-docking groove.",
+      "title": "Binding of SARS-CoV-2 protein ORF9b to mitochondrial translocase TOM70 prevents its interaction with chaperone HSP90.",
+      "journal": "Biochimie",
+      "year": "2022"
+    },
+    {
+      "pmid": "32728199",
+      "doi": "10.1038/s41423-020-0514-8",
+      "one_line_mechanism": "SARS-CoV-2 Orf9b suppresses type I interferon responses by targeting TOM70, blocking the TOM70\u2013MAVS mitochondrial antiviral signaling axis.",
+      "title": "SARS-CoV-2 Orf9b suppresses type I interferon responses by targeting TOM70.",
+      "journal": "Cell Mol Immunol",
+      "year": "2020"
+    },
+    {
+      "pmid": "34502139",
+      "doi": "10.3390/ijms22179233",
+      "one_line_mechanism": "Phosphorylation of SARS-CoV-2 Orf9b regulates its targeting to two binding sites in TOM70 and its recruitment of Hsp90, tuning the Orf9b\u2013TOM70 chaperone interface.",
+      "title": "Phosphorylation of SARS-CoV-2 Orf9b Regulates Its Targeting to Two Binding Sites in TOM70 and Recruitment of Hsp90.",
+      "journal": "Int J Mol Sci",
+      "year": "2021"
+    },
+    {
+      "pmid": "37682539",
+      "doi": "10.1083/jcb.202303002",
+      "one_line_mechanism": "Orf9b binding to TOM70 modulates mitochondrial protein biogenesis, dampening import of TOM70-dependent substrates during infection.",
+      "title": "The Orf9b protein of SARS-CoV-2 modulates mitochondrial protein biogenesis.",
+      "journal": "J Cell Biol",
+      "year": "2023"
+    }
+  ],
+  "neighbor_edge": "TOMM70\u2013HSP90 (chaperone import machinery)",
+  "neighbor_papers": [
+    {
+      "pmid": "12526792",
+      "doi": "10.1016/s0092-8674(02)01250-3",
+      "one_line_mechanism": "Molecular chaperones Hsp90 and Hsp70 dock onto the TPR domain of the outer-membrane receptor Tom70 via their C-terminal EEVD motifs to deliver preproteins to the mitochondrial import machinery.",
+      "title": "Molecular chaperones Hsp90 and Hsp70 deliver preproteins to the mitochondrial import receptor Tom70.",
+      "journal": "Cell",
+      "year": "2003"
+    },
+    {
+      "pmid": "16968702",
+      "doi": "10.1074/jbc.M605250200",
+      "one_line_mechanism": "Hsp90 ATPase activity functions in targeting and outer-membrane translocation of preproteins through the Tom70 receptor, coupling chaperone cycling to mitochondrial import.",
+      "title": "Hsp90 functions in the targeting and outer membrane translocation steps of Tom70-mediated mitochondrial import.",
+      "journal": "J Biol Chem",
+      "year": "2006"
+    },
+    {
+      "pmid": "35876647",
+      "doi": "10.7554/eLife.77706",
+      "one_line_mechanism": "A network of cytosolic (co)chaperones acting through Tom70 promotes the biogenesis of mitochondrial signal-anchored outer-membrane proteins by delivering substrates to the import receptor.",
+      "title": "A network of cytosolic (co)chaperones promotes the biogenesis of mitochondrial signal-anchored outer membrane proteins.",
+      "journal": "Elife",
+      "year": "2022"
+    }
+  ],
+  "confidence": "high"
+}

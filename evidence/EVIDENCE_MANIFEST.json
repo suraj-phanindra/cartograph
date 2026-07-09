@@ -1,0 +1,61 @@
+{
+  "generated": "2026-07-08",
+  "ground_truth": "Gordon et al. 2020 (PMID 32353859), IntAct/IMEx IM-27814: 26 baits, 332 HC interactions, 332 unique preys, 66 druggable proteins / 69 compounds \u2014 all four canonical numbers verified.",
+  "citation_integrity": "All PMIDs/DOIs in the evidence packs were verified by the producing sub-agents against NCBI E-utilities + CrossRef; a sample of 9 key identifiers was independently re-verified in the parent session \u2014 all 9 resolved to the exact claimed papers. Sub-agents discarded several memory-recalled identifiers that failed verification (incl. one retracted paper).",
+  "files": {
+    "gordon2020_edges.csv": {
+      "lookup": 1,
+      "vid": "629d68a7-1714-4248-8cf5-0f3d8ae0a198",
+      "desc": "Ground-truth bait\u2192prey edge list (332 rows), IntAct-sourced, per-Nsp baits recovered."
+    },
+    "gordon2020_counts.json": {
+      "lookup": 1,
+      "vid": "2198ccac-69aa-4a38-9cdc-946bb53f6cc5",
+      "desc": "Confirmed counts + canonical-number reconciliation + discrepancy notes."
+    },
+    "demo_protein_shortlist.md": {
+      "lookup": 2,
+      "vid": "795b6fef-aa44-42ed-8b88-e294b06c6d46",
+      "desc": "Demo proteins ranked by literature richness; Orf6 & Orf9b top the list."
+    },
+    "edge_packs/orf6_nup98.json": {
+      "lookup": 3,
+      "vid": "94411073-7171-496b-914a-902a70048690",
+      "desc": "Evidence pack: Orf6\u2013NUP98 + NUP98\u2013RAE1 neighbor (5+3 verified papers)."
+    },
+    "edge_packs/orf9b_tom70.json": {
+      "lookup": 3,
+      "vid": "1d6b8dc5-40ef-4ba9-8570-1783bbafcabb",
+      "desc": "Evidence pack: Orf9b\u2013TOMM70 + TOMM70\u2013HSP90 (5+3 verified papers)."
+    },
+    "edge_packs/n_g3bp1.json": {
+      "lookup": 3,
+      "vid": "6a8da18c-a263-4d6d-9ea2-400ee568d547",
+      "desc": "Evidence pack: N\u2013G3BP1 + G3BP1\u2013G3BP2 (5+3 verified papers)."
+    },
+    "worked_example_orf6.json": {
+      "lookup": 4,
+      "vid": "d9e6b222-eb5e-46c6-b8f6-2e239ef24b14",
+      "desc": "Flagship held-out example: Orf6\u2013RAE1 recovered via NUP98\u2013RAE1; full cited chain + Orf9b backup."
+    },
+    "crispr_gold_standard.csv": {
+      "lookup": 5,
+      "vid": "586ff35d-83e2-4f95-9ff2-22b3232c0271",
+      "desc": "27-gene cross-screen consensus (\u22652 of 7 screens); SCAP is the sole overlap with Gordon prey."
+    },
+    "crispr_screens.json": {
+      "lookup": 5,
+      "vid": "5bae61c3-4ba0-4962-a467-a8c403856313",
+      "desc": "Per-screen provenance (7 screens, verified PMID/DOI, cell line)."
+    },
+    "cartograph_domain.json": {
+      "lookup": 6,
+      "vid": "cf8d0dd3-e711-410c-9c2f-ef77a5704177",
+      "desc": "Domain priors: 12 prey complexes, family interaction priors, 5 AP-MS FP patterns; 16 verified sources."
+    }
+  },
+  "caveats": [
+    "CRISPR consensus is built from top hits reported in abstracts/main text, not full genome-wide hit tables \u2014 treat the 27-gene set as a high-confidence core, not exhaustive. The near-zero overlap with AP-MS prey (only SCAP) is expected: functional-dependency screens and physical-binding AP-MS capture orthogonal biology. Present Option B as corroboration, not proof (Option A = frozen held-out edges remains the guaranteed number).",
+    "Druggability (66/69) is a curated pharmacology annotation from the Gordon supplement, not part of the 332-edge PPI record."
+  ]
+}

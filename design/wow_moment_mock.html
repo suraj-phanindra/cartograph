@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cartograph — wow moment (mock)</title>
+<style>
+  :root{
+    --bg0:#0b1020; --bg1:#05070e;
+    --ink:#e6ecf5; --muted:#8a97ad; --line:#1c2740;
+    --viral:#ffb454; --viralGlow:#ffcaa0;
+    --human:#57cbe0; --humanGlow:#a9ecf7;
+    --known:rgba(150,170,205,.40); --enrich:rgba(120,145,185,.22);
+    --path:#ffd166; --cand:#ff7a7a; --good:#37e08a; --bad:#ff5c5c;
+    --panel:#0e1526;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 800px at 30% 20%,var(--bg0),var(--bg1));
+    color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:18px 20px 28px;}
+  .head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .head h1{font-size:19px;margin:0;font-weight:650;letter-spacing:.2px}
+  .head .tag{font-size:12px;color:var(--muted)}
+  .head .badge{margin-left:auto;font-size:11px;color:var(--muted);border:1px solid var(--line);
+    padding:3px 9px;border-radius:999px}
+  .stage{display:flex;gap:16px;margin-top:10px}
+  .graph{position:relative;flex:1 1 auto;min-width:0;border:1px solid var(--line);border-radius:14px;
+    background:linear-gradient(180deg,rgba(255,255,255,.015),rgba(0,0,0,.05));overflow:hidden}
+  svg{display:block;width:100%;height:auto}
+  .rail{width:312px;flex:0 0 312px;display:flex;flex-direction:column;gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+  .card h3{margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  #reason{min-height:150px;font-size:14px;line-height:1.5}
+  #reason .q{color:var(--ink);font-weight:600}
+  #reason .mut{color:var(--muted)}
+  #reason .agent{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;margin-right:6px;
+    border:1px solid var(--line)}
+  .a-read{color:#9ad0ff}.a-skep{color:#ff9e9e}.a-cur{color:#8affc4}
+  .cite{margin-top:10px;border-top:1px dashed var(--line);padding-top:9px;font-size:12.5px;color:var(--muted)}
+  .cite a{color:#8fb7ff;text-decoration:none}
+  .metrics{display:flex;gap:10px}
+  .metric{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+  .metric .k{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  .metric .v{font-size:26px;font-weight:700;margin-top:3px}
+  .metric .v small{font-size:13px;color:var(--muted);font-weight:500}
+  .v.good{color:var(--good)}
+  .controls{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+  button{font:inherit;color:var(--ink);background:#15203a;border:1px solid #26385f;border-radius:9px;
+    padding:8px 14px;cursor:pointer;transition:.15s}
+  button:hover{background:#1b2a4c}
+  button.primary{background:linear-gradient(180deg,#2d6cf6,#1f52d0);border-color:#2d6cf6}
+  button:disabled{opacity:.4;cursor:default}
+  .dots{display:flex;gap:6px;margin-left:6px}
+  .dot{width:8px;height:8px;border-radius:50%;background:#243458;transition:.2s}
+  .dot.on{background:var(--path);box-shadow:0 0 8px var(--path)}
+  .steplabel{font-size:12.5px;color:var(--muted);margin-left:auto}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:14px;height:0;border-top:3px solid;border-radius:2px}
+  .swd{width:14px;height:0;border-top:3px dashed}
+  .nd{width:11px;height:11px;border-radius:50%}
+  /* svg element transitions */
+  .edge{transition:opacity .5s ease,stroke .5s ease,stroke-width .5s ease}
+  .node circle,.node polygon{transition:opacity .45s ease,fill .45s ease,filter .45s ease,stroke .45s ease}
+  .node text{transition:opacity .45s ease}
+  .dim{opacity:.12 !important}
+  .hlnode circle,.hlnode polygon{filter:url(#glow)}
+  .heldout{opacity:0}
+  .heldout.show{opacity:1}
+  .heldout.good{stroke:var(--good);stroke-width:3.4;filter:url(#glowGood)}
+  .heldout.bad{stroke:var(--bad);stroke-width:2.6;stroke-dasharray:4 5}
+  .heldout.dropped{opacity:0 !important}
+  #candidate{opacity:0}
+  #candidate.show{opacity:1}
+  #candidate.locked{stroke:var(--good);stroke-dasharray:none;filter:url(#glowGood)}
+  #pathline{opacity:0;stroke:var(--path);stroke-width:3.2;fill:none;filter:url(#glow);
+    stroke-linecap:round;stroke-linejoin:round}
+  #pathline.show{opacity:.95}
+  .pulse{animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+  .endcard{position:absolute;inset:0;background:rgba(6,9,17,.86);backdrop-filter:blur(3px);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    gap:12px;opacity:0;pointer-events:none;transition:.4s;padding:24px}
+  .endcard.show{opacity:1;pointer-events:auto}
+  .endcard h2{margin:0;font-size:22px;max-width:26ch;line-height:1.3}
+  .endcard p{margin:0;color:var(--muted);max-width:44ch;font-size:14px}
+  .note{font-size:11.5px;color:var(--muted);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>Cartograph</h1>
+    <span class="tag">the map finds its own missing edges — live</span>
+    <span class="badge">demo mock · SARS-CoV-2 interactome</span>
+  </div>
+
+  <div class="stage">
+    <div class="graph">
+      <svg id="svg" viewBox="0 0 720 620" role="img" aria-label="Interactome demo">
+        <defs>
+          <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="4" result="b"/><feMerge>
+            <feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glowGood" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="4.5" result="b"/><feMerge>
+            <feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff7a7a"/>
+          </marker>
+        </defs>
+        <g id="gEnrich"></g>
+        <g id="gKnown"></g>
+        <g id="gHeld"></g>
+        <polyline id="pathline" points=""></polyline>
+        <line id="candidate" class="edge" x1="0" y1="0" x2="0" y2="0" stroke="#ff7a7a"
+              stroke-width="3" stroke-dasharray="6 6" marker-end="url(#arrow)"></line>
+        <g id="gNodes"></g>
+      </svg>
+      <div class="endcard" id="endcard">
+        <h2>An interactome is a map. Cartograph is the navigation layer.</h2>
+        <p>It predicts the edges that should be there but aren’t, proves each with the literature, and measures how often it’s right.</p>
+        <button class="primary" onclick="replay()">Replay ▸</button>
+      </div>
+    </div>
+
+    <div class="rail">
+      <div class="card">
+        <h3 id="railTitle">Cartograph</h3>
+        <div id="reason"></div>
+        <div class="cite" id="cite" style="display:none"></div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="k">Held-out precision</div><div class="v" id="mPrec">—</div></div>
+        <div class="metric"><div class="k">Edges annotated</div><div class="v" id="mAnn">0</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="playBtn" onclick="play()">▸ Play</button>
+    <button id="prevBtn" onclick="manual(-1)">‹ Prev</button>
+    <button id="nextBtn" onclick="manual(1)">Next ›</button>
+    <div class="dots" id="dots"></div>
+    <div class="steplabel" id="stepLabel"></div>
+  </div>
+
+  <div class="legend">
+    <span><i class="nd" style="background:var(--viral)"></i>viral protein</span>
+    <span><i class="nd" style="background:var(--human)"></i>human protein</span>
+    <span><i class="sw" style="border-color:var(--known)"></i>known interaction</span>
+    <span><i class="swd" style="border-color:var(--enrich)"></i>STRING enrichment</span>
+    <span><i class="swd" style="border-color:var(--cand)"></i>predicted edge</span>
+    <span><i class="sw" style="border-color:var(--good)"></i>confirmed vs held-out truth</span>
+    <span><i class="swd" style="border-color:var(--bad)"></i>rejected</span>
+  </div>
+</div>
+
+<script>
+"use strict";
+// ---- grounded mini-network (SARS-CoV-2 x human, verified interactions) ----
+var N = {
+  ORF9b:{x:120,y:120,t:"v"}, ORF6:{x:175,y:325,t:"v"}, Nprot:{x:150,y:520,t:"v",label:"N"}, E:{x:600,y:540,t:"v"},
+  TOMM70A:{x:300,y:120,t:"h"}, HSP90:{x:445,y:90,t:"h",label:"HSP90AA1"},
+  XPO1:{x:325,y:250,t:"h"}, NUP98:{x:390,y:345,t:"h"}, RAE1:{x:520,y:300,t:"h"}, KPNA2:{x:340,y:430,t:"h"},
+  G3BP1:{x:320,y:540,t:"h"}, G3BP2:{x:470,y:560,t:"h"}, BRD2:{x:585,y:390,t:"h"}, BRD4:{x:660,y:470,t:"h"}
+};
+var KNOWN = [["ORF9b","TOMM70A"],["ORF6","NUP98"],["ORF6","XPO1"],["Nprot","G3BP1"],["E","BRD2"]];
+var ENRICH = [["TOMM70A","HSP90"],["XPO1","NUP98"],["NUP98","RAE1"],["NUP98","KPNA2"],["XPO1","KPNA2"],
+              ["G3BP1","G3BP2"],["BRD2","BRD4"]];
+// held-out edges revealed during the eval (correct=matches a prediction)
+var HELD = [
+  {s:"ORF6",t:"RAE1",ok:true}, {s:"ORF9b",t:"HSP90",ok:true},
+  {s:"Nprot",t:"G3BP2",ok:true}, {s:"E",t:"BRD4",ok:true},
+  {s:"ORF6",t:"KPNA2",ok:false} // topological artifact; Skeptic rejects
+];
+var FLAG_PATH = ["ORF6","XPO1","NUP98","RAE1"]; // one length-3 path Cartograph scores
+
+var svgNS="http://www.w3.org/2000/svg";
+function el(tag,attrs){var e=document.createElementNS(svgNS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
+function key(a,b){return a+"__"+b;}
+function hexPts(cx,cy,r){var p=[];for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);p.push((cx+r*Math.cos(a)).toFixed(1)+","+(cy+r*Math.sin(a)).toFixed(1));}return p.join(" ");}
+
+var elByKey={}, nodeEls={};
+function build(){
+  var gK=document.getElementById("gKnown"), gE=document.getElementById("gEnrich"),
+      gH=document.getElementById("gHeld"), gN=document.getElementById("gNodes");
+  ENRICH.forEach(function(e){var a=N[e[0]],b=N[e[1]];var l=el("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,
+    stroke:"rgba(120,145,185,.22)","stroke-width":1.6,"stroke-dasharray":"3 5",class:"edge enrich"});
+    l.dataset.k=key(e[0],e[1]);gE.appendChild(l);elByKey["E:"+key(e[0],e[1])]=l;});
+  KNOWN.forEach(function(e){var a=N[e[0]],b=N[e[1]];var l=el("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,
+    stroke:"rgba(150,170,205,.42)","stroke-width":2.2,class:"edge known"});
+    l.dataset.k=key(e[0],e[1]);gK.appendChild(l);elByKey["K:"+key(e[0],e[1])]=l;});
+  HELD.forEach(function(h,i){var a=N[h.s],b=N[h.t];var l=el("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,
+    "stroke-width":3,class:"edge heldout "+(h.ok?"good":"bad")});
+    l.style.transitionDelay=(i*0.22)+"s";gH.appendChild(l);elByKey["H:"+i]=l;});
+  Object.keys(N).forEach(function(id){var n=N[id];var g=el("g",{class:"node"});g.dataset.id=id;
+    if(n.t==="v"){g.appendChild(el("polygon",{points:hexPts(n.x,n.y,15),fill:"#ffb454",stroke:"#7a4a10","stroke-width":1}));}
+    else{g.appendChild(el("circle",{cx:n.x,cy:n.y,r:12,fill:"#57cbe0",stroke:"#12414d","stroke-width":1}));}
+    var tx=el("text",{x:n.x,y:n.y+ (n.t==="v"?30:28),"text-anchor":"middle","font-size":11.5,fill:"#e6ecf5"});
+    tx.textContent=n.label||id; tx.setAttribute("style","paint-order:stroke;stroke:#05070e;stroke-width:3px");
+    g.appendChild(tx); document.getElementById("gNodes").appendChild(g); nodeEls[id]=g;});
+}
+
+// ---- steps ----
+var reason=document.getElementById("reason"), cite=document.getElementById("cite"),
+    mPrec=document.getElementById("mPrec"), mAnn=document.getElementById("mAnn"),
+    railTitle=document.getElementById("railTitle"), stepLabel=document.getElementById("stepLabel"),
+    endcard=document.getElementById("endcard");
+var candidate=document.getElementById("candidate"), pathline=document.getElementById("pathline");
+
+function setCandidate(){var a=N[FLAG_PATH[0]],b=N[FLAG_PATH[FLAG_PATH.length-1]];
+  candidate.setAttribute("x1",a.x);candidate.setAttribute("y1",a.y);
+  candidate.setAttribute("x2",b.x);candidate.setAttribute("y2",b.y);}
+function setPath(){pathline.setAttribute("points",FLAG_PATH.map(function(id){return N[id].x+","+N[id].y;}).join(" "));}
+
+function clearState(){
+  Object.keys(nodeEls).forEach(function(id){nodeEls[id].classList.remove("dim","hlnode");});
+  ["E:","K:"].forEach(function(pre){Object.keys(elByKey).forEach(function(k){if(k.indexOf(pre)===0){elByKey[k].classList.remove("dim");}});});
+  HELD.forEach(function(h,i){elByKey["H:"+i].classList.remove("show","dropped");});
+  candidate.classList.remove("show","locked","pulse");
+  pathline.classList.remove("show");
+  cite.style.display="none"; endcard.classList.remove("show");
+}
+function focus(nodeSet,edgeKeys){
+  Object.keys(nodeEls).forEach(function(id){ if(nodeSet.indexOf(id)<0) nodeEls[id].classList.add("dim"); else nodeEls[id].classList.add("hlnode");});
+  Object.keys(elByKey).forEach(function(k){ if(k[0]==="H") return; if(edgeKeys.indexOf(k)<0) elByKey[k].classList.add("dim");});
+}
+function lockGreens(){HELD.forEach(function(h,i){ if(h.ok){elByKey["H:"+i].classList.add("show");}});}
+
+function countUp(to){var v=0;var t=setInterval(function(){v+=8; if(v>=to){v=to;clearInterval(t);} mPrec.textContent=v+"%";},45);}
+
+var steps=[
+  {name:"The map", run:function(){
+    railTitle.textContent="The map";
+    reason.innerHTML='<span class="mut">This is how SARS-CoV-2 hijacks a human cell. Every edge is a real interaction with a paper behind it. Hexagons are viral proteins, circles are human. The map is full of holes.</span>';
+    mPrec.textContent="—"; mPrec.className="v"; mAnn.textContent="0";
+  }},
+  {name:"The question", run:function(){
+    railTitle.textContent="Ask in plain English";
+    reason.innerHTML='<span class="q">“Which human protein is ORF6 hitting that we haven’t mapped?”</span>';
+  }},
+  {name:"Traverse (L3)", run:function(){
+    railTitle.textContent="Deterministic candidate";
+    focus(FLAG_PATH,["K:"+key("ORF6","XPO1"),"E:"+key("XPO1","NUP98"),"E:"+key("NUP98","RAE1")]);
+    setPath(); pathline.classList.add("show");
+    reason.innerHTML='<span class="mut">The graph scores each candidate by paths of length three. A strong one:</span><br><b>ORF6 → XPO1 → NUP98 → RAE1</b><br><span class="mut">RAE1 sits one step past the NUP98–RAE1 complex. The structure proposes it. No model guessed.</span>';
+  }},
+  {name:"Predicted edge", run:function(){
+    railTitle.textContent="Predicted edge";
+    focus(FLAG_PATH,["K:"+key("ORF6","XPO1"),"E:"+key("XPO1","NUP98"),"E:"+key("NUP98","RAE1")]);
+    setPath(); pathline.classList.add("show"); setCandidate(); candidate.classList.add("show","pulse");
+    reason.innerHTML='<span class="agent a-read">Reader</span> proposes a missing edge: <b>ORF6 — RAE1</b>.<br><span class="mut">Now prove it from the literature.</span>';
+  }},
+  {name:"Cited hypothesis", run:function(){
+    railTitle.textContent="Mechanistic, cited";
+    focus(FLAG_PATH,["K:"+key("ORF6","XPO1"),"E:"+key("XPO1","NUP98"),"E:"+key("NUP98","RAE1")]);
+    setPath(); pathline.classList.add("show"); setCandidate(); candidate.classList.add("show");
+    reason.innerHTML='<span class="agent a-read">Reader</span> ORF6 docks on the <b>NUP98–RAE1</b> complex at the nuclear pore, clogging nucleocytoplasmic transport and blocking STAT1 / interferon signaling. RAE1 is the co-partner it must engage.';
+    cite.style.display="block";
+    cite.innerHTML='Evidence chain:<br>• Miorin et al. 2020, <i>PNAS</i> — ORF6 hijacks Nup98 to block STAT nuclear import <a href="https://pubmed.ncbi.nlm.nih.gov/33097660/" target="_blank">PMID 33097660</a><br>• Addetia et al. 2021 — ORF6 disrupts transport via Rae1 & Nup98 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8092196/" target="_blank">PMC8092196</a>';
+  }},
+  {name:"The locked test", run:function(){
+    railTitle.textContent="Locked evaluator";
+    clearState();
+    reason.innerHTML='<span class="mut">Is it just a confident story? Before any prediction we hid a fifth of the real edges. Watch the map find them — green locks against hidden truth, red is a miss.</span>';
+    lockGreens(); HELD.forEach(function(h,i){ if(!h.ok) elByKey["H:"+i].classList.add("show");});
+    setCandidate(); candidate.classList.add("show","locked");
+    mPrec.className="v good"; countUp(80); mAnn.textContent="4";
+  }},
+  {name:"The Skeptic", run:function(){
+    railTitle.textContent="The Skeptic agent";
+    clearState(); lockGreens();
+    var miss; HELD.forEach(function(h,i){ if(!h.ok){elByKey["H:"+i].classList.add("show");miss=i;}});
+    reason.innerHTML='<span class="agent a-skep">Skeptic</span> ORF6 — KPNA2 was topologically plausible, but there is <b>no primary evidence</b> of a direct complex. It is an artifact of shared nuclear-transport partners. <b>Dropped.</b>';
+    mPrec.className="v good"; mPrec.textContent="80%";
+    setTimeout(function(){ if(miss!=null) elByKey["H:"+miss].classList.add("dropped"); },650);
+  }},
+  {name:"The loop", run:function(){
+    railTitle.textContent="It improves itself";
+    clearState(); lockGreens();
+    setCandidate(); candidate.classList.add("show","locked");
+    reason.innerHTML='<span class="agent a-cur">Curator</span> confirmed edges fold back into the map as annotations. The graph is denser, so the next question is answered from a richer map. <span class="mut">The map improves itself — under a locked ruler.</span>';
+    mPrec.className="v good"; mPrec.textContent="80%"; mAnn.textContent="4";
+  }},
+  {name:"Cartograph", run:function(){
+    railTitle.textContent="Cartograph";
+    reason.innerHTML='<span class="mut">Point it at any Krogan map. It tells you what’s missing — and proves how often it’s right.</span>';
+    endcard.classList.add("show");
+  }}
+];
+
+var cur=0, auto=null;
+var dur=[2600,2400,3400,2600,4200,4200,3600,3600,1000];
+function render(){ var s=steps[cur]; clearState(); s.run();
+  stepLabel.textContent=(cur+1)+" / "+steps.length+" — "+s.name;
+  var dots=document.getElementById("dots"); dots.innerHTML="";
+  for(var i=0;i<steps.length;i++){var d=document.createElement("div");d.className="dot"+(i===cur?" on":"");dots.appendChild(d);}
+  document.getElementById("prevBtn").disabled=(cur===0);
+  document.getElementById("nextBtn").disabled=(cur===steps.length-1);
+}
+function goTo(i){cur=Math.max(0,Math.min(steps.length-1,i));render();}
+function stopAuto(){if(auto){clearTimeout(auto);auto=null;}document.getElementById("playBtn").textContent="▸ Play";}
+function play(){stopAuto();if(cur>=steps.length-1)cur=0;render();document.getElementById("playBtn").textContent="■ Stop";
+  (function tick(){ if(cur>=steps.length-1){stopAuto();return;} auto=setTimeout(function(){goTo(cur+1);tick();},dur[cur]); })();
+}
+function manual(d){stopAuto();goTo(cur+d);}
+function replay(){cur=0;play();}
+function toggle(){ if(auto)stopAuto(); else play(); }
+document.getElementById("playBtn").onclick=toggle;
+
+build(); render();
+</script>
+</body>
+</html>
