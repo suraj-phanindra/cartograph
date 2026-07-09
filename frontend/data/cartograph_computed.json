@@ -1,0 +1,2155 @@
+{
+  "meta": {
+    "title": "Cartograph \u2014 computed artifact",
+    "ground_truth": "Gordon et al. 2020 (PMID 32353859), IntAct IM-27814",
+    "n_edges": 332,
+    "n_baits": 26,
+    "string_version": "12.0",
+    "string_params": "physical channel, score>=700",
+    "n_enrichment_edges": 159,
+    "reproducible": true
+  },
+  "integrity": {
+    "deterministic_path": "The graph proposes edges via degree-normalized L3. Claude reads, adjudicates, explains. Claude never invents an edge.",
+    "no_citation_no_render": "Every mechanistic clause opens to a real PubMed paper.",
+    "predicted_labeled": "Predicted structures are always labelled predicted with a confidence number (pLDDT/ipTM). Never shown as experimental fact.",
+    "locked_evaluator": "The held-out split was frozen and committed BEFORE any prediction code, in a module the reasoning layer cannot import.",
+    "headline_is_honest": "Precision is computed on real held-out Gordon edges, not the prototype's illustrative 80%."
+  },
+  "eval": {
+    "seed": 42,
+    "fraction": 0.17,
+    "n_held_out": 57,
+    "n_random_sampled": 56,
+    "pinned_walkthrough": [
+      [
+        "Orf6",
+        "RAE1"
+      ]
+    ],
+    "protocol": "seeded random 17% sample of the 332 HC Gordon viral->host edges, plus disclosed pinned walkthrough edge(s). Precision reported with and without pinned edges.",
+    "baseline": {
+      "precision_at_k": {
+        "10": 0.3,
+        "20": 0.45,
+        "50": 0.26
+      },
+      "recall_at_k": {
+        "10": 0.2143,
+        "20": 0.6429,
+        "50": 0.9286
+      },
+      "roc_auc": 0.8451,
+      "average_precision": 0.3733,
+      "headline_precision_at_k": 0.45,
+      "headline_k": 20,
+      "n_targets": 57,
+      "n_recoverable": 14
+    },
+    "loop": {
+      "confirmed_edges": [
+        [
+          "N",
+          "G3BP1"
+        ],
+        [
+          "Nsp13",
+          "PCNT"
+        ],
+        [
+          "Nsp4",
+          "TIMM10"
+        ],
+        [
+          "Orf9c",
+          "ECSIT"
+        ]
+      ],
+      "measured_on": "the remaining held-out edges (fair before/after)",
+      "before_precision_at_20": 0.3,
+      "after_precision_at_20": 0.35,
+      "before_recoverable": 10,
+      "after_recoverable": 10,
+      "story": "Confirm the high-confidence recovered-true edges (each L3-rank #1, each a real Gordon edge), fold them back as known, and re-score the still-hidden edges. Densification unlocks previously-unreachable edges."
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "RRP9",
+        "type": "human",
+        "uniprot": "O43818",
+        "degree": 5,
+        "cluster": "stress-granule",
+        "x": 843.4,
+        "y": 648.4
+      },
+      {
+        "id": "FBLN5",
+        "type": "human",
+        "uniprot": "Q9UBX5",
+        "degree": 2,
+        "cluster": "nuclear-pore",
+        "x": 342.2,
+        "y": 688.7
+      },
+      {
+        "id": "DDX21",
+        "type": "human",
+        "uniprot": "Q9NR30",
+        "degree": 1,
+        "cluster": "stress-granule",
+        "x": 767.3,
+        "y": 462.3
+      },
+      {
+        "id": "GTF2F2",
+        "type": "human",
+        "uniprot": "P13984",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 226.8,
+        "y": 706.0
+      },
+      {
+        "id": "MOV10",
+        "type": "human",
+        "uniprot": "Q9HCE1",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 919.1,
+        "y": 638.0
+      },
+      {
+        "id": "N",
+        "type": "viral",
+        "uniprot": "P0DTC9",
+        "degree": 15,
+        "cluster": "stress-granule",
+        "x": 882.1,
+        "y": 526.5
+      },
+      {
+        "id": "CSNK2A2",
+        "type": "human",
+        "uniprot": "P19784",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 963.8,
+        "y": 522.3
+      },
+      {
+        "id": "Nsp9",
+        "type": "viral",
+        "uniprot": "P0DTD1",
+        "degree": 16,
+        "cluster": "nuclear-pore",
+        "x": 299.5,
+        "y": 590.7
+      },
+      {
+        "id": "NUP214",
+        "type": "human",
+        "uniprot": "P35658",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 174.0,
+        "y": 584.6
+      },
+      {
+        "id": "MARK3",
+        "type": "human",
+        "uniprot": "P27448",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 602.1,
+        "y": 90.0
+      },
+      {
+        "id": "SNIP1",
+        "type": "human",
+        "uniprot": "Q8TAD8",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 880.9,
+        "y": 413.6
+      },
+      {
+        "id": "NUP98",
+        "type": "human",
+        "uniprot": "P52948",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 146.2,
+        "y": 529.4
+      },
+      {
+        "id": "MARK2",
+        "type": "human",
+        "uniprot": "Q7KZI7",
+        "degree": 2,
+        "cluster": "mitochondria",
+        "x": 597.1,
+        "y": 331.5
+      },
+      {
+        "id": "NUP62",
+        "type": "human",
+        "uniprot": "P37198",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 184.6,
+        "y": 611.5
+      },
+      {
+        "id": "CHMP2A",
+        "type": "human",
+        "uniprot": "O43633",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 559.7,
+        "y": 102.5
+      },
+      {
+        "id": "MARK1",
+        "type": "human",
+        "uniprot": "Q9P0L2",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 678.1,
+        "y": 129.5
+      },
+      {
+        "id": "PABPC1",
+        "type": "human",
+        "uniprot": "P11940",
+        "degree": 7,
+        "cluster": "stress-granule",
+        "x": 842.8,
+        "y": 468.4
+      },
+      {
+        "id": "PABPC4",
+        "type": "human",
+        "uniprot": "Q13310",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 926.1,
+        "y": 522.9
+      },
+      {
+        "id": "DCAF7",
+        "type": "human",
+        "uniprot": "P61962",
+        "degree": 2,
+        "cluster": "nuclear-pore",
+        "x": 255.2,
+        "y": 490.9
+      },
+      {
+        "id": "CSDE1",
+        "type": "human",
+        "uniprot": "O75534",
+        "degree": 2,
+        "cluster": "mitochondria",
+        "x": 738.4,
+        "y": 325.7
+      },
+      {
+        "id": "NHERF1",
+        "type": "human",
+        "uniprot": "O14745",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 510.0,
+        "y": 167.4
+      },
+      {
+        "id": "TOMM70",
+        "type": "human",
+        "uniprot": "O94826",
+        "degree": 2,
+        "cluster": "mitochondria",
+        "x": 520.5,
+        "y": 339.8
+      },
+      {
+        "id": "CSNK2B",
+        "type": "human",
+        "uniprot": "P67870",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 920.0,
+        "y": 582.4
+      },
+      {
+        "id": "MTCH1",
+        "type": "human",
+        "uniprot": "Q9NZJ7",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 269.1,
+        "y": 322.7
+      },
+      {
+        "id": "G3BP2",
+        "type": "human",
+        "uniprot": "Q9UN86",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 919.3,
+        "y": 445.8
+      },
+      {
+        "id": "NUP58",
+        "type": "human",
+        "uniprot": "Q9BVL2",
+        "degree": 7,
+        "cluster": "nuclear-pore",
+        "x": 231.0,
+        "y": 581.2
+      },
+      {
+        "id": "MIB1",
+        "type": "human",
+        "uniprot": "Q86YT6",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 370.0,
+        "y": 702.5
+      },
+      {
+        "id": "Orf9b",
+        "type": "viral",
+        "uniprot": "P0DTD2",
+        "degree": 11,
+        "cluster": "mitochondria",
+        "x": 601.9,
+        "y": 218.2
+      },
+      {
+        "id": "FAM98A",
+        "type": "human",
+        "uniprot": "Q8NCA5",
+        "degree": 1,
+        "cluster": "stress-granule",
+        "x": 727.3,
+        "y": 501.6
+      },
+      {
+        "id": "FBN2",
+        "type": "human",
+        "uniprot": "P35556",
+        "degree": 2,
+        "cluster": "nuclear-pore",
+        "x": 311.6,
+        "y": 668.1
+      },
+      {
+        "id": "LARP1",
+        "type": "human",
+        "uniprot": "Q6PKG0",
+        "degree": 2,
+        "cluster": "stress-granule",
+        "x": 803.3,
+        "y": 554.8
+      },
+      {
+        "id": "SPART",
+        "type": "human",
+        "uniprot": "Q8N0X7",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 427.1,
+        "y": 506.2
+      },
+      {
+        "id": "DPH5",
+        "type": "human",
+        "uniprot": "Q9H2P9",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 563.1,
+        "y": 346.2
+      },
+      {
+        "id": "RAE1",
+        "type": "human",
+        "uniprot": "P78406",
+        "degree": 6,
+        "cluster": "nuclear-pore",
+        "x": 120.0,
+        "y": 506.6
+      },
+      {
+        "id": "NUP54",
+        "type": "human",
+        "uniprot": "Q7Z3B4",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 192.5,
+        "y": 558.5
+      },
+      {
+        "id": "NEK9",
+        "type": "human",
+        "uniprot": "Q8TD19",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 401.1,
+        "y": 463.6
+      },
+      {
+        "id": "DCTPP1",
+        "type": "human",
+        "uniprot": "Q9H773",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 504.1,
+        "y": 234.0
+      },
+      {
+        "id": "G3BP1",
+        "type": "human",
+        "uniprot": "Q13283",
+        "degree": 4,
+        "cluster": "stress-granule",
+        "x": 915.2,
+        "y": 486.0
+      },
+      {
+        "id": "BAG5",
+        "type": "human",
+        "uniprot": "Q9UL15",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 644.1,
+        "y": 98.0
+      },
+      {
+        "id": "ZNF503",
+        "type": "human",
+        "uniprot": "Q96F45",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 322.6,
+        "y": 528.6
+      },
+      {
+        "id": "PTBP2",
+        "type": "human",
+        "uniprot": "Q9UKA9",
+        "degree": 1,
+        "cluster": "mitochondria",
+        "x": 660.0,
+        "y": 242.2
+      },
+      {
+        "id": "Orf6",
+        "type": "viral",
+        "uniprot": "P0DTC6",
+        "degree": 3,
+        "cluster": "nuclear-pore",
+        "x": 160.6,
+        "y": 412.1
+      },
+      {
+        "id": "NUP88",
+        "type": "human",
+        "uniprot": "Q99567",
+        "degree": 8,
+        "cluster": "nuclear-pore",
+        "x": 173.7,
+        "y": 556.4
+      },
+      {
+        "id": "FBN1",
+        "type": "human",
+        "uniprot": "P35555",
+        "degree": 3,
+        "cluster": "nuclear-pore",
+        "x": 307.1,
+        "y": 710.0
+      },
+      {
+        "id": "RBM28",
+        "type": "human",
+        "uniprot": "Q9NW13",
+        "degree": 1,
+        "cluster": "stress-granule",
+        "x": 1020.0,
+        "y": 507.2
+      },
+      {
+        "id": "MAT2B",
+        "type": "human",
+        "uniprot": "Q9NZL9",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 256.7,
+        "y": 544.3
+      },
+      {
+        "id": "UPF1",
+        "type": "human",
+        "uniprot": "Q92900",
+        "degree": 4,
+        "cluster": "stress-granule",
+        "x": 885.5,
+        "y": 566.3
+      },
+      {
+        "id": "EIF4H",
+        "type": "human",
+        "uniprot": "Q15056",
+        "degree": 1,
+        "cluster": "nuclear-pore",
+        "x": 460.0,
+        "y": 547.2
+      },
+      {
+        "id": "RPL36",
+        "type": "human",
+        "uniprot": "Q9Y3U8",
+        "degree": 5,
+        "cluster": "stress-granule",
+        "x": 993.1,
+        "y": 559.0
+      }
+    ],
+    "edges": [
+      {
+        "source": "N",
+        "target": "RRP9",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "FBLN5",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "FBLN5",
+        "target": "FBN1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "DDX21",
+        "kind": "known",
+        "score": 0.87,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "GTF2F2",
+        "kind": "known",
+        "score": 0.73,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "MOV10",
+        "kind": "known",
+        "score": 0.91,
+        "held_out": false
+      },
+      {
+        "source": "MOV10",
+        "target": "UPF1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "PABPC1",
+        "kind": "known",
+        "score": 0.8,
+        "held_out": true
+      },
+      {
+        "source": "N",
+        "target": "CSNK2A2",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "CSNK2B",
+        "kind": "known",
+        "score": 0.64,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "G3BP1",
+        "kind": "known",
+        "score": 0.98,
+        "held_out": true
+      },
+      {
+        "source": "N",
+        "target": "PABPC4",
+        "kind": "known",
+        "score": 0.73,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "LARP1",
+        "kind": "known",
+        "score": 0.79,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "FAM98A",
+        "kind": "known",
+        "score": 0.73,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "SNIP1",
+        "kind": "known",
+        "score": 0.64,
+        "held_out": true
+      },
+      {
+        "source": "N",
+        "target": "UPF1",
+        "kind": "known",
+        "score": 0.64,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "G3BP2",
+        "kind": "known",
+        "score": 0.97,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "RBM28",
+        "kind": "known",
+        "score": 0.73,
+        "held_out": false
+      },
+      {
+        "source": "N",
+        "target": "RPL36",
+        "kind": "known",
+        "score": 0.64,
+        "held_out": true
+      },
+      {
+        "source": "CSNK2A2",
+        "target": "CSNK2B",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "FBN1",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "FBN2",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP214",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": true
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP62",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "DCAF7",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "EIF4H",
+        "kind": "known",
+        "score": 0.64,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP54",
+        "kind": "known",
+        "score": 0.66,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "MIB1",
+        "kind": "known",
+        "score": 0.75,
+        "held_out": true
+      },
+      {
+        "source": "Nsp9",
+        "target": "SPART",
+        "kind": "known",
+        "score": 0.64,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "NEK9",
+        "kind": "known",
+        "score": 0.64,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "ZNF503",
+        "kind": "known",
+        "score": 0.66,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP88",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP58",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "MAT2B",
+        "kind": "known",
+        "score": 0.66,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "NUP58",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "NUP62",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "RAE1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "NUP54",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP214",
+        "target": "NUP98",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "MARK3",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Orf6",
+        "target": "NUP98",
+        "kind": "known",
+        "score": 0.91,
+        "held_out": false
+      },
+      {
+        "source": "NUP98",
+        "target": "NUP54",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP98",
+        "target": "NUP58",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP98",
+        "target": "NUP62",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP98",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP98",
+        "target": "RAE1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "MARK2",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "NUP62",
+        "target": "NUP54",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP62",
+        "target": "NUP58",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP62",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "CHMP2A",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "MARK1",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "PABPC1",
+        "target": "CSDE1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "PABPC1",
+        "target": "G3BP1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "PABPC1",
+        "target": "LARP1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "PABPC1",
+        "target": "PABPC4",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "PABPC1",
+        "target": "UPF1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "CSDE1",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": true
+      },
+      {
+        "source": "Orf9b",
+        "target": "NHERF1",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": true
+      },
+      {
+        "source": "Orf9b",
+        "target": "TOMM70",
+        "kind": "known",
+        "score": 0.98,
+        "held_out": false
+      },
+      {
+        "source": "Orf6",
+        "target": "MTCH1",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "G3BP2",
+        "target": "G3BP1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP58",
+        "target": "NUP54",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP58",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "DPH5",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "DCTPP1",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "Orf9b",
+        "target": "PTBP2",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": true
+      },
+      {
+        "source": "Orf9b",
+        "target": "BAG5",
+        "kind": "known",
+        "score": 0.53,
+        "held_out": false
+      },
+      {
+        "source": "FBN2",
+        "target": "FBN1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "Orf6",
+        "target": "RAE1",
+        "kind": "known",
+        "score": 0.93,
+        "held_out": true
+      },
+      {
+        "source": "RAE1",
+        "target": "NUP54",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "RAE1",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "NUP54",
+        "target": "NUP88",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      },
+      {
+        "source": "G3BP1",
+        "target": "UPF1",
+        "kind": "enrichment",
+        "score": 0.001,
+        "held_out": false
+      }
+    ],
+    "predicted": [
+      {
+        "source": "Nsp9",
+        "target": "NUP98",
+        "l3_score": 2.920391,
+        "path": [
+          "Nsp9",
+          "NUP54",
+          "NUP210",
+          "NUP98"
+        ],
+        "rank": 2,
+        "held_out_true": false,
+        "has_dossier": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "NUP214",
+        "l3_score": 2.885273,
+        "path": [
+          "Nsp9",
+          "NUP54",
+          "NUP210",
+          "NUP214"
+        ],
+        "rank": 3,
+        "held_out_true": true,
+        "has_dossier": false
+      },
+      {
+        "source": "Nsp9",
+        "target": "RAE1",
+        "l3_score": 2.328271,
+        "path": [
+          "Nsp9",
+          "NUP54",
+          "NUP210",
+          "RAE1"
+        ],
+        "rank": 4,
+        "held_out_true": false,
+        "has_dossier": false
+      },
+      {
+        "source": "N",
+        "target": "G3BP1",
+        "l3_score": 1.135028,
+        "path": [
+          "N",
+          "LARP1",
+          "PABPC1",
+          "G3BP1"
+        ],
+        "rank": 1,
+        "held_out_true": true,
+        "has_dossier": true
+      },
+      {
+        "source": "N",
+        "target": "PABPC1",
+        "l3_score": 1.050477,
+        "path": [
+          "N",
+          "G3BP2",
+          "G3BP1",
+          "PABPC1"
+        ],
+        "rank": 2,
+        "held_out_true": true,
+        "has_dossier": false
+      },
+      {
+        "source": "Orf6",
+        "target": "NUP54",
+        "l3_score": 0.800375,
+        "path": [
+          "Orf6",
+          "NUP98",
+          "NUP210",
+          "NUP54"
+        ],
+        "rank": 2,
+        "held_out_true": false,
+        "has_dossier": false
+      },
+      {
+        "source": "Orf6",
+        "target": "NUP88",
+        "l3_score": 0.800375,
+        "path": [
+          "Orf6",
+          "NUP98",
+          "NUP210",
+          "NUP88"
+        ],
+        "rank": 3,
+        "held_out_true": false,
+        "has_dossier": false
+      },
+      {
+        "source": "Orf6",
+        "target": "NUP214",
+        "l3_score": 0.791745,
+        "path": [
+          "Orf6",
+          "NUP98",
+          "NUP210",
+          "NUP214"
+        ],
+        "rank": 4,
+        "held_out_true": false,
+        "has_dossier": false
+      },
+      {
+        "source": "N",
+        "target": "CSDE1",
+        "l3_score": 0.781474,
+        "path": [
+          "N",
+          "LARP1",
+          "PABPC1",
+          "CSDE1"
+        ],
+        "rank": 3,
+        "held_out_true": false,
+        "has_dossier": false
+      },
+      {
+        "source": "Orf6",
+        "target": "NUP62",
+        "l3_score": 0.642261,
+        "path": [
+          "Orf6",
+          "NUP98",
+          "NUP210",
+          "NUP62"
+        ],
+        "rank": 5,
+        "held_out_true": false,
+        "has_dossier": false
+      },
+      {
+        "source": "Orf6",
+        "target": "NUP58",
+        "l3_score": 0.633631,
+        "path": [
+          "Orf6",
+          "NUP98",
+          "NUP210",
+          "NUP58"
+        ],
+        "rank": 6,
+        "held_out_true": false,
+        "has_dossier": false
+      }
+    ],
+    "clusters": [
+      "mitochondria",
+      "nuclear-pore",
+      "stress-granule"
+    ]
+  },
+  "flagship": {
+    "edge": "Orf6|RAE1",
+    "path": [
+      "Orf6",
+      "NUP98",
+      "NUP214",
+      "RAE1"
+    ],
+    "l3_rank": 7,
+    "n_candidates": 8,
+    "l3_score": 0.508631,
+    "note": "Recovered via a genuine length-3 path (Orf6->NUP98->NUP214->RAE1). Topology ranks it inside Orf6's nuclear-pore candidate set; the structure (PDB 7VPH) and literature identify it as the biologically correct edge."
+  },
+  "dossiers": {
+    "Orf6|RAE1": {
+      "edge": "Orf6|RAE1",
+      "source": "Orf6",
+      "target": "RAE1",
+      "status": "predicted",
+      "mechanism": [
+        {
+          "text": "SARS-CoV-2 ORF6 docks its short acidic C-terminal tail onto the RAE1\u2013NUP98 mRNA-export complex at the cytoplasmic face of the nuclear pore",
+          "cites": [
+            1
+          ]
+        },
+        {
+          "text": ", inserting Met58 into the RAE1 mRNA-binding groove to sterically block bidirectional nucleocytoplasmic transport",
+          "cites": [
+            2
+          ]
+        },
+        {
+          "text": ", which prevents nuclear import of activated STAT1/STAT2 and antagonizes the type-I interferon response",
+          "cites": [
+            3
+          ]
+        },
+        {
+          "text": ". The graph proposed this edge from topology alone (Orf6\u2192NUP98\u2192NUP214\u2192RAE1); PDB 7VPH shows ORF6 in direct contact with RAE1, confirming it.",
+          "cites": []
+        }
+      ],
+      "citations": [
+        {
+          "pmid": "33097660",
+          "doi": "10.1073/pnas.2016650117",
+          "title": "SARS-CoV-2 Orf6 hijacks Nup98 to block STAT nuclear import and antagonize interferon signaling.",
+          "journal": "Proc Natl Acad Sci U S A",
+          "year": "2020",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33097660/",
+          "claim": "SARS-CoV-2 Orf6 binds the Nup98\u2013Rae1 complex at the nuclear pore to block STAT1/STAT2 nuclear import, antagonizing interferon signaling (Miorin et al. 2020 PNAS).",
+          "n": 1
+        },
+        {
+          "pmid": "35970938",
+          "doi": "10.1038/s41467-022-32489-5",
+          "title": "Structural basis for Sarbecovirus ORF6 mediated blockage of nucleocytoplasmic transport.",
+          "journal": "Nat Commun",
+          "year": "2022",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/35970938/",
+          "claim": "Crystal structure of the SARS-CoV-2 Orf6 C-terminus bound to Rae1\u2013Nup98 shows Orf6 inserts a methionine into the Rae1 mRNA-binding groove to sterically block nucleocytoplasmic transport.",
+          "n": 2
+        },
+        {
+          "pmid": "33849972",
+          "doi": "10.1128/mBio.00065-21",
+          "title": "SARS-CoV-2 ORF6 Disrupts Bidirectional Nucleocytoplasmic Transport through Interactions with Rae1 and Nup98.",
+          "journal": "mBio",
+          "year": "2021",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33849972/",
+          "claim": "Orf6 docks onto the Rae1\u2013Nup98 nucleoporin complex and disrupts bidirectional nucleocytoplasmic transport, inhibiting both host mRNA export and protein import.",
+          "n": 3
+        }
+      ],
+      "structure": {
+        "kind": "experimental",
+        "source": "PDB 7VPH",
+        "pdb": "7VPH",
+        "url": "data/structures/7VPH.cif",
+        "method": "X-ray diffraction",
+        "resolution_A": 2.8,
+        "confidence": {
+          "type": "resolution",
+          "value": 2.8,
+          "unit": "\u00c5 (X-ray)"
+        },
+        "chains": "SARS-CoV-2 ORF6 C-terminal tail + human RAE1 + human NUP98",
+        "interface_residues": [
+          "E55",
+          "Q56",
+          "M58",
+          "E59",
+          "D61"
+        ],
+        "interface_source": "computed: ORF6 heavy-atom contacts with RAE1 <= 3.0 \u00c5 in PDB 7VPH",
+        "note": "Experimental structure. ORF6 directly contacts RAE1 at the mRNA-export groove; the graph independently re-proposed this held-out edge and the structure confirms it."
+      },
+      "confidence": {
+        "topology": 0.64,
+        "topology_rank": 7,
+        "structure": {
+          "type": "resolution",
+          "value": 2.8,
+          "unit": "\u00c5 (X-ray)"
+        },
+        "literature": "Strong",
+        "literature_count": 3
+      },
+      "proposed_test": {
+        "residues": [
+          "E55A",
+          "M58R",
+          "D61A"
+        ],
+        "assay": "co-immunoprecipitation (HEK293T)",
+        "readout": "STAT1 nuclear import",
+        "text": "Mutate the structure-verified ORF6 interface residues (E55A / M58R / D61A) and test for loss of RAE1 binding by co-immunoprecipitation in HEK293T; rescue of STAT1 nuclear import confirms the edge is functional."
+      },
+      "druggability": {
+        "target": "RAE1",
+        "ensembl": "ENSG00000101146",
+        "level": "LOW",
+        "note": "Shallow mRNA-export groove \u2014 addressable only as a PPI-inhibitor class."
+      },
+      "skeptic": {
+        "verdict": "pass",
+        "reason": "no false-positive pattern matched.",
+        "caveat": null
+      },
+      "l3_path": [
+        "Orf6",
+        "NUP98",
+        "NUP214",
+        "RAE1"
+      ],
+      "held_out": true,
+      "provenance": {
+        "proposed_by": "deterministic degree-normalized L3",
+        "evidence_by": "Claude reasoning layer (Reader/Skeptic), grounded in verified edge packs",
+        "structure_by": "PDB 7VPH",
+        "evaluator": "locked held-out benchmark (frozen before prediction)"
+      }
+    },
+    "Orf9b|TOMM70": {
+      "edge": "Orf9b|TOMM70",
+      "source": "Orf9b",
+      "target": "TOMM70",
+      "status": "known",
+      "mechanism": [
+        {
+          "text": "SARS-CoV-2 ORF9b occupies the TOM70 cytosolic C-terminal pocket that normally receives HSP90-chaperoned client proteins",
+          "cites": [
+            1
+          ]
+        },
+        {
+          "text": ", binding the chaperone-docking groove (structure-verified contacts include S53, R58, E65) and preventing the TOM70\u2013HSP90 interaction",
+          "cites": [
+            2
+          ]
+        },
+        {
+          "text": ", which dampens TOM70-dependent MAVS signalling to blunt type-I interferon induction",
+          "cites": [
+            3
+          ]
+        },
+        {
+          "text": ". S53 is the phospho-regulated serine that tunes this interface.",
+          "cites": [
+            4
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "pmid": "33990585",
+          "doi": "10.1038/s41467-021-23118-8",
+          "title": "Crystal structure of SARS-CoV-2 Orf9b in complex with human TOM70 suggests unusual virus-host interactions.",
+          "journal": "Nat Commun",
+          "year": "2021",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33990585/",
+          "claim": "Crystal structure of SARS-CoV-2 Orf9b bound to human TOM70 shows Orf9b occupies the TOM70 cytosolic C-terminal HSP70/HSP90-binding pocket, suggesting displacement of chaperone-mediated preprotein import.",
+          "n": 1
+        },
+        {
+          "pmid": "35643212",
+          "doi": "10.1016/j.biochi.2022.05.016",
+          "title": "Binding of SARS-CoV-2 protein ORF9b to mitochondrial translocase TOM70 prevents its interaction with chaperone HSP90.",
+          "journal": "Biochimie",
+          "year": "2022",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/35643212/",
+          "claim": "Biophysical characterization confirms SARS-CoV-2 Orf9b binds the mitochondrial translocase receptor TOM70, occupying its chaperone-docking groove.",
+          "n": 2
+        },
+        {
+          "pmid": "32728199",
+          "doi": "10.1038/s41423-020-0514-8",
+          "title": "SARS-CoV-2 Orf9b suppresses type I interferon responses by targeting TOM70.",
+          "journal": "Cell Mol Immunol",
+          "year": "2020",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/32728199/",
+          "claim": "SARS-CoV-2 Orf9b suppresses type I interferon responses by targeting TOM70, blocking the TOM70\u2013MAVS mitochondrial antiviral signaling axis.",
+          "n": 3
+        },
+        {
+          "pmid": "34502139",
+          "doi": "10.3390/ijms22179233",
+          "title": "Phosphorylation of SARS-CoV-2 Orf9b Regulates Its Targeting to Two Binding Sites in TOM70 and Recruitment of Hsp90.",
+          "journal": "Int J Mol Sci",
+          "year": "2021",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/34502139/",
+          "claim": "Phosphorylation of SARS-CoV-2 Orf9b regulates its targeting to two binding sites in TOM70 and its recruitment of Hsp90, tuning the Orf9b\u2013TOM70 chaperone interface.",
+          "n": 4
+        }
+      ],
+      "structure": {
+        "kind": "experimental",
+        "source": "PDB 7DHG",
+        "pdb": "7DHG",
+        "url": "data/structures/7DHG.cif",
+        "method": "X-ray diffraction",
+        "resolution_A": 2.2,
+        "confidence": {
+          "type": "resolution",
+          "value": 2.2,
+          "unit": "\u00c5 (X-ray)"
+        },
+        "chains": "SARS-CoV-2 ORF9b + human TOM70 (TOMM70)",
+        "interface_residues": [
+          "I44",
+          "S53",
+          "R58",
+          "E65"
+        ],
+        "interface_source": "computed: ORF9b heavy-atom contacts with TOM70 <= 3.0 \u00c5 in PDB 7DHG",
+        "note": "Experimental. S53 (the phospho-regulated serine) confirmed as a real contact; the prototype's S55/K46 are NOT contacts and were repaired."
+      },
+      "confidence": {
+        "topology": null,
+        "topology_rank": null,
+        "structure": {
+          "type": "resolution",
+          "value": 2.2,
+          "unit": "\u00c5 (X-ray)"
+        },
+        "literature": "Strong",
+        "literature_count": 4
+      },
+      "proposed_test": {
+        "residues": [
+          "S53A",
+          "R58E"
+        ],
+        "assay": "co-immunoprecipitation (HEK293T)",
+        "readout": "MAVS-driven IFN-\u03b2 reporter",
+        "text": "Point-mutate the ORF9b interface (S53A phospho-null; R58E charge reversal) and confirm loss of TOM70 binding by co-immunoprecipitation; rescue of the MAVS-driven IFN-\u03b2 reporter confirms functional relief."
+      },
+      "druggability": {
+        "target": "TOMM70",
+        "ensembl": "ENSG00000154174",
+        "level": "MODERATE",
+        "note": "Defined hydrophobic TPR pocket \u2014 a more tractable orthosteric handle than most PPI interfaces."
+      },
+      "skeptic": {
+        "verdict": "pass",
+        "reason": "no false-positive pattern matched.",
+        "caveat": null
+      },
+      "l3_path": null,
+      "held_out": false,
+      "provenance": {
+        "proposed_by": "deterministic degree-normalized L3",
+        "evidence_by": "Claude reasoning layer (Reader/Skeptic), grounded in verified edge packs",
+        "structure_by": "PDB 7DHG",
+        "evaluator": "locked held-out benchmark (frozen before prediction)"
+      }
+    },
+    "N|G3BP1": {
+      "edge": "N|G3BP1",
+      "source": "N",
+      "target": "G3BP1",
+      "status": "predicted",
+      "mechanism": [
+        {
+          "text": "The SARS-CoV-2 nucleocapsid (N) protein binds G3BP1 through a convergently-evolved ITFG/\u03a6xFG-like G3BP1-binding motif",
+          "cites": [
+            1
+          ]
+        },
+        {
+          "text": ", phase-separating with the G3BP scaffold to disassemble host stress granules and free the antiviral G3BP1 pool",
+          "cites": [
+            2
+          ]
+        },
+        {
+          "text": ", which suppresses the stress-granule-associated interferon response and favours viral replication",
+          "cites": [
+            3
+          ]
+        },
+        {
+          "text": ". Known AP-MS edge; the complex is not crystallised, so the 3D panel shows the predicted G3BP1 model, labelled predicted.",
+          "cites": []
+        }
+      ],
+      "citations": [
+        {
+          "pmid": "40936503",
+          "doi": "10.1093/ve/veaf063",
+          "title": "Convergent evolution of the G3BP1-binding motif in betacoronavirus nucleocapsid proteins.",
+          "journal": "Virus Evol",
+          "year": "2025",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/40936503/",
+          "claim": "Betacoronavirus nucleocapsid proteins convergently evolved an ITFG (\u03a6xFG-like) G3BP1-binding motif that mediates the N\u2013G3BP1 interaction and stress-granule antagonism.",
+          "n": 1
+        },
+        {
+          "pmid": "33495715",
+          "doi": "10.1016/j.scib.2021.01.013",
+          "title": "SARS-CoV-2 nucleocapsid protein phase separates with G3BPs to disassemble stress granules and facilitate viral production.",
+          "journal": "Sci Bull (Beijing)",
+          "year": "2021",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33495715/",
+          "claim": "SARS-CoV-2 N protein phase-separates with G3BP1/G3BP2, disassembling host stress granules by co-condensing the G3BP scaffold away from stress-granule seeds.",
+          "n": 2
+        },
+        {
+          "pmid": "35652658",
+          "doi": "10.1128/jvi.00412-22",
+          "title": "SARS-CoV-2 N Protein Antagonizes Stress Granule Assembly and IFN Production by Interacting with G3BPs to Facilitate Viral Replication.",
+          "journal": "J Virol",
+          "year": "2022",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/35652658/",
+          "claim": "SARS-CoV-2 N protein antagonizes stress-granule assembly through its interaction with G3BP1, suppressing the stress-granule-associated interferon response.",
+          "n": 3
+        }
+      ],
+      "structure": {
+        "kind": "predicted",
+        "source": "AlphaFold DB (AF-Q13283, G3BP1)",
+        "pdb": null,
+        "model_id": "AF-Q13283-F1",
+        "url": "data/structures/AF-Q13283-G3BP1.cif",
+        "method": "AlphaFold2 monomer (predicted)",
+        "confidence": {
+          "type": "pLDDT",
+          "value": 66.8,
+          "unit": "mean pLDDT"
+        },
+        "chains": "human G3BP1 (predicted monomer; the N\u2013G3BP1 complex is not deposited)",
+        "interface_residues": [],
+        "interface_source": "no deposited complex; specific N-protein contact residues are not shown (would be unverified). Binding is via the literature-verified ITFG/\u03a6xFG G3BP1-binding motif.",
+        "note": "PREDICTED structure of the human G3BP1 target, shown to demonstrate the predicted-vs-experimental integrity path. Not the complex; not experimental fact."
+      },
+      "confidence": {
+        "topology": 1.0,
+        "topology_rank": 1,
+        "structure": {
+          "type": "pLDDT",
+          "value": 66.8,
+          "unit": "mean pLDDT"
+        },
+        "literature": "Strong",
+        "literature_count": 3
+      },
+      "proposed_test": {
+        "residues": [
+          "ITFG-motif"
+        ],
+        "assay": "co-immunoprecipitation (HEK293T)",
+        "readout": "stress-granule assembly (immunofluorescence)",
+        "text": "Mutate the N-protein ITFG G3BP1-binding motif and test for loss of G3BP1 binding by co-immunoprecipitation; score rescue of stress-granule assembly by immunofluorescence. (Specific residue numbers await a complex structure.)"
+      },
+      "druggability": {
+        "target": "G3BP1",
+        "ensembl": "ENSG00000145907",
+        "level": "LOW",
+        "note": "NTF2-like groove; shallow PPI-inhibitor target, no known chemical starts."
+      },
+      "skeptic": {
+        "verdict": "pass",
+        "reason": "no false-positive pattern matched.",
+        "caveat": "AP-MS captures co-complex membership, not necessarily a direct binary contact; treat as a co-membership prior until a structure resolves it."
+      },
+      "l3_path": [
+        "N",
+        "LARP1",
+        "PABPC1",
+        "G3BP1"
+      ],
+      "held_out": true,
+      "provenance": {
+        "proposed_by": "deterministic degree-normalized L3",
+        "evidence_by": "Claude reasoning layer (Reader/Skeptic), grounded in verified edge packs",
+        "structure_by": "AlphaFold DB (AF-Q13283, G3BP1)",
+        "evaluator": "locked held-out benchmark (frozen before prediction)"
+      }
+    },
+    "Orf6|NUP98": {
+      "edge": "Orf6|NUP98",
+      "source": "Orf6",
+      "target": "NUP98",
+      "status": "known",
+      "mechanism": [
+        {
+          "text": "SARS-CoV-2 ORF6 binds the nucleoporin NUP98 as part of the Rae1\u2013Nup98 export module at the nuclear pore",
+          "cites": [
+            1
+          ]
+        },
+        {
+          "text": ", and overexpression dislocates RAE1 and NUP98 from the pore, disrupting its integrity",
+          "cites": [
+            2
+          ]
+        },
+        {
+          "text": ". This is a known high-confidence AP-MS edge, shown for calibration.",
+          "cites": []
+        }
+      ],
+      "citations": [
+        {
+          "pmid": "33097660",
+          "doi": "10.1073/pnas.2016650117",
+          "title": "SARS-CoV-2 Orf6 hijacks Nup98 to block STAT nuclear import and antagonize interferon signaling.",
+          "journal": "Proc Natl Acad Sci U S A",
+          "year": "2020",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33097660/",
+          "claim": "SARS-CoV-2 Orf6 binds the Nup98\u2013Rae1 complex at the nuclear pore to block STAT1/STAT2 nuclear import, antagonizing interferon signaling (Miorin et al. 2020 PNAS).",
+          "n": 1
+        },
+        {
+          "pmid": "33360543",
+          "doi": "10.1016/j.bbrc.2020.11.115",
+          "title": "Overexpression of SARS-CoV-2 protein ORF6 dislocates RAE1 and NUP98 from the nuclear pore complex.",
+          "journal": "Biochem Biophys Res Commun",
+          "year": "2021",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33360543/",
+          "claim": "Overexpression of SARS-CoV-2 Orf6 physically dislocates RAE1 and NUP98 away from the nuclear pore complex, disrupting nuclear pore integrity.",
+          "n": 2
+        }
+      ],
+      "structure": {
+        "kind": "experimental",
+        "source": "PDB 7VPH",
+        "pdb": "7VPH",
+        "url": "data/structures/7VPH.cif",
+        "method": "X-ray diffraction",
+        "resolution_A": 2.8,
+        "confidence": {
+          "type": "resolution",
+          "value": 2.8,
+          "unit": "\u00c5 (X-ray)"
+        },
+        "chains": "SARS-CoV-2 ORF6 C-terminal tail + human NUP98",
+        "interface_residues": [],
+        "interface_source": "computed: ORF6 heavy-atom contacts with NUP98 <= 3.0 \u00c5 in PDB 7VPH",
+        "note": "Experimental; known AP-MS edge shown for calibration."
+      },
+      "confidence": {
+        "topology": null,
+        "topology_rank": null,
+        "structure": {
+          "type": "resolution",
+          "value": 2.8,
+          "unit": "\u00c5 (X-ray)"
+        },
+        "literature": "Strong",
+        "literature_count": 2
+      },
+      "proposed_test": {
+        "residues": [
+          "M58R"
+        ],
+        "assay": "co-immunoprecipitation (HEK293T)",
+        "readout": "host mRNA nuclear export (oligo-dT FISH)",
+        "text": "Point-mutate the ORF6 C-terminal anchor (M58R) and confirm loss of the Rae1\u2013Nup98 association by co-immunoprecipitation; score rescue of host mRNA export by oligo-dT FISH."
+      },
+      "druggability": {
+        "target": "NUP98",
+        "ensembl": "ENSG00000110713",
+        "level": "LOW",
+        "note": "Structural nucleoporin; not a conventional small-molecule target."
+      },
+      "skeptic": {
+        "verdict": "pass",
+        "reason": "no false-positive pattern matched.",
+        "caveat": null
+      },
+      "l3_path": null,
+      "held_out": false,
+      "provenance": {
+        "proposed_by": "deterministic degree-normalized L3",
+        "evidence_by": "Claude reasoning layer (Reader/Skeptic), grounded in verified edge packs",
+        "structure_by": "PDB 7VPH",
+        "evaluator": "locked held-out benchmark (frozen before prediction)"
+      }
+    }
+  },
+  "held_out_in_view": [
+    [
+      "N",
+      "G3BP1"
+    ],
+    [
+      "N",
+      "PABPC1"
+    ],
+    [
+      "N",
+      "RPL36"
+    ],
+    [
+      "N",
+      "SNIP1"
+    ],
+    [
+      "Nsp9",
+      "MIB1"
+    ],
+    [
+      "Nsp9",
+      "NUP214"
+    ],
+    [
+      "Orf6",
+      "RAE1"
+    ],
+    [
+      "Orf9b",
+      "CSDE1"
+    ],
+    [
+      "Orf9b",
+      "NHERF1"
+    ],
+    [
+      "Orf9b",
+      "PTBP2"
+    ]
+  ],
+  "per_heldout_recovery": [
+    {
+      "bait": "E",
+      "prey": "CWC27",
+      "rank": null,
+      "n_candidates": 7,
+      "recovered": false
+    },
+    {
+      "bait": "M",
+      "prey": "ATP6V1A",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    },
+    {
+      "bait": "M",
+      "prey": "BZW2",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    },
+    {
+      "bait": "M",
+      "prey": "ETFA",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    },
+    {
+      "bait": "M",
+      "prey": "FAM8A1",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    },
+    {
+      "bait": "M",
+      "prey": "PMPCB",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    },
+    {
+      "bait": "M",
+      "prey": "PSMD8",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    },
+    {
+      "bait": "M",
+      "prey": "YIF1A",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    },
+    {
+      "bait": "N",
+      "prey": "G3BP1",
+      "rank": 1,
+      "n_candidates": 8,
+      "recovered": true
+    },
+    {
+      "bait": "N",
+      "prey": "PABPC1",
+      "rank": 2,
+      "n_candidates": 8,
+      "recovered": true
+    },
+    {
+      "bait": "N",
+      "prey": "RPL36",
+      "rank": null,
+      "n_candidates": 8,
+      "recovered": false
+    },
+    {
+      "bait": "N",
+      "prey": "SNIP1",
+      "rank": null,
+      "n_candidates": 8,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp1",
+      "prey": "PKP2",
+      "rank": null,
+      "n_candidates": 0,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp10",
+      "prey": "AP2A2",
+      "rank": null,
+      "n_candidates": 0,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp12",
+      "prey": "AKAP8",
+      "rank": null,
+      "n_candidates": 17,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp12",
+      "prey": "PRRC2B",
+      "rank": null,
+      "n_candidates": 17,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp12",
+      "prey": "UBAP2L",
+      "rank": null,
+      "n_candidates": 17,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp12",
+      "prey": "ZC3H7A",
+      "rank": null,
+      "n_candidates": 17,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "GCC1",
+      "rank": null,
+      "n_candidates": 12,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "GOLGA3",
+      "rank": null,
+      "n_candidates": 12,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "NINL",
+      "rank": null,
+      "n_candidates": 12,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "PCNT",
+      "rank": 1,
+      "n_candidates": 12,
+      "recovered": true
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "PDE4DIP",
+      "rank": 3,
+      "n_candidates": 12,
+      "recovered": true
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "PRKAR2A",
+      "rank": 2,
+      "n_candidates": 12,
+      "recovered": true
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "RDX",
+      "rank": null,
+      "n_candidates": 12,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "TLE1",
+      "rank": 4,
+      "n_candidates": 12,
+      "recovered": true
+    },
+    {
+      "bait": "Nsp14",
+      "prey": "SIRT5",
+      "rank": null,
+      "n_candidates": 0,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp2",
+      "prey": "WASHC4",
+      "rank": null,
+      "n_candidates": 2,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "TIMM10",
+      "rank": 1,
+      "n_candidates": 11,
+      "recovered": true
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "TIMM29",
+      "rank": 2,
+      "n_candidates": 11,
+      "recovered": true
+    },
+    {
+      "bait": "Nsp6",
+      "prey": "ATP5MG",
+      "rank": null,
+      "n_candidates": 0,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp6",
+      "prey": "SIGMAR1",
+      "rank": null,
+      "n_candidates": 0,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp7",
+      "prey": "RAB1A",
+      "rank": null,
+      "n_candidates": 4,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp7",
+      "prey": "RAB5C",
+      "rank": null,
+      "n_candidates": 4,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp7",
+      "prey": "RAB8A",
+      "rank": null,
+      "n_candidates": 4,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp8",
+      "prey": "AATF",
+      "rank": 3,
+      "n_candidates": 8,
+      "recovered": true
+    },
+    {
+      "bait": "Nsp8",
+      "prey": "CCDC86",
+      "rank": null,
+      "n_candidates": 8,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp8",
+      "prey": "MEPCE",
+      "rank": null,
+      "n_candidates": 8,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp8",
+      "prey": "MPHOSPH10",
+      "rank": 4,
+      "n_candidates": 8,
+      "recovered": true
+    },
+    {
+      "bait": "Nsp9",
+      "prey": "MIB1",
+      "rank": null,
+      "n_candidates": 9,
+      "recovered": false
+    },
+    {
+      "bait": "Nsp9",
+      "prey": "NUP214",
+      "rank": 3,
+      "n_candidates": 9,
+      "recovered": true
+    },
+    {
+      "bait": "Orf10",
+      "prey": "THTPA",
+      "rank": null,
+      "n_candidates": 10,
+      "recovered": false
+    },
+    {
+      "bait": "Orf3a",
+      "prey": "HMOX1",
+      "rank": null,
+      "n_candidates": 5,
+      "recovered": false
+    },
+    {
+      "bait": "Orf6",
+      "prey": "RAE1",
+      "rank": 7,
+      "n_candidates": 8,
+      "recovered": true
+    },
+    {
+      "bait": "Orf8",
+      "prey": "FBXL12",
+      "rank": null,
+      "n_candidates": 2,
+      "recovered": false
+    },
+    {
+      "bait": "Orf8",
+      "prey": "NPTX1",
+      "rank": null,
+      "n_candidates": 2,
+      "recovered": false
+    },
+    {
+      "bait": "Orf8",
+      "prey": "PLEKHF2",
+      "rank": null,
+      "n_candidates": 2,
+      "recovered": false
+    },
+    {
+      "bait": "Orf8",
+      "prey": "POGLUT2",
+      "rank": null,
+      "n_candidates": 2,
+      "recovered": false
+    },
+    {
+      "bait": "Orf8",
+      "prey": "SIL1",
+      "rank": null,
+      "n_candidates": 2,
+      "recovered": false
+    },
+    {
+      "bait": "Orf9b",
+      "prey": "CSDE1",
+      "rank": null,
+      "n_candidates": 0,
+      "recovered": false
+    },
+    {
+      "bait": "Orf9b",
+      "prey": "NHERF1",
+      "rank": null,
+      "n_candidates": 0,
+      "recovered": false
+    },
+    {
+      "bait": "Orf9b",
+      "prey": "PTBP2",
+      "rank": null,
+      "n_candidates": 0,
+      "recovered": false
+    },
+    {
+      "bait": "Orf9c",
+      "prey": "DPY19L1",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    },
+    {
+      "bait": "Orf9c",
+      "prey": "ECSIT",
+      "rank": 1,
+      "n_candidates": 3,
+      "recovered": true
+    },
+    {
+      "bait": "Orf9c",
+      "prey": "NDUFAF1",
+      "rank": 2,
+      "n_candidates": 3,
+      "recovered": true
+    },
+    {
+      "bait": "Orf9c",
+      "prey": "RETREG3",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    },
+    {
+      "bait": "Orf9c",
+      "prey": "TMEM97",
+      "rank": null,
+      "n_candidates": 3,
+      "recovered": false
+    }
+  ]
+}

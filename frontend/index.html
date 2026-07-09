@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartograph — the navigation layer for a protein interaction map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vendor/pdbe-molstar-light.css">
+<link rel="stylesheet" href="style.css">
+<script src="vendor/cytoscape.min.js"></script>
+<script src="vendor/pdbe-molstar-component.js"></script>
+</head>
+<body>
+<div id="app">
+  <!-- top bar -->
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">Cartograph</span>
+      <span class="tagline">the navigation layer for a protein interaction map</span>
+    </div>
+    <div class="topmeta">
+      <span class="pill" id="pill-data">Gordon 2020 · 332 edges · 26 baits</span>
+      <span class="pill pill-integrity">deterministic graph · Claude explains · locked evaluator</span>
+    </div>
+  </header>
+
+  <div id="main">
+    <!-- left control strip -->
+    <aside id="controls" class="scroll">
+      <section class="ctl-block">
+        <div class="ctl-h">Ask the map</div>
+        <div class="askbox">
+          <button class="ask-preset" data-q="orf6">What interaction is Orf6 missing?</button>
+          <button class="ask-preset" data-q="orf9b">Show the Orf9b–TOM70 dossier</button>
+          <button class="ask-preset" data-q="n">Show the N–G3BP1 dossier</button>
+        </div>
+      </section>
+
+      <section class="ctl-block">
+        <div class="ctl-h">Layers</div>
+        <div id="layer-toggles"></div>
+      </section>
+
+      <section class="ctl-block">
+        <div class="ctl-h">Locked evaluator</div>
+        <button id="btn-eval" class="ctl-btn">Run evaluator</button>
+        <button id="btn-loop" class="ctl-btn" disabled>Run one loop round</button>
+        <div id="eval-readout" class="eval-readout"></div>
+      </section>
+
+      <section class="ctl-block ctl-integrity">
+        <div class="ctl-h">Integrity</div>
+        <ul id="integrity-list"></ul>
+      </section>
+
+      <section class="ctl-block ctl-foot">
+        <button id="btn-reset" class="ctl-btn ctl-ghost">Reset demo</button>
+        <div class="foot-note">Open source · MIT · reproducible</div>
+      </section>
+    </aside>
+
+    <!-- center graph stage -->
+    <div id="stage">
+      <div id="cy"></div>
+      <div id="ask-toast" class="ask-toast hidden"></div>
+      <div id="precision-chip" class="precision-chip hidden"></div>
+      <div id="legend" class="legend"></div>
+    </div>
+
+    <!-- right dossier panel -->
+    <aside id="dossier" class="scroll">
+      <div id="dossier-body"></div>
+    </aside>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
