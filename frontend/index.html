@@ -47,7 +47,14 @@
         <div class="ctl-h">Locked evaluator</div>
         <button id="btn-eval" class="ctl-btn">Run evaluator</button>
         <button id="btn-loop" class="ctl-btn" disabled>Run one loop round</button>
-        <div id="eval-readout" class="eval-readout"></div>
+        <button id="btn-evaltrans" class="ctl-btn ctl-ghost">Held-out transparency</button>
+        <div id="eval-readout" class="eval-readout" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="ctl-block">
+        <div class="ctl-h">Triage</div>
+        <button id="btn-worklist" class="ctl-btn">What to test next →</button>
+        <button id="btn-upload" class="ctl-btn ctl-ghost">Upload interactome…</button>
       </section>
 
       <section class="ctl-block ctl-integrity">
@@ -63,9 +70,9 @@
 
     <!-- center graph stage -->
     <div id="stage">
-      <div id="cy"></div>
-      <div id="ask-toast" class="ask-toast hidden"></div>
-      <div id="precision-chip" class="precision-chip hidden"></div>
+      <div id="cy" role="img" aria-label="SARS-CoV-2 to human interaction graph. Mouse-driven; use the Ask the map buttons on the left as the keyboard path to open dossiers."></div>
+      <div id="ask-toast" class="ask-toast hidden" role="status" aria-live="polite"></div>
+      <div id="precision-chip" class="precision-chip hidden" role="status" aria-live="polite"></div>
       <div id="legend" class="legend"></div>
     </div>
 
@@ -88,6 +95,18 @@
     </div>
     <div id="fs-mount"></div>
     <div id="fs-resid" class="fs-resid"></div>
+  </div>
+
+  <!-- worklist / eval-transparency / upload modal -->
+  <div id="modal" class="hidden" role="dialog" aria-modal="true" aria-label="panel">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div id="modal-title" class="modal-title"></div>
+        <div id="modal-actions" class="modal-actions"></div>
+        <button id="modal-close" class="fs-btn fs-close" title="Close (Esc)">✕ Close</button>
+      </div>
+      <div id="modal-body" class="modal-body scroll"></div>
+    </div>
   </div>
 
   <!-- lightweight graph hover tooltip -->

@@ -161,6 +161,36 @@ def _build_dossier(edge_key, ranked_by_bait, structure_facts, frozen):
     }
 
 
+def _build_worklist(ranked_all, held_set, structure_facts, top_n=40):
+    """The ranked 'what to test next' triage list over the WHOLE map.
+
+    Only honestly-known columns: L3 score/rank, whether the edge is a recovered
+    held-out true edge, whether we hold a structure and a cited mechanism, and a
+    druggability read. Conservation is intentionally omitted — we have no
+    cross-coronavirus PPI data, so a conservation column would be fabricated.
+    """
+    rows = []
+    for bait, ranked in ranked_all.items():
+        for i, c in enumerate(ranked, 1):
+            edge = f"{bait}|{c['candidate']}"
+            has_dossier = edge in DOSSIER
+            struct = structure_facts.get(edge)
+            rows.append({
+                "bait": bait, "prey": c["candidate"], "edge": edge,
+                "l3_score": c["l3_score"], "rank": i,
+                "recovered": (bait, c["candidate"]) in held_set,
+                "structure": struct["kind"] if struct else "none",
+                "structure_source": (struct.get("pdb") or struct.get("source")) if struct else None,
+                "has_mechanism": has_dossier,
+                "druggability": DOSSIER[edge]["drug"]["level"] if has_dossier else None,
+                "opentargets": f"https://platform.opentargets.org/search?q={c['candidate']}",
+                "has_dossier": has_dossier,
+                "path": pick_display_path(c, preferred=config.FLAGSHIP_PATH),
+            })
+    rows.sort(key=lambda r: (-r["l3_score"], r["bait"], r["prey"]))
+    return rows[:top_n]
+
+
 def build():
     g = enriched_graph()
     frozen = load_frozen()
@@ -182,7 +212,18 @@ def build():
     # --- demo subgraph ------------------------------------------------------
     sub, nodes, held_set = _subgraph(g, frozen)
 
-    ranked_by_bait = {b: l3_scores(_train_graph(g, frozen), b) for b in DEMO_BAITS}
+    # rank L3 candidates for every bait once (blind training graph); reuse for the
+    # demo subgraph and the whole-map worklist.
+    train = _train_graph(g, frozen)
+    all_baits = sorted(n for n, d in g.nodes(data=True) if d["type"] == "viral")
+    ranked_all = {b: l3_scores(train, b) for b in all_baits}
+    ranked_by_bait = {b: ranked_all[b] for b in DEMO_BAITS}
+
+    # enrich held-out recovery rows with the L3 path behind each recovered edge
+    # (for the eval-transparency view). Deterministic; derived from ranked_all.
+    for r in rec:
+        ent = next((c for c in ranked_all.get(r["bait"], []) if c["candidate"] == r["prey"]), None)
+        r["path"] = pick_display_path(ent, preferred=config.FLAGSHIP_PATH) if ent else None
 
     # visible edges
     edges = []
@@ -235,6 +276,9 @@ def build():
     # --- dossiers -----------------------------------------------------------
     structure_facts = build_structure_facts()
     dossiers = {e: _build_dossier(e, ranked_by_bait, structure_facts, frozen) for e in DEMO_EDGES}
+
+    # --- worklist: ranked "what to test next" over the whole map ------------
+    worklist = _build_worklist(ranked_all, held_set, structure_facts)
 
     # --- flagship detail ----------------------------------------------------
     flag_bait, flag_prey = config.FLAGSHIP_HELDOUT_EDGE
@@ -312,6 +356,7 @@ def build():
                   "clusters": sorted(set(CLUSTER.values()))},
         "flagship": flagship,
         "dossiers": dossiers,
+        "worklist": worklist,
         "held_out_in_view": sorted([[s, t] for (s, t) in held_set
                                     if s in DEMO_BAITS and t in visible]),
         "per_heldout_recovery": rec,

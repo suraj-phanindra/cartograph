@@ -156,6 +156,9 @@ function buildControls(){
   document.getElementById('btn-eval').onclick=runEval;
   document.getElementById('btn-loop').onclick=runLoop;
   document.getElementById('btn-reset').onclick=()=>location.reload();
+  document.getElementById('btn-worklist').onclick=openWorklist;
+  document.getElementById('btn-evaltrans').onclick=openEvalTransparency;
+  document.getElementById('btn-upload').onclick=openUpload;
 
   const il=document.getElementById('integrity-list'); il.innerHTML='';
   const items=[DATA.integrity.deterministic_path, DATA.integrity.no_citation_no_render,
@@ -450,6 +453,7 @@ function openFullscreen(st){
   document.getElementById('fs-reset').onclick=()=>molCall(el, v=>v.visual.reset && v.visual.reset({camera:true}));
   fsReturnFocus=document.activeElement;
   ov.classList.remove('hidden');
+  setInert(true);                       // trap focus: background is inert while open
   document.body.style.overflow='hidden';
   document.getElementById('fs-close').focus();
 }
@@ -458,9 +462,14 @@ function closeFullscreen(){
   if(ov.classList.contains('hidden')) return false;
   ov.classList.add('hidden');
   document.getElementById('fs-mount').innerHTML='';   // dispose the viewer
+  setInert(false);
   document.body.style.overflow='';
   if(fsReturnFocus && fsReturnFocus.focus) fsReturnFocus.focus();
   return true;
+}
+// make the rest of the app inert (out of tab + a11y tree) while a dialog is open
+function setInert(on){
+  for(const id of ['topbar','main']){ const el=document.getElementById(id); if(el) el.inert=on; }
 }
 function fsOpen(){ return !document.getElementById('struct-fullscreen').classList.contains('hidden'); }
 
@@ -491,6 +500,178 @@ function renderIdle(){
     </div>`;
 }
 
+/* ---------- modal (worklist / eval transparency / upload) ---------- */
+function openModal(title, actionsHtml, bodyHtml){
+  document.getElementById('modal-title').innerHTML=title;
+  document.getElementById('modal-actions').innerHTML=actionsHtml||'';
+  document.getElementById('modal-body').innerHTML=bodyHtml||'';
+  modalReturnFocus=document.activeElement;
+  const m=document.getElementById('modal'); m.classList.remove('hidden');
+  setInert(true);
+  document.getElementById('modal-close').focus();
+  return m;
+}
+let modalReturnFocus=null;
+function closeModal(){
+  const m=document.getElementById('modal');
+  if(m.classList.contains('hidden')) return false;
+  m.classList.add('hidden');
+  document.getElementById('modal-body').innerHTML='';
+  setInert(false);
+  if(modalReturnFocus && modalReturnFocus.focus) modalReturnFocus.focus();
+  return true;
+}
+function modalOpen(){ return !document.getElementById('modal').classList.contains('hidden'); }
+
+/* ---------- worklist: ranked "what to test next" ---------- */
+const wlState = { sort:'l3_score', dir:-1, bait:'all', onlyDossier:false, onlyRecovered:false };
+
+function openWorklist(){
+  openModal(`What to test next <small>top ${DATA.worklist.length} graph-proposed edges across the whole map · deterministic L3</small>`,
+    `<button class="fs-btn" id="wl-csv">Export CSV</button>`, '');
+  document.getElementById('wl-csv').onclick=exportWorklistCsv;
+  renderWorklist();
+}
+function wlRows(){
+  let rows=DATA.worklist.slice();
+  if(wlState.bait!=='all') rows=rows.filter(r=>r.bait===wlState.bait);
+  if(wlState.onlyDossier) rows=rows.filter(r=>r.has_dossier);
+  if(wlState.onlyRecovered) rows=rows.filter(r=>r.recovered);
+  const k=wlState.sort, d=wlState.dir;
+  rows.sort((a,b)=>{ let x=a[k], y=b[k];
+    if(typeof x==='boolean'){ x=x?1:0; y=y?1:0; }
+    if(typeof x==='string'){ return d*x.localeCompare(y); }
+    return d*((x||0)-(y||0)); });
+  return rows;
+}
+function renderWorklist(){
+  const baits=[...new Set(DATA.worklist.map(r=>r.bait))].sort();
+  const cols=[['edge','Edge'],['l3_score','L3'],['rank','Rank'],['recovered','Recovered'],
+    ['structure','Structure'],['has_mechanism','Mechanism'],['druggability','Drug'],['','']];
+  const arr=k=> wlState.sort===k?`<span class="arr">${wlState.dir<0?'▼':'▲'}</span>`:'';
+  const rows=wlRows();
+  const badge=(on,txt,cls)=> on?`<span class="wl-badge ${cls}">${txt}</span>`:'<span class="wl-no">—</span>';
+  const body=`
+    <div class="wl-filters">
+      <label>Bait <select id="wl-bait">${['all',...baits].map(b=>`<option ${b===wlState.bait?'selected':''}>${esc(b)}</option>`).join('')}</select></label>
+      <label><input type="checkbox" id="wl-dos" ${wlState.onlyDossier?'checked':''}> has dossier</label>
+      <label><input type="checkbox" id="wl-rec" ${wlState.onlyRecovered?'checked':''}> recovered held-out only</label>
+      <span style="margin-left:auto;color:var(--mut2);font-family:var(--mono);font-size:11px">${rows.length} edges</span>
+    </div>
+    <table class="wl-table"><thead><tr>${cols.map(([k,l])=>l?`<th data-k="${k}">${esc(l)} ${arr(k)}</th>`:'<th></th>').join('')}</tr></thead>
+    <tbody>${rows.map(r=>`
+      <tr class="${r.has_dossier?'clickable':''}" data-edge="${esc(r.edge)}">
+        <td class="wl-edge">${esc(r.bait)} → ${esc(r.prey)}</td>
+        <td class="wl-num">${r.l3_score.toFixed(3)}</td>
+        <td class="wl-num">${esc(r.rank)}</td>
+        <td>${badge(r.recovered,'held-out ✓','wl-yes')}</td>
+        <td>${r.structure==='experimental'?'<span class="wl-badge wl-exp">experimental</span>':(r.structure==='predicted'?'<span class="wl-badge wl-pred">predicted</span>':'<span class="wl-no">—</span>')}</td>
+        <td>${badge(r.has_mechanism,'cited','wl-yes')}</td>
+        <td>${r.druggability?esc(r.druggability):`<a href="${esc(r.opentargets)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`}</td>
+        <td>${r.has_dossier?'<span style="color:var(--predicted);font-size:11px">open dossier →</span>':''}</td>
+      </tr>`).join('')}</tbody></table>
+    <div class="wl-note">L3 score and rank are computed on the blind training graph (held-out edges removed). <b>Recovered</b> marks a real held-out Gordon edge the graph re-proposed. <b>Structure</b>/<b>Mechanism</b>/<b>Drug</b> are shown only where verified evidence exists — blanks mean "not established", never fabricated. Conservation is omitted (no cross-coronavirus data). Rows with a dossier are clickable.</div>`;
+  document.getElementById('modal-body').innerHTML=body;
+  document.getElementById('wl-bait').onchange=e=>{ wlState.bait=e.target.value; renderWorklist(); };
+  document.getElementById('wl-dos').onchange=e=>{ wlState.onlyDossier=e.target.checked; renderWorklist(); };
+  document.getElementById('wl-rec').onchange=e=>{ wlState.onlyRecovered=e.target.checked; renderWorklist(); };
+  document.querySelectorAll('.wl-table th[data-k]').forEach(th=>{ const k=th.dataset.k; if(!k) return;
+    th.onclick=()=>{ if(wlState.sort===k) wlState.dir*=-1; else { wlState.sort=k; wlState.dir=-1; } renderWorklist(); }; });
+  document.querySelectorAll('.wl-table tr.clickable').forEach(tr=>{
+    tr.onclick=()=>{ const e=tr.dataset.edge; closeModal(); openDossier(e); }; });
+}
+function exportWorklistCsv(){
+  const cols=['bait','prey','l3_score','rank','recovered','structure','structure_source','has_mechanism','druggability','opentargets'];
+  const esc2=v=>{ const s=String(v==null?'':v); return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
+  const lines=[cols.join(',')].concat(wlRows().map(r=>cols.map(c=>esc2(r[c])).join(',')));
+  const blob=new Blob([lines.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='cartograph_worklist.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ---------- eval transparency: recovered vs missed held-out edges ---------- */
+function openEvalTransparency(){
+  const b=DATA.eval.baseline;
+  const rec=(DATA.per_heldout_recovery||[]).slice()
+    .sort((a,x)=> (x.recovered-a.recovered) || ((a.rank||1e9)-(x.rank||1e9)) || a.bait.localeCompare(x.bait));
+  const nrec=rec.filter(r=>r.recovered).length;
+  const pct=v=>Math.round(v*100)+'%';
+  const body=`
+    <div class="wl-filters" style="gap:18px">
+      <span><b style="color:var(--ink)">${esc(b.n_targets)}</b> held-out Gordon edges</span>
+      <span><b style="color:var(--confirmed)">${esc(nrec)}</b> recovered by L3</span>
+      <span><b style="color:var(--ink)">${esc(b.n_recoverable)}</b> reachable ceiling (a length-3 path exists)</span>
+      <span>precision@20 <b style="color:var(--confirmed)">${pct(b.precision_at_k['20'])}</b> · ROC-AUC <b>${esc(b.roc_auc)}</b></span>
+    </div>
+    <table class="wl-table"><thead><tr><th>Held-out edge</th><th>Outcome</th><th>L3 rank (in bait)</th><th>Length-3 path</th></tr></thead>
+    <tbody>${rec.map(r=>`<tr>
+      <td class="wl-edge">${esc(r.bait)} → ${esc(r.prey)}</td>
+      <td>${r.recovered?'<span class="wl-badge wl-yes">recovered ✓</span>':'<span class="wl-badge" style="color:var(--rejected);background:rgba(255,92,106,.12)">missed</span>'}</td>
+      <td class="wl-num">${r.recovered?esc(r.rank)+' / '+esc(r.n_candidates):'—'}</td>
+      <td class="mono" style="font-size:11px;color:var(--mut)">${r.path?esc(r.path.join(' → ')):'no length-3 path exists (unreachable)'}</td>
+    </tr>`).join('')}</tbody></table>
+    <div class="wl-note">The evaluator was frozen (seed ${esc(DATA.eval.seed)}) and committed before any prediction code, in a module the predictor cannot import. Precision is reported with and without the disclosed pinned walkthrough edge (@20 ${pct(b.without_pinned.precision_at_k['20'])} without). "Missed" edges mostly have no length-3 path back to a co-prey — the honest topology ceiling, not a scoring error.</div>`;
+  openModal(`Held-out transparency <small>every held-out edge: recovered or missed, and why</small>`, '', body);
+}
+
+/* ---------- upload: bring your own interactome (via the API) ---------- */
+function openUpload(){
+  const body=`
+    <div class="up-form">
+      <div class="up-msg info">Upload an edge-list to run the deterministic L3 predictor on <b>your own</b> network. Uploaded data never enters the locked Gordon benchmark. Dossiers degrade honestly: no cached evidence means topology only, never an invented citation.</div>
+      <label>Edge list (one <span class="mono">bait,prey</span> per line; a header row is optional)</label>
+      <textarea id="up-edges" placeholder="ORF6,NUP98&#10;ORF6,RAE1&#10;N,G3BP1&#10;N,G3BP2"></textarea>
+      <label>Held-out fraction for your own eval (0 to skip)</label>
+      <input type="number" id="up-frac" min="0" max="0.5" step="0.05" value="0.2">
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="fs-btn" id="up-run" style="background:var(--panel2)">Enrich + run L3</button>
+        <span id="up-status" style="font:500 12px/1 var(--mono);color:var(--mut)"></span>
+      </div>
+      <div id="up-result"></div>
+    </div>`;
+  openModal(`Upload interactome <small>your edges → STRING enrichment → deterministic L3</small>`, '', body);
+  document.getElementById('up-run').onclick=runUpload;
+}
+
+async function runUpload(){
+  const status=document.getElementById('up-status');
+  const result=document.getElementById('up-result');
+  const edges=document.getElementById('up-edges').value.trim();
+  const frac=parseFloat(document.getElementById('up-frac').value)||0;
+  result.innerHTML='';
+  if(!edges){ status.textContent='paste an edge list first.'; return; }
+  status.innerHTML='<span class="spin"></span> validating + enriching (STRING)…';
+  try{
+    const resp=await fetch('/api/upload',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({edges, heldout_fraction:frac})});
+    if(!resp.ok){ const e=await resp.json().catch(()=>({detail:`HTTP ${resp.status}`}));
+      throw new Error(e.detail||`HTTP ${resp.status}`); }
+    const d=await resp.json();
+    status.textContent='';
+    renderUploadResult(d);
+  }catch(err){
+    status.textContent='';
+    result.innerHTML=`<div class="up-msg err">${esc(String(err.message||err))}<br><br>
+      Upload needs the Cartograph API server. Start it: <b class="mono">./run.sh api</b> (the static demo runs without it).</div>`;
+  }
+}
+
+function renderUploadResult(d){
+  const preds=(d.predictions||[]);
+  const ev=d.eval;
+  const rows=preds.slice(0,25).map(p=>`<tr>
+    <td class="wl-edge">${esc(p.bait)} → ${esc(p.prey)}</td>
+    <td class="wl-num">${(p.l3_score||0).toFixed(3)}</td>
+    <td class="mono" style="font-size:11px;color:var(--mut)">${p.path?esc(p.path.join(' → ')):'—'}</td>
+    <td><span class="wl-no">no cached evidence — topology only</span></td></tr>`).join('');
+  document.getElementById('up-result').innerHTML=`
+    <div class="up-msg ok">Loaded ${esc(d.n_baits)} baits, ${esc(d.n_prey)} prey, ${esc(d.n_edges)} edges; added ${esc(d.n_enrichment)} STRING enrichment edges.
+    ${ev?` Your own held-out eval: precision@${esc(ev.k)} <b>${Math.round(ev.precision*100)}%</b> on ${esc(ev.n_heldout)} held-out edges (seed ${esc(ev.seed)}).`:''}</div>
+    <table class="wl-table" style="margin-top:12px"><thead><tr><th>Predicted edge</th><th>L3</th><th>Length-3 path</th><th>Evidence</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan=4 class="wl-no">no length-3 predictions</td></tr>'}</tbody></table>
+    <div class="wl-note">These predictions are pure topology on your network. Cartograph shows no mechanism, structure, or citation here because none is cached for your edges — it will not fabricate one. Your data was not added to the locked Gordon benchmark.</div>`;
+}
+
 /* ---------- panel lifecycle: one system for every transient panel ---------- */
 function closeDossier(){
   if(cy){ cy.nodes().removeClass('dossier-target'); }
@@ -501,10 +682,14 @@ function hideToast(){ document.getElementById('ask-toast').classList.add('hidden
 
 function wireGlobalHandlers(){
   document.getElementById('fs-close').onclick=closeFullscreen;
-  // Escape closes, in priority order: fullscreen > chip > toast > dossier
+  document.getElementById('modal-close').onclick=closeModal;
+  // click the modal backdrop (not the card) to dismiss
+  document.getElementById('modal').addEventListener('mousedown', (e)=>{ if(e.target.id==='modal') closeModal(); });
+  // Escape closes, in priority order: fullscreen > modal > chip > toast > dossier
   document.addEventListener('keydown', (e)=>{
     if(e.key!=='Escape') return;
     if(closeFullscreen()) return;
+    if(closeModal()) return;
     const chip=document.getElementById('precision-chip');
     if(!chip.classList.contains('hidden')){ hideChip(); return; }
     if(!document.getElementById('ask-toast').classList.contains('hidden')){ hideToast(); return; }

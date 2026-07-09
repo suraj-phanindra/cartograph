@@ -1741,6 +1741,808 @@
       }
     }
   },
+  "worklist": [
+    {
+      "bait": "Nsp9",
+      "prey": "NUP210",
+      "edge": "Nsp9|NUP210",
+      "l3_score": 2.920391,
+      "rank": 1,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP210",
+      "has_dossier": false,
+      "path": [
+        "Nsp9",
+        "NUP54",
+        "NUP214",
+        "NUP210"
+      ]
+    },
+    {
+      "bait": "Nsp9",
+      "prey": "NUP98",
+      "edge": "Nsp9|NUP98",
+      "l3_score": 2.920391,
+      "rank": 2,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP98",
+      "has_dossier": false,
+      "path": [
+        "Nsp9",
+        "NUP54",
+        "NUP210",
+        "NUP98"
+      ]
+    },
+    {
+      "bait": "Nsp9",
+      "prey": "NUP214",
+      "edge": "Nsp9|NUP214",
+      "l3_score": 2.885273,
+      "rank": 3,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP214",
+      "has_dossier": false,
+      "path": [
+        "Nsp9",
+        "NUP54",
+        "NUP210",
+        "NUP214"
+      ]
+    },
+    {
+      "bait": "Nsp9",
+      "prey": "RAE1",
+      "edge": "Nsp9|RAE1",
+      "l3_score": 2.328271,
+      "rank": 4,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=RAE1",
+      "has_dossier": false,
+      "path": [
+        "Nsp9",
+        "NUP54",
+        "NUP210",
+        "RAE1"
+      ]
+    },
+    {
+      "bait": "Nsp8",
+      "prey": "RPL36",
+      "edge": "Nsp8|RPL36",
+      "l3_score": 1.5,
+      "rank": 1,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=RPL36",
+      "has_dossier": false,
+      "path": [
+        "Nsp8",
+        "SRP19",
+        "SRP54",
+        "RPL36"
+      ]
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "TIMM10",
+      "edge": "Nsp4|TIMM10",
+      "l3_score": 1.363611,
+      "rank": 1,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=TIMM10",
+      "has_dossier": false,
+      "path": [
+        "Nsp4",
+        "TIMM10B",
+        "TIMM29",
+        "TIMM10"
+      ]
+    },
+    {
+      "bait": "Nsp8",
+      "prey": "RRP9",
+      "edge": "Nsp8|RRP9",
+      "l3_score": 1.294427,
+      "rank": 2,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=RRP9",
+      "has_dossier": false,
+      "path": [
+        "Nsp8",
+        "NGDN",
+        "AATF",
+        "RRP9"
+      ]
+    },
+    {
+      "bait": "Orf10",
+      "prey": "BRD4",
+      "edge": "Orf10|BRD4",
+      "l3_score": 1.270444,
+      "rank": 1,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=BRD4",
+      "has_dossier": false,
+      "path": [
+        "Orf10",
+        "CUL2",
+        "ELOB",
+        "BRD4"
+      ]
+    },
+    {
+      "bait": "Orf10",
+      "prey": "RIPK1",
+      "edge": "Orf10|RIPK1",
+      "l3_score": 1.270444,
+      "rank": 2,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=RIPK1",
+      "has_dossier": false,
+      "path": [
+        "Orf10",
+        "CUL2",
+        "ELOB",
+        "RIPK1"
+      ]
+    },
+    {
+      "bait": "Nsp8",
+      "prey": "AATF",
+      "edge": "Nsp8|AATF",
+      "l3_score": 1.247214,
+      "rank": 3,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=AATF",
+      "has_dossier": false,
+      "path": [
+        "Nsp8",
+        "NGDN",
+        "MPHOSPH10",
+        "AATF"
+      ]
+    },
+    {
+      "bait": "Nsp8",
+      "prey": "MPHOSPH10",
+      "edge": "Nsp8|MPHOSPH10",
+      "l3_score": 1.247214,
+      "rank": 4,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=MPHOSPH10",
+      "has_dossier": false,
+      "path": [
+        "Nsp8",
+        "NGDN",
+        "AATF",
+        "MPHOSPH10"
+      ]
+    },
+    {
+      "bait": "N",
+      "prey": "G3BP1",
+      "edge": "N|G3BP1",
+      "l3_score": 1.135028,
+      "rank": 1,
+      "recovered": true,
+      "structure": "predicted",
+      "structure_source": "AlphaFold DB (AF-Q13283, G3BP1)",
+      "has_mechanism": true,
+      "druggability": "LOW",
+      "opentargets": "https://platform.opentargets.org/search?q=G3BP1",
+      "has_dossier": true,
+      "path": [
+        "N",
+        "LARP1",
+        "PABPC1",
+        "G3BP1"
+      ]
+    },
+    {
+      "bait": "N",
+      "prey": "PABPC1",
+      "edge": "N|PABPC1",
+      "l3_score": 1.050477,
+      "rank": 2,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=PABPC1",
+      "has_dossier": false,
+      "path": [
+        "N",
+        "G3BP2",
+        "G3BP1",
+        "PABPC1"
+      ]
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "PCNT",
+      "edge": "Nsp13|PCNT",
+      "l3_score": 0.944911,
+      "rank": 1,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=PCNT",
+      "has_dossier": false,
+      "path": [
+        "Nsp13",
+        "AKAP9",
+        "CDK5RAP2",
+        "PCNT"
+      ]
+    },
+    {
+      "bait": "Orf8",
+      "prey": "FAM8A1",
+      "edge": "Orf8|FAM8A1",
+      "l3_score": 0.930904,
+      "rank": 1,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=FAM8A1",
+      "has_dossier": false,
+      "path": [
+        "Orf8",
+        "ERLEC1",
+        "OS9",
+        "FAM8A1"
+      ]
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "PRKAR2A",
+      "edge": "Nsp13|PRKAR2A",
+      "l3_score": 0.877964,
+      "rank": 2,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=PRKAR2A",
+      "has_dossier": false,
+      "path": [
+        "Nsp13",
+        "AKAP9",
+        "PRKACA",
+        "PRKAR2A"
+      ]
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "TIMM29",
+      "edge": "Nsp4|TIMM29",
+      "l3_score": 0.847214,
+      "rank": 2,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=TIMM29",
+      "has_dossier": false,
+      "path": [
+        "Nsp4",
+        "TIMM10B",
+        "TIMM10",
+        "TIMM29"
+      ]
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "TIMM8B",
+      "edge": "Nsp4|TIMM8B",
+      "l3_score": 0.847214,
+      "rank": 3,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=TIMM8B",
+      "has_dossier": false,
+      "path": [
+        "Nsp4",
+        "TIMM10B",
+        "TIMM10",
+        "TIMM8B"
+      ]
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "NUP54",
+      "edge": "Nsp4|NUP54",
+      "l3_score": 0.800375,
+      "rank": 4,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP54",
+      "has_dossier": false,
+      "path": [
+        "Nsp4",
+        "NUP210",
+        "NUP214",
+        "NUP54"
+      ]
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "NUP88",
+      "edge": "Nsp4|NUP88",
+      "l3_score": 0.800375,
+      "rank": 5,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP88",
+      "has_dossier": false,
+      "path": [
+        "Nsp4",
+        "NUP210",
+        "NUP214",
+        "NUP88"
+      ]
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "NUP98",
+      "edge": "Nsp4|NUP98",
+      "l3_score": 0.800375,
+      "rank": 6,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP98",
+      "has_dossier": false,
+      "path": [
+        "Nsp4",
+        "NUP210",
+        "NUP214",
+        "NUP98"
+      ]
+    },
+    {
+      "bait": "Orf6",
+      "prey": "NUP210",
+      "edge": "Orf6|NUP210",
+      "l3_score": 0.800375,
+      "rank": 1,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP210",
+      "has_dossier": false,
+      "path": [
+        "Orf6",
+        "NUP98",
+        "NUP214",
+        "NUP210"
+      ]
+    },
+    {
+      "bait": "Orf6",
+      "prey": "NUP54",
+      "edge": "Orf6|NUP54",
+      "l3_score": 0.800375,
+      "rank": 2,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP54",
+      "has_dossier": false,
+      "path": [
+        "Orf6",
+        "NUP98",
+        "NUP210",
+        "NUP54"
+      ]
+    },
+    {
+      "bait": "Orf6",
+      "prey": "NUP88",
+      "edge": "Orf6|NUP88",
+      "l3_score": 0.800375,
+      "rank": 3,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP88",
+      "has_dossier": false,
+      "path": [
+        "Orf6",
+        "NUP98",
+        "NUP210",
+        "NUP88"
+      ]
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "NUP214",
+      "edge": "Nsp4|NUP214",
+      "l3_score": 0.791745,
+      "rank": 7,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP214",
+      "has_dossier": false,
+      "path": [
+        "Nsp4",
+        "NUP210",
+        "NUP54",
+        "NUP214"
+      ]
+    },
+    {
+      "bait": "Orf6",
+      "prey": "NUP214",
+      "edge": "Orf6|NUP214",
+      "l3_score": 0.791745,
+      "rank": 4,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP214",
+      "has_dossier": false,
+      "path": [
+        "Orf6",
+        "NUP98",
+        "NUP210",
+        "NUP214"
+      ]
+    },
+    {
+      "bait": "N",
+      "prey": "CSDE1",
+      "edge": "N|CSDE1",
+      "l3_score": 0.781474,
+      "rank": 3,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=CSDE1",
+      "has_dossier": false,
+      "path": [
+        "N",
+        "LARP1",
+        "PABPC1",
+        "CSDE1"
+      ]
+    },
+    {
+      "bait": "N",
+      "prey": "LARP4B",
+      "edge": "N|LARP4B",
+      "l3_score": 0.781474,
+      "rank": 4,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=LARP4B",
+      "has_dossier": false,
+      "path": [
+        "N",
+        "LARP1",
+        "PABPC1",
+        "LARP4B"
+      ]
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "PDE4DIP",
+      "edge": "Nsp13|PDE4DIP",
+      "l3_score": 0.755929,
+      "rank": 3,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=PDE4DIP",
+      "has_dossier": false,
+      "path": [
+        "Nsp13",
+        "CDK5RAP2",
+        "AKAP9",
+        "PDE4DIP"
+      ]
+    },
+    {
+      "bait": "Nsp8",
+      "prey": "LARP4B",
+      "edge": "Nsp8|LARP4B",
+      "l3_score": 0.75,
+      "rank": 5,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=LARP4B",
+      "has_dossier": false,
+      "path": [
+        "Nsp8",
+        "SRP19",
+        "RPL36",
+        "LARP4B"
+      ]
+    },
+    {
+      "bait": "Orf10",
+      "prey": "TIMM29",
+      "edge": "Orf10|TIMM29",
+      "l3_score": 0.697214,
+      "rank": 3,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=TIMM29",
+      "has_dossier": false,
+      "path": [
+        "Orf10",
+        "TIMM8B",
+        "TIMM10",
+        "TIMM29"
+      ]
+    },
+    {
+      "bait": "Orf10",
+      "prey": "DCAF7",
+      "edge": "Orf10|DCAF7",
+      "l3_score": 0.673755,
+      "rank": 4,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=DCAF7",
+      "has_dossier": false,
+      "path": [
+        "Orf10",
+        "CUL2",
+        "RBX1",
+        "DCAF7"
+      ]
+    },
+    {
+      "bait": "Nsp13",
+      "prey": "TLE1",
+      "edge": "Nsp13|TLE1",
+      "l3_score": 0.666667,
+      "rank": 4,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=TLE1",
+      "has_dossier": false,
+      "path": [
+        "Nsp13",
+        "TLE3",
+        "TLE5",
+        "TLE1"
+      ]
+    },
+    {
+      "bait": "Orf9c",
+      "prey": "ECSIT",
+      "edge": "Orf9c|ECSIT",
+      "l3_score": 0.666667,
+      "rank": 1,
+      "recovered": true,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=ECSIT",
+      "has_dossier": false,
+      "path": [
+        "Orf9c",
+        "ACAD9",
+        "NDUFAF1",
+        "ECSIT"
+      ]
+    },
+    {
+      "bait": "N",
+      "prey": "NGDN",
+      "edge": "N|NGDN",
+      "l3_score": 0.647214,
+      "rank": 5,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NGDN",
+      "has_dossier": false,
+      "path": [
+        "N",
+        "RRP9",
+        "AATF",
+        "NGDN"
+      ]
+    },
+    {
+      "bait": "N",
+      "prey": "NOL10",
+      "edge": "N|NOL10",
+      "l3_score": 0.647214,
+      "rank": 6,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NOL10",
+      "has_dossier": false,
+      "path": [
+        "N",
+        "RRP9",
+        "AATF",
+        "NOL10"
+      ]
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "NUP62",
+      "edge": "Nsp4|NUP62",
+      "l3_score": 0.642261,
+      "rank": 8,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP62",
+      "has_dossier": false,
+      "path": [
+        "Nsp4",
+        "NUP210",
+        "NUP214",
+        "NUP62"
+      ]
+    },
+    {
+      "bait": "Orf6",
+      "prey": "NUP62",
+      "edge": "Orf6|NUP62",
+      "l3_score": 0.642261,
+      "rank": 5,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP62",
+      "has_dossier": false,
+      "path": [
+        "Orf6",
+        "NUP98",
+        "NUP210",
+        "NUP62"
+      ]
+    },
+    {
+      "bait": "Nsp7",
+      "prey": "VPS11",
+      "edge": "Nsp7|VPS11",
+      "l3_score": 0.642229,
+      "rank": 1,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=VPS11",
+      "has_dossier": false,
+      "path": [
+        "Nsp7",
+        "RAB2A",
+        "VPS39",
+        "VPS11"
+      ]
+    },
+    {
+      "bait": "Nsp4",
+      "prey": "NUP58",
+      "edge": "Nsp4|NUP58",
+      "l3_score": 0.633631,
+      "rank": 9,
+      "recovered": false,
+      "structure": "none",
+      "structure_source": null,
+      "has_mechanism": false,
+      "druggability": null,
+      "opentargets": "https://platform.opentargets.org/search?q=NUP58",
+      "has_dossier": false,
+      "path": [
+        "Nsp4",
+        "NUP210",
+        "NUP214",
+        "NUP58"
+      ]
+    }
+  ],
   "held_out_in_view": [
     [
       "N",
@@ -1789,399 +2591,526 @@
       "prey": "CWC27",
       "rank": null,
       "n_candidates": 7,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "M",
       "prey": "ATP6V1A",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "M",
       "prey": "BZW2",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "M",
       "prey": "ETFA",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "M",
       "prey": "FAM8A1",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "M",
       "prey": "PMPCB",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "M",
       "prey": "PSMD8",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "M",
       "prey": "YIF1A",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "N",
       "prey": "G3BP1",
       "rank": 1,
       "n_candidates": 8,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "N",
+        "LARP1",
+        "PABPC1",
+        "G3BP1"
+      ]
     },
     {
       "bait": "N",
       "prey": "PABPC1",
       "rank": 2,
       "n_candidates": 8,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "N",
+        "G3BP2",
+        "G3BP1",
+        "PABPC1"
+      ]
     },
     {
       "bait": "N",
       "prey": "RPL36",
       "rank": null,
       "n_candidates": 8,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "N",
       "prey": "SNIP1",
       "rank": null,
       "n_candidates": 8,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp1",
       "prey": "PKP2",
       "rank": null,
       "n_candidates": 0,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp10",
       "prey": "AP2A2",
       "rank": null,
       "n_candidates": 0,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp12",
       "prey": "AKAP8",
       "rank": null,
       "n_candidates": 17,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp12",
       "prey": "PRRC2B",
       "rank": null,
       "n_candidates": 17,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp12",
       "prey": "UBAP2L",
       "rank": null,
       "n_candidates": 17,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp12",
       "prey": "ZC3H7A",
       "rank": null,
       "n_candidates": 17,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp13",
       "prey": "GCC1",
       "rank": null,
       "n_candidates": 12,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp13",
       "prey": "GOLGA3",
       "rank": null,
       "n_candidates": 12,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp13",
       "prey": "NINL",
       "rank": null,
       "n_candidates": 12,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp13",
       "prey": "PCNT",
       "rank": 1,
       "n_candidates": 12,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Nsp13",
+        "AKAP9",
+        "CDK5RAP2",
+        "PCNT"
+      ]
     },
     {
       "bait": "Nsp13",
       "prey": "PDE4DIP",
       "rank": 3,
       "n_candidates": 12,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Nsp13",
+        "CDK5RAP2",
+        "AKAP9",
+        "PDE4DIP"
+      ]
     },
     {
       "bait": "Nsp13",
       "prey": "PRKAR2A",
       "rank": 2,
       "n_candidates": 12,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Nsp13",
+        "AKAP9",
+        "PRKACA",
+        "PRKAR2A"
+      ]
     },
     {
       "bait": "Nsp13",
       "prey": "RDX",
       "rank": null,
       "n_candidates": 12,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp13",
       "prey": "TLE1",
       "rank": 4,
       "n_candidates": 12,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Nsp13",
+        "TLE3",
+        "TLE5",
+        "TLE1"
+      ]
     },
     {
       "bait": "Nsp14",
       "prey": "SIRT5",
       "rank": null,
       "n_candidates": 0,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp2",
       "prey": "WASHC4",
       "rank": null,
       "n_candidates": 2,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp4",
       "prey": "TIMM10",
       "rank": 1,
       "n_candidates": 11,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Nsp4",
+        "TIMM10B",
+        "TIMM29",
+        "TIMM10"
+      ]
     },
     {
       "bait": "Nsp4",
       "prey": "TIMM29",
       "rank": 2,
       "n_candidates": 11,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Nsp4",
+        "TIMM10B",
+        "TIMM10",
+        "TIMM29"
+      ]
     },
     {
       "bait": "Nsp6",
       "prey": "ATP5MG",
       "rank": null,
       "n_candidates": 0,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp6",
       "prey": "SIGMAR1",
       "rank": null,
       "n_candidates": 0,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp7",
       "prey": "RAB1A",
       "rank": null,
       "n_candidates": 4,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp7",
       "prey": "RAB5C",
       "rank": null,
       "n_candidates": 4,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp7",
       "prey": "RAB8A",
       "rank": null,
       "n_candidates": 4,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp8",
       "prey": "AATF",
       "rank": 3,
       "n_candidates": 8,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Nsp8",
+        "NGDN",
+        "MPHOSPH10",
+        "AATF"
+      ]
     },
     {
       "bait": "Nsp8",
       "prey": "CCDC86",
       "rank": null,
       "n_candidates": 8,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp8",
       "prey": "MEPCE",
       "rank": null,
       "n_candidates": 8,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp8",
       "prey": "MPHOSPH10",
       "rank": 4,
       "n_candidates": 8,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Nsp8",
+        "NGDN",
+        "AATF",
+        "MPHOSPH10"
+      ]
     },
     {
       "bait": "Nsp9",
       "prey": "MIB1",
       "rank": null,
       "n_candidates": 9,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Nsp9",
       "prey": "NUP214",
       "rank": 3,
       "n_candidates": 9,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Nsp9",
+        "NUP54",
+        "NUP210",
+        "NUP214"
+      ]
     },
     {
       "bait": "Orf10",
       "prey": "THTPA",
       "rank": null,
       "n_candidates": 10,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf3a",
       "prey": "HMOX1",
       "rank": null,
       "n_candidates": 5,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf6",
       "prey": "RAE1",
       "rank": 7,
       "n_candidates": 8,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Orf6",
+        "NUP98",
+        "NUP214",
+        "RAE1"
+      ]
     },
     {
       "bait": "Orf8",
       "prey": "FBXL12",
       "rank": null,
       "n_candidates": 2,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf8",
       "prey": "NPTX1",
       "rank": null,
       "n_candidates": 2,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf8",
       "prey": "PLEKHF2",
       "rank": null,
       "n_candidates": 2,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf8",
       "prey": "POGLUT2",
       "rank": null,
       "n_candidates": 2,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf8",
       "prey": "SIL1",
       "rank": null,
       "n_candidates": 2,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf9b",
       "prey": "CSDE1",
       "rank": null,
       "n_candidates": 0,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf9b",
       "prey": "NHERF1",
       "rank": null,
       "n_candidates": 0,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf9b",
       "prey": "PTBP2",
       "rank": null,
       "n_candidates": 0,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf9c",
       "prey": "DPY19L1",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf9c",
       "prey": "ECSIT",
       "rank": 1,
       "n_candidates": 3,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Orf9c",
+        "ACAD9",
+        "NDUFAF1",
+        "ECSIT"
+      ]
     },
     {
       "bait": "Orf9c",
       "prey": "NDUFAF1",
       "rank": 2,
       "n_candidates": 3,
-      "recovered": true
+      "recovered": true,
+      "path": [
+        "Orf9c",
+        "ACAD9",
+        "ECSIT",
+        "NDUFAF1"
+      ]
     },
     {
       "bait": "Orf9c",
       "prey": "RETREG3",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     },
     {
       "bait": "Orf9c",
       "prey": "TMEM97",
       "rank": null,
       "n_candidates": 3,
-      "recovered": false
+      "recovered": false,
+      "path": null
     }
   ]
 }
