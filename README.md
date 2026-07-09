@@ -78,12 +78,22 @@ candidates → locked evaluator scores them → reasoning layer assembles cited
 dossiers → `build_artifact.py` freezes it all into one JSON → the frontend
 animates the demo.
 
+## Beyond the core (Phase 2)
+
+All optional, none on the critical path; the offline static demo is the guaranteed fallback.
+- **Ranked "what to test next" worklist** — sortable/filterable triage of the top predicted edges (L3, recovered-held-out, structure, cited-mechanism, druggability), CSV export.
+- **Held-out transparency** — every one of the 57 held-out edges as recovered/missed with its L3 rank and length-3 path, and the reachability ceiling.
+- **Bring-your-own-interactome upload** (needs the API) — your edge-list → STRING enrichment → L3 → optional **own** held-out eval on a **separate seed**; uploaded data never touches the locked benchmark, and dossiers degrade honestly (no cached evidence → topology only, never fabricated).
+- **FastAPI + SSE** wrapper over the engine; **dossier → self-contained HTML report** export.
+- **Expanded 3D viewer**, keyboard-operable controls, responsive reflow.
+
 ## Commands
 
 ```bash
-./run.sh            # build + serve the demo
+./run.sh            # build + serve the OFFLINE static demo (no API)
+./run.sh api        # build + serve the demo WITH the live API (adds upload)
 ./run.sh build      # just rebuild frontend/data/cartograph_computed.json
-./run.sh test       # run the test suite (24 tests)
+./run.sh test       # run the test suite (39 tests)
 ```
 
 Reproducibility: the STRING enrichment is pinned to v12.0 (physical channel,
