@@ -11,11 +11,32 @@ const COL = {
 };
 const KEY = (s,t)=>`${s}|${t}`;
 
+// --- safety helpers: escape all interpolated strings, validate every URL.
+// Today the data is our own build-time artifact, but the product's purpose is to
+// load user-supplied interactomes, so the trust boundary is closed here up front. ---
+const ESC = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>ESC[c]);
+const safeUrl = u => (typeof u==='string' && /^https?:\/\//i.test(u)) ? u : null;
+const safeEnsembl = e => (typeof e==='string' && /^ENSG[0-9]+$/.test(e)) ? e : null;
+const edgeBetween = (a,b) => cy.getElementById(KEY(a,b)).union(cy.getElementById(KEY(b,a)));
+
 let DATA=null, cy=null, molViewer=null;
 const state = { evalDone:false, loopDone:false, layers:{known:true,enrichment:true,predicted:true,confirmed:true} };
 
 async function boot(){
-  DATA = await (await fetch('data/cartograph_computed.json')).json();
+  try {
+    const resp = await fetch('data/cartograph_computed.json');
+    if(!resp.ok) throw new Error(`HTTP ${resp.status} fetching the computed artifact`);
+    DATA = await resp.json();
+  } catch(err) {
+    document.getElementById('dossier-body').innerHTML =
+      `<div class="dz-idle"><h2>Could not load the demo data.</h2>
+       <p>${esc(String(err))}</p>
+       <p style="color:#8a97ad">Serve the folder over HTTP (not file://). From <code>frontend/</code>:
+       <br><b style="color:#22e0dd">python3 -m http.server 8791 --bind 127.0.0.1</b><br>
+       then open <b>http://127.0.0.1:8791/index.html</b>. Or run <b>./run.sh</b> from the repo root.</p></div>`;
+    return;
+  }
   buildGraph();
   buildControls();
   buildLegend();
@@ -149,12 +170,12 @@ function runQuery(q){
   const step=()=>{
     if(i<path.length){
       const n=cy.getElementById(path[i]); n.removeClass('dim').addClass('pathlit');
-      if(i>0){ const e=cy.getElementById(KEY(path[i-1],path[i])) ; if(e.nonempty()){ e.removeClass('dim hiddenEdge').addClass('pathlit'); } }
+      if(i>0){ const e=edgeBetween(path[i-1],path[i]); if(e.nonempty()){ e.removeClass('dim hiddenEdge').addClass('pathlit'); e.style('display','element'); } }
       i++; setTimeout(step,650);
     } else {
-      // reveal the predicted Orf6-RAE1 edge
-      const pe=cy.getElementById(KEY('Orf6','RAE1'));
-      pe.removeClass('hiddenEdge dim').addClass('pathlit');
+      // reveal the predicted Orf6-RAE1 edge (orientation-independent)
+      const pe=edgeBetween('Orf6','RAE1');
+      pe.removeClass('hiddenEdge dim').addClass('pathlit'); pe.style('display','element');
       toast(`Graph proposes the missing edge <span class="k">Orf6 → RAE1</span> (L3 rank ${DATA.flagship.l3_rank}/${DATA.flagship.n_candidates}). Opening the structural dossier…`);
       setTimeout(()=>{ cy.elements().removeClass('dim'); openDossier('Orf6|RAE1'); }, 900);
     }
@@ -190,33 +211,36 @@ function runEval(){
 
 function showPrecision(){
   const b=DATA.eval.baseline;
+  const pk=b.precision_at_k, np=b.without_pinned;
+  const pct=v=>Math.round(v*100)+'%';
   const chip=document.getElementById('precision-chip'); chip.classList.remove('hidden');
-  chip.innerHTML=`<div class="lbl">Locked evaluator · precision@${b.headline_k}</div>
-    <div class="big">${Math.round(b.headline_precision_at_k*100)}%</div>
-    <div class="sub">on <b>${b.n_targets}</b> real held-out Gordon edges (${b.n_recoverable} reachable by L3)<br>
-    ROC-AUC <b>${b.roc_auc}</b> · recall@50 <b>${Math.round(b.recall_at_k['50']*100)}%</b><br>
-    <span style="color:${COL.mut}">frozen seed ${DATA.eval.seed}, committed before prediction</span></div>`;
+  chip.innerHTML=`<div class="lbl">Locked evaluator · precision@${esc(b.headline_k)}</div>
+    <div class="big">${pct(b.headline_precision_at_k)}</div>
+    <div class="sub">precision@10 <b>${pct(pk['10'])}</b> · @20 <b>${pct(pk['20'])}</b> · @50 <b>${pct(pk['50'])}</b><br>
+    ROC-AUC <b>${esc(b.roc_auc)}</b> · AP <b>${esc(b.average_precision)}</b> · recall@50 <b>${pct(b.recall_at_k['50'])}</b><br>
+    on <b>${esc(b.n_targets)}</b> real held-out Gordon edges (${esc(b.n_recoverable)} reachable by L3)<br>
+    <span style="color:${COL.mut}">without pinned edge: @20 ${pct(np.precision_at_k['20'])} (pinning does not inflate it)<br>
+    frozen seed ${esc(DATA.eval.seed)}, committed before prediction</span></div>`;
   const r=document.getElementById('eval-readout');
-  r.innerHTML=`held-out <b>${b.n_targets}</b> · precision@${b.headline_k} <b>${(b.headline_precision_at_k*100).toFixed(0)}%</b><br>ROC-AUC <b>${b.roc_auc}</b> · recall@50 <b>${(b.recall_at_k['50']*100).toFixed(0)}%</b>`;
+  r.innerHTML=`held-out <b>${esc(b.n_targets)}</b> · P@10/20/50 <b>${pct(pk['10'])}/${pct(pk['20'])}/${pct(pk['50'])}</b><br>ROC-AUC <b>${esc(b.roc_auc)}</b> · AP <b>${esc(b.average_precision)}</b>`;
 }
 
 /* ---------- loop round ---------- */
 function runLoop(){
   if(state.loopDone) return; state.loopDone=true;
   const lp=DATA.eval.loop;
-  // confirm the recovered-true greens -> turn confirmed, densify
+  const nInView=(lp.confirmed_in_view||[]).length;
+  // confirm the recovered-true greens -> turn confirmed, densify (in-view ones animate)
   cy.edges('edge.hit').addClass('confirmed');
-  for(const [s,t] of lp.confirmed_edges){
-    const e=cy.getElementById(KEY(s,t)); if(e.nonempty()) e.addClass('confirmed');
-  }
-  toast(`<span class="k">Loop round</span>: confirm ${lp.confirmed_edges.length} recovered-true edges (each a real Gordon edge, each L3-rank #1), fold them back as known, re-score the still-hidden edges.`);
+  for(const [s,t] of lp.confirmed_edges){ const e=edgeBetween(s,t); if(e.nonempty()) e.addClass('confirmed'); }
+  toast(`<span class="k">Loop round</span>: confirm ${esc(lp.confirmed_edges.length)} recovered-true edges (each a real Gordon edge, each L3-rank #1; ${esc(nInView)} in this view), fold them back as known, re-score the still-hidden edges.`);
   const chip=document.getElementById('precision-chip');
   const before=Math.round(lp.before_precision_at_20*100), after=Math.round(lp.after_precision_at_20*100);
   chip.innerHTML=`<div class="lbl">Loop round · precision@20 on remaining held-out</div>
     <div class="big">${before}% → ${after}%</div>
-    <div class="sub">confirmed <b>${lp.confirmed_edges.length}</b> edges, folded back as known<br>
-    recoverable ${lp.before_recoverable} → <b>${lp.after_recoverable}</b><br>
-    <span style="color:${COL.mut}">measured on the remaining hidden edges (fair before/after)</span></div>`;
+    <div class="sub">confirmed <b>${esc(lp.confirmed_edges.length)}</b> edges, folded back as known<br>
+    reachable set unchanged (${esc(lp.before_recoverable)} → ${esc(lp.after_recoverable)}); the gain is honest <b>re-ranking</b><br>
+    <span style="color:${COL.mut}">measured on the same remaining hidden edges (fair before/after)</span></div>`;
   document.getElementById('btn-loop').disabled=true;
 }
 
@@ -235,25 +259,29 @@ function openDossier(key){
   const badge = d.status==='predicted'?['PREDICTED EDGE',COL.predicted]
     : d.status==='confirmed'?['CONFIRMED EDGE',COL.confirmed]:['KNOWN EDGE',COL.human];
   const st=d.structure, cf=d.confidence;
+  const rcsb=safeUrl(st.rcsb_url);
+  const ens=safeEnsembl(d.druggability.ensembl);
+  const skClass = ['pass','downgrade','veto'].includes(d.skeptic.verdict)?d.skeptic.verdict:'pass';
   const html=`
   <div class="dz-head">
-    <span class="dz-badge" style="background:${hex2(badge[1],.16)};color:${badge[1]}">${badge[0]}</span>
-    <div class="dz-title">${d.source}<span class="arrow">→</span>${d.target}</div>
-    <div class="dz-sub">${d.provenance.proposed_by} · Claude explained · ${d.provenance.evaluator}</div>
+    <span class="dz-badge" style="background:${hex2(badge[1],.16)};color:${badge[1]}">${esc(badge[0])}</span>
+    <div class="dz-title">${esc(d.source)}<span class="arrow">→</span>${esc(d.target)}</div>
+    <div class="dz-sub">${esc(d.provenance.proposed_by)} · Claude explained · ${esc(d.provenance.evaluator)}</div>
   </div>
 
   <div class="dz-sec">
     <div class="dz-sec-h">Structure</div>
     <div id="molstar-wrap"><div class="struct-chip" style="background:${st.kind==='experimental'?hex2(COL.human,.9):hex2(COL.predicted,.9)};color:#05121a">
-      ${st.kind==='experimental'?'EXPERIMENTAL · '+st.source:'PREDICTED · '+st.source}</div></div>
+      ${st.kind==='experimental'?'EXPERIMENTAL · '+esc(st.source):'PREDICTED · '+esc(st.source)}</div></div>
     <div class="struct-meta">
-      <span class="lbl">method</span> ${st.method}
-      &nbsp;·&nbsp; <span class="lbl">${st.confidence.type}</span> ${st.confidence.value} ${st.confidence.unit||''}<br>
-      <span class="lbl">chains</span> ${st.chains}
+      <span class="lbl">method</span> ${esc(st.method)}
+      &nbsp;·&nbsp; <span class="lbl">${esc(st.confidence.type)}</span> ${esc(st.confidence.value)} ${esc(st.confidence.unit||'')}
+      ${rcsb?`&nbsp;·&nbsp; <a href="${esc(rcsb)}" target="_blank" rel="noopener noreferrer" style="color:${COL.predicted};font-family:var(--mono);font-size:11px">${esc(st.pdb)} on RCSB →</a>`:''}<br>
+      <span class="lbl">chains</span> ${esc(st.chains)}
     </div>
-    ${st.interface_residues.length?`<div class="struct-resid">${st.interface_residues.map(r=>`<span class="r">${r}</span>`).join('')}</div>
-      <div class="struct-note">interface residues ${st.interface_source}</div>`
-      :`<div class="struct-note">${st.interface_source}</div>`}
+    ${st.interface_residues.length?`<div class="struct-resid">${st.interface_residues.map(r=>`<span class="r">${esc(r)}</span>`).join('')}</div>
+      <div class="struct-note">interface residues ${esc(st.interface_source)}</div>`
+      :`<div class="struct-note">${esc(st.interface_source)}</div>`}
   </div>
 
   <div class="dz-sec">
@@ -264,47 +292,48 @@ function openDossier(key){
   <div class="dz-sec">
     <div class="dz-sec-h">Confidence <span style="color:${COL.mut};font-weight:400;text-transform:none;letter-spacing:0"> — three signals, never blended</span></div>
     <div class="conf-row">
-      ${gauge('Topology', cf.topology, COL.topology, cf.topology!=null?cf.topology.toFixed(2):'—', cf.topology_rank?`L3 rank ${cf.topology_rank}`:'')}
-      ${gauge('Structure', structVal(st), COL.predicted, `${st.confidence.value}`, st.confidence.type)}
-      ${gauge('Literature', cf.literature_count>=2?0.9:(cf.literature_count===1?0.5:0.15), COL.confirmed, cf.literature, `${cf.literature_count} papers`)}
+      ${gauge('Topology', cf.topology, COL.topology, cf.topology!=null?cf.topology.toFixed(2):'—', cf.topology_rank?`L3 rank ${esc(cf.topology_rank)}`:'')}
+      ${gauge('Structure', structVal(st), COL.predicted, `${esc(st.confidence.value)}`, esc(st.confidence.type))}
+      ${gauge('Literature', cf.literature_count>=2?0.9:(cf.literature_count===1?0.5:0.15), COL.confirmed, esc(cf.literature), `${esc(cf.literature_count)} papers`)}
     </div>
   </div>
 
   <div class="dz-sec">
     <div class="dz-sec-h">Skeptic</div>
-    <div class="skeptic sk-${d.skeptic.verdict}">
-      <span class="badge">${d.skeptic.verdict}</span>
-      <div>${d.skeptic.reason}${d.skeptic.caveat?`<br><span style="color:${COL.mut}">${d.skeptic.caveat}</span>`:''}</div>
+    <div class="skeptic sk-${skClass}">
+      <span class="badge">${esc(d.skeptic.verdict)}</span>
+      <div>${esc(d.skeptic.reason)}${d.skeptic.caveat?`<br><span style="color:${COL.mut}">${esc(d.skeptic.caveat)}</span>`:''}</div>
     </div>
   </div>
 
   <div class="dz-sec">
     <div class="dz-sec-h">Proposed wet-lab test</div>
     <div class="test-box">
-      <div class="muts">${d.proposed_test.residues.map(r=>`<span class="mut">${r}</span>`).join('')}</div>
-      ${d.proposed_test.text}
+      <div class="muts">${d.proposed_test.residues.map(r=>`<span class="mut">${esc(r)}</span>`).join('')}</div>
+      ${esc(d.proposed_test.text)}
     </div>
   </div>
 
   <div class="dz-sec">
-    <div class="dz-sec-h">Druggability <span style="color:${COL.mut};font-weight:400;text-transform:none;letter-spacing:0"> — Open Targets</span></div>
-    <div class="kv"><b>${d.druggability.target}</b> · tractability <b style="color:${drugColor(d.druggability.level)}">${d.druggability.level}</b>
+    <div class="dz-sec-h">Druggability <span style="color:${COL.mut};font-weight:400;text-transform:none;letter-spacing:0"> — curated prior, not computed/cited</span></div>
+    <div class="kv"><b>${esc(d.druggability.target)}</b> · tractability <b style="color:${drugColor(d.druggability.level)}">${esc(d.druggability.level)}</b>
     <div class="drug-bar"><i style="width:${drugPct(d.druggability.level)}%;background:${drugColor(d.druggability.level)}"></i></div>
-    ${d.druggability.note}
-    ${d.druggability.ensembl?`<br><a href="https://platform.opentargets.org/target/${d.druggability.ensembl}" target="_blank" style="color:${COL.predicted};font-family:JetBrains Mono,monospace;font-size:11px">open in Open Targets →</a>`:''}</div>
+    ${esc(d.druggability.note)}
+    ${ens?`<br><a href="https://platform.opentargets.org/target/${esc(ens)}" target="_blank" rel="noopener noreferrer" style="color:${COL.predicted};font-family:JetBrains Mono,monospace;font-size:11px">open in Open Targets →</a>`:''}</div>
   </div>
 
   <div class="dz-sec">
     <div class="dz-sec-h">Citations</div>
-    <div class="cites">${d.citations.map(c=>`<div class="cite-item"><span class="n">${c.n}</span>
-      <div><a href="${c.url}" target="_blank">${c.title}</a><br>
-      <span class="id">PMID ${c.pmid}${c.journal?` · ${c.journal} ${c.year}`:''}</span></div></div>`).join('')}</div>
+    <div class="cites">${d.citations.map(c=>{ const u=safeUrl(c.url); const label=`${esc(c.title)}`;
+      return `<div class="cite-item"><span class="n">${esc(c.n)}</span>
+      <div>${u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${label}</a>`:label}<br>
+      <span class="id">PMID ${esc(c.pmid)}${c.journal?` · ${esc(c.journal)} ${esc(c.year)}`:''}</span></div></div>`;}).join('')}</div>
   </div>
 
   <div class="integrity-foot">
-    <b>proposed by</b> ${d.provenance.proposed_by}<br>
-    <b>explained by</b> ${d.provenance.evidence_by}<br>
-    <b>structure</b> ${d.provenance.structure_by} · <b>scored by</b> ${d.provenance.evaluator}
+    <b>proposed by</b> ${esc(d.provenance.proposed_by)}<br>
+    <b>explained by</b> ${esc(d.provenance.evidence_by)}<br>
+    <b>structure</b> ${esc(d.provenance.structure_by)} · <b>scored by</b> ${esc(d.provenance.evaluator)}
   </div>`;
   document.getElementById('dossier-body').innerHTML=html;
   mountStructure(st);
@@ -312,8 +341,8 @@ function openDossier(key){
 
 function renderMechanism(mech){
   return mech.map(cl=>{
-    const cites=cl.cites.map(n=>`<sup class="cite">${n}</sup>`).join('');
-    return cl.text+cites;
+    const cites=cl.cites.map(n=>`<sup class="cite">${esc(n)}</sup>`).join('');
+    return esc(cl.text)+cites;
   }).join('');
 }
 
@@ -347,10 +376,10 @@ function renderNodePanel(id){
   const n=DATA.graph.nodes.find(x=>x.id===id)||{};
   const partners=DATA.graph.edges.filter(e=>e.source===id||e.target===id);
   document.getElementById('dossier-body').innerHTML=`
-    <div class="dz-head"><div class="dz-title">${id}</div>
-    <div class="dz-sub">${n.type==='viral'?'SARS-CoV-2 viral bait':'human prey'} · ${n.uniprot||''} · degree ${n.degree||0}</div></div>
+    <div class="dz-head"><div class="dz-title">${esc(id)}</div>
+    <div class="dz-sub">${n.type==='viral'?'SARS-CoV-2 viral bait':'human prey'} · ${esc(n.uniprot||'')} · degree ${esc(n.degree||0)}</div></div>
     <div class="dz-sec"><div class="dz-sec-h">Incident edges</div>
-    <div class="kv">${partners.map(e=>`${e.source} → ${e.target} <span style="color:${COL.mut}">(${e.kind})</span>`).join('<br>')||'—'}</div></div>`;
+    <div class="kv">${partners.map(e=>`${esc(e.source)} → ${esc(e.target)} <span style="color:${COL.mut}">(${esc(e.kind)})</span>`).join('<br>')||'—'}</div></div>`;
 }
 
 function renderIdle(){

@@ -45,8 +45,9 @@ DOSSIER = {
              "bidirectional nucleocytoplasmic transport", ["35970938"]),
             (", which prevents nuclear import of activated STAT1/STAT2 and antagonizes the "
              "type-I interferon response", ["33849972"]),
-            (". The graph proposed this edge from topology alone (Orf6→NUP98→NUP214→RAE1); "
-             "PDB 7VPH shows ORF6 in direct contact with RAE1, confirming it.", None),
+            (". The graph proposed this edge from topology alone (Orf6→NUP98→NUP214→RAE1); the "
+             "experimental structure shown above (PDB 7VPH, openable) resolves ORF6 in direct "
+             "contact with RAE1.", None),
         ],
         "test": {
             "residues": ["E55A", "M58R", "D61A"],

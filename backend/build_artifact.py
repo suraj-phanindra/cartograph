@@ -138,6 +138,8 @@ def build():
     # --- evaluator: baseline (topology only) --------------------------------
     base = evaluate()
     m = base["metrics"]
+    # disclosed anti-gaming check: precision WITHOUT the pinned walkthrough edge
+    m_np = evaluate(exclude_pinned=True)["metrics"]
 
     # --- honest loop: confirm the #1-ranked recovered-true edges, fold back --
     rec = per_heldout_recovery()
@@ -169,21 +171,27 @@ def build():
         })
     edges.sort(key=lambda e: (e["source"], e["target"]))  # deterministic order
 
-    # visible L3 predictions (missing edges the graph proposes among visible nodes)
+    # visible L3 predictions (missing edges the graph proposes among visible nodes).
+    # A candidate is shown when it is a top-6 proposal OR it is a held-out-true edge
+    # OR it has a dossier — so the flagship Orf6->RAE1 (L3 rank 7) is never dropped.
     visible = {n["id"] for n in nodes}
     predicted = []
     for bait in DEMO_BAITS:
-        for c in ranked_by_bait[bait][:6]:
-            if c["candidate"] in visible:
-                edge = (bait, c["candidate"])
-                predicted.append({
-                    "source": bait, "target": c["candidate"],
-                    "l3_score": c["l3_score"],
-                    "path": pick_display_path(c, preferred=config.FLAGSHIP_PATH),
-                    "rank": rank_of(ranked_by_bait[bait], c["candidate"]),
-                    "held_out_true": edge in held_set,
-                    "has_dossier": f"{bait}|{c['candidate']}" in DOSSIER,
-                })
+        for i, c in enumerate(ranked_by_bait[bait], 1):
+            if c["candidate"] not in visible:
+                continue
+            edge = (bait, c["candidate"])
+            keep = i <= 6 or edge in held_set or f"{bait}|{c['candidate']}" in DOSSIER
+            if not keep:
+                continue
+            predicted.append({
+                "source": bait, "target": c["candidate"],
+                "l3_score": c["l3_score"],
+                "path": pick_display_path(c, preferred=config.FLAGSHIP_PATH),
+                "rank": i,
+                "held_out_true": edge in held_set,
+                "has_dossier": f"{bait}|{c['candidate']}" in DOSSIER,
+            })
     # de-dup and sort by score
     seen = set()
     uniq = []
@@ -246,17 +254,28 @@ def build():
                 "headline_precision_at_k": m["headline_precision_at_k"],
                 "headline_k": m["headline_k"],
                 "n_targets": m["n_targets"], "n_recoverable": m["n_targets_recoverable"],
+                # disclosed: pinning the walkthrough edge does not inflate the headline
+                "without_pinned": {
+                    "precision_at_k": {str(k): m_np["k"][k]["precision"] for k in config.EVAL_K_VALUES},
+                    "roc_auc": m_np["roc_auc"], "n_targets": m_np["n_targets"],
+                },
             },
             "loop": {
                 "confirmed_edges": [list(e) for e in top1_greens],
-                "measured_on": "the remaining held-out edges (fair before/after)",
+                "confirmed_in_view": [list(e) for e in top1_greens
+                                      if e[0] in DEMO_BAITS and e[1] in {n["id"] for n in nodes}],
+                "measured_on": "the remaining held-out edges (fair before/after, same target set)",
                 "before_precision_at_20": loop_before["k"][20]["precision"],
                 "after_precision_at_20": loop_after["k"][20]["precision"],
                 "before_recoverable": loop_before["n_targets_recoverable"],
                 "after_recoverable": loop_after["n_targets_recoverable"],
                 "story": ("Confirm the high-confidence recovered-true edges (each L3-rank #1, each a "
                           "real Gordon edge), fold them back as known, and re-score the still-hidden "
-                          "edges. Densification unlocks previously-unreachable edges."),
+                          "edges on the same target set. Folding them back re-ranks the still-hidden "
+                          "edges — one climbs into the top 20 — lifting precision@20 from "
+                          f"{loop_before['k'][20]['precision']} to {loop_after['k'][20]['precision']}. "
+                          "Reachability is unchanged this round; the gain is honest re-ranking, not "
+                          "newly-unlocked edges."),
             },
         },
         "graph": {"nodes": nodes, "edges": edges, "predicted": predicted,
@@ -267,6 +286,12 @@ def build():
                                     if s in DEMO_BAITS and t in visible]),
         "per_heldout_recovery": rec,
     }
+
+    # guard: the narrated flagship path must not drift from the computed path
+    arrow = "→".join(config.FLAGSHIP_PATH)
+    assert flagship["path"] == config.FLAGSHIP_PATH, "flagship path drifted from config"
+    orf6_mech = " ".join(cl["text"] for cl in dossiers["Orf6|RAE1"]["mechanism"])
+    assert arrow in orf6_mech, f"narrated path drifted; expected '{arrow}' in the Orf6-RAE1 mechanism"
 
     out = config.FRONTEND_DATA_DIR / "cartograph_computed.json"
     out.write_text(json.dumps(artifact, indent=2))

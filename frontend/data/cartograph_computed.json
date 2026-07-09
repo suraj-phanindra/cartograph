@@ -44,7 +44,16 @@
       "headline_precision_at_k": 0.45,
       "headline_k": 20,
       "n_targets": 57,
-      "n_recoverable": 14
+      "n_recoverable": 14,
+      "without_pinned": {
+        "precision_at_k": {
+          "10": 0.3,
+          "20": 0.45,
+          "50": 0.24
+        },
+        "roc_auc": 0.859,
+        "n_targets": 56
+      }
     },
     "loop": {
       "confirmed_edges": [
@@ -65,12 +74,18 @@
           "ECSIT"
         ]
       ],
-      "measured_on": "the remaining held-out edges (fair before/after)",
+      "confirmed_in_view": [
+        [
+          "N",
+          "G3BP1"
+        ]
+      ],
+      "measured_on": "the remaining held-out edges (fair before/after, same target set)",
       "before_precision_at_20": 0.3,
       "after_precision_at_20": 0.35,
       "before_recoverable": 10,
       "after_recoverable": 10,
-      "story": "Confirm the high-confidence recovered-true edges (each L3-rank #1, each a real Gordon edge), fold them back as known, and re-score the still-hidden edges. Densification unlocks previously-unreachable edges."
+      "story": "Confirm the high-confidence recovered-true edges (each L3-rank #1, each a real Gordon edge), fold them back as known, and re-score the still-hidden edges on the same target set. Folding them back re-ranks the still-hidden edges \u2014 one climbs into the top 20 \u2014 lifting precision@20 from 0.3 to 0.35. Reachability is unchanged this round; the gain is honest re-ranking, not newly-unlocked edges."
     }
   },
   "graph": {
@@ -1198,6 +1213,20 @@
         "rank": 6,
         "held_out_true": false,
         "has_dossier": false
+      },
+      {
+        "source": "Orf6",
+        "target": "RAE1",
+        "l3_score": 0.508631,
+        "path": [
+          "Orf6",
+          "NUP98",
+          "NUP214",
+          "RAE1"
+        ],
+        "rank": 7,
+        "held_out_true": true,
+        "has_dossier": true
       }
     ],
     "clusters": [
@@ -1245,7 +1274,7 @@
           ]
         },
         {
-          "text": ". The graph proposed this edge from topology alone (Orf6\u2192NUP98\u2192NUP214\u2192RAE1); PDB 7VPH shows ORF6 in direct contact with RAE1, confirming it.",
+          "text": ". The graph proposed this edge from topology alone (Orf6\u2192NUP98\u2192NUP214\u2192RAE1); the experimental structure shown above (PDB 7VPH, openable) resolves ORF6 in direct contact with RAE1.",
           "cites": []
         }
       ],
@@ -1285,6 +1314,7 @@
         "kind": "experimental",
         "source": "PDB 7VPH",
         "pdb": "7VPH",
+        "rcsb_url": "https://www.rcsb.org/structure/7VPH",
         "url": "data/structures/7VPH.cif",
         "method": "X-ray diffraction",
         "resolution_A": 2.8,
@@ -1427,6 +1457,7 @@
         "kind": "experimental",
         "source": "PDB 7DHG",
         "pdb": "7DHG",
+        "rcsb_url": "https://www.rcsb.org/structure/7DHG",
         "url": "data/structures/7DHG.cif",
         "method": "X-ray diffraction",
         "resolution_A": 2.2,
@@ -1656,6 +1687,7 @@
         "kind": "experimental",
         "source": "PDB 7VPH",
         "pdb": "7VPH",
+        "rcsb_url": "https://www.rcsb.org/structure/7VPH",
         "url": "data/structures/7VPH.cif",
         "method": "X-ray diffraction",
         "resolution_A": 2.8,

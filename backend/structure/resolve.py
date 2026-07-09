@@ -41,7 +41,7 @@ def _core_residues(residues):
 def _mean_plddt(cif_path):
     st = gemmi.read_structure(str(cif_path))
     vals = [res.find_atom("CA", "*").b_iso for ch in st[0] for res in ch if res.find_atom("CA", "*")]
-    return round(statistics.mean(vals), 1)
+    return round(statistics.mean(vals), 1) if vals else None
 
 
 def build_structure_facts():
@@ -49,7 +49,11 @@ def build_structure_facts():
     'BAIT|PREY'. Copies CIFs to the frontend for offline loading."""
     FRONTEND_STRUCT_DIR.mkdir(parents=True, exist_ok=True)
     for cif in ["7VPH.cif", "7DHG.cif", "AF-Q13283-G3BP1.cif"]:
-        shutil.copy(CIF_DIR / cif, FRONTEND_STRUCT_DIR / cif)
+        src = CIF_DIR / cif
+        if not src.exists():
+            raise FileNotFoundError(f"missing CIF {cif}; cannot build structure facts. "
+                                    f"Re-download to {CIF_DIR} (see README).")
+        shutil.copy(src, FRONTEND_STRUCT_DIR / cif)
 
     facts = {}
 
@@ -59,6 +63,7 @@ def build_structure_facts():
         "kind": "experimental",
         "source": "PDB 7VPH",
         "pdb": "7VPH",
+        "rcsb_url": "https://www.rcsb.org/structure/7VPH",
         "url": "data/structures/7VPH.cif",
         "method": "X-ray diffraction",
         "resolution_A": 2.8,
@@ -77,6 +82,7 @@ def build_structure_facts():
         "kind": "experimental",
         "source": "PDB 7VPH",
         "pdb": "7VPH",
+        "rcsb_url": "https://www.rcsb.org/structure/7VPH",
         "url": "data/structures/7VPH.cif",
         "method": "X-ray diffraction",
         "resolution_A": 2.8,
@@ -93,6 +99,7 @@ def build_structure_facts():
         "kind": "experimental",
         "source": "PDB 7DHG",
         "pdb": "7DHG",
+        "rcsb_url": "https://www.rcsb.org/structure/7DHG",
         "url": "data/structures/7DHG.cif",
         "method": "X-ray diffraction",
         "resolution_A": 2.2,
