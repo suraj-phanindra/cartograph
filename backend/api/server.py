@@ -100,7 +100,12 @@ class UploadReq(BaseModel):
     heldout_fraction: float = 0.0
 
 
+MAX_PAYLOAD = 500_000  # ~500 KB of edge-list text; bounds parse work
+
+
 def _parse_edges(text: str):
+    if len(text) > MAX_PAYLOAD:
+        raise HTTPException(413, f"edge list too large (> {MAX_PAYLOAD} chars)")
     edges = []
     nodes = set()
     for i, raw in enumerate(text.strip().splitlines()):
