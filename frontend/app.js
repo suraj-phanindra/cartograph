@@ -423,12 +423,12 @@ function openDossier(key){
   </div>
 
   <div class="dz-sec">
-    <div class="dz-sec-h">Mechanism <span style="color:${COL.mut};font-weight:400;text-transform:none;letter-spacing:0"> — every clause opens to a paper</span></div>
+    <div class="dz-sec-h">Mechanism</div>
     <div class="mech">${renderMechanism(d.mechanism)}</div>
   </div>
 
   <div class="dz-sec">
-    <div class="dz-sec-h">Confidence <span style="color:${COL.mut};font-weight:400;text-transform:none;letter-spacing:0"> — three signals, never blended</span></div>
+    <div class="dz-sec-h">Confidence</div>
     <div class="conf-row">
       ${gauge('Topology', cf.topology, COL.topology, cf.topology!=null?cf.topology.toFixed(2):'—', cf.topology_rank?`L3 rank ${esc(cf.topology_rank)}`:'')}
       ${gauge('Structure', structVal(st), COL.predicted, `${esc(st.confidence.value)}`, esc(st.confidence.type))}
@@ -490,7 +490,7 @@ function renderDruggability(dr){
   const live=dr.live;
   const ens=safeEnsembl(dr.ensembl);
   const otTarget = ens ? `https://platform.opentargets.org/target/${ens}` : null;
-  const head=`<div class="dz-sec-h">Druggability &amp; repurposing <span style="color:${COL.mut};font-weight:400;text-transform:none;letter-spacing:0"> — real Open Targets data</span></div>`;
+  const head=`<div class="dz-sec-h">Druggability &amp; repurposing</div>`;
 
   if(!live || live.unavailable){
     // honest fallback: no live/cached data -> the curated prior, clearly labeled
