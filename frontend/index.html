@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cartograph — the navigation layer for a protein interaction map</title>
+<title>Cartograph — interactome workbench</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2305070e'/%3E%3Cline x1='9' y1='11' x2='22' y2='20' stroke='%2322e0dd' stroke-width='2'/%3E%3Ccircle cx='9' cy='11' r='4' fill='%236c9ffb'/%3E%3Cpolygon points='22,15 26,18 26,23 22,26 18,23 18,18' fill='%23ffb454'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,15 +15,21 @@
 </head>
 <body>
 <div id="app">
-  <!-- top bar -->
+  <!-- workbench chrome -->
   <header id="topbar">
     <div class="brand">
       <span class="logo">Cartograph</span>
-      <span class="tagline">the navigation layer for a protein interaction map</span>
+      <span class="tagline">interactome workbench</span>
+      <span class="sep">·</span>
+      <label class="strain" title="Interactome (single strain in this build)">
+        <select id="strain-select"><option>SARS-CoV-2 · Gordon 2020</option></select>
+      </label>
     </div>
-    <div class="topmeta">
-      <span class="pill" id="pill-data">Gordon 2020 · 332 edges · 26 baits</span>
-      <span class="pill pill-integrity">deterministic graph · Claude explains · locked evaluator</span>
+    <div class="topactions">
+      <button id="act-compare" class="top-btn" data-live="compare" disabled>Compare strains</button>
+      <button id="act-upload" class="top-btn" data-live="upload">Bring your own map</button>
+      <button id="act-export" class="top-btn">Export</button>
+      <span id="mode-pill" class="mode-pill" title="serving mode"></span>
     </div>
   </header>
 
@@ -31,21 +37,12 @@
     <!-- left control strip -->
     <aside id="controls" class="scroll">
       <section class="ctl-block">
-        <div class="ctl-h">Ask the map</div>
-        <div class="askbox">
-          <button class="ask-preset" data-q="orf6">What interaction is Orf6 missing?</button>
-          <button class="ask-preset" data-q="orf9b">Show the Orf9b–TOM70 dossier</button>
-          <button class="ask-preset" data-q="n">Show the N–G3BP1 dossier</button>
-        </div>
-      </section>
-
-      <section class="ctl-block">
         <div class="ctl-h">Layers</div>
         <div id="layer-toggles"></div>
       </section>
 
       <section class="ctl-block">
-        <div class="ctl-h">Locked evaluator</div>
+        <div class="ctl-h"><span class="lock" aria-hidden="true">&#128274;</span> Locked evaluator</div>
         <button id="btn-eval" class="ctl-btn">Run evaluator</button>
         <button id="btn-loop" class="ctl-btn" disabled>Run one loop round</button>
         <button id="btn-evaltrans" class="ctl-btn ctl-ghost">Held-out transparency</button>
@@ -54,44 +51,47 @@
 
       <section class="ctl-block">
         <div class="ctl-h">Triage</div>
-        <button id="btn-worklist" class="ctl-btn">What to test next →</button>
-        <button id="btn-upload" class="ctl-btn ctl-ghost">Upload interactome…</button>
-      </section>
-
-      <section class="ctl-block ctl-integrity">
-        <div class="ctl-h">Integrity</div>
-        <ul id="integrity-list"></ul>
+        <button id="btn-worklist" class="ctl-btn">What to test next</button>
       </section>
 
       <section class="ctl-block ctl-foot">
-        <button id="btn-reset" class="ctl-btn ctl-ghost">Reset demo</button>
-        <div class="foot-note">Open source · MIT · reproducible</div>
+        <button id="btn-reset" class="ctl-btn ctl-ghost">Reset view</button>
       </section>
     </aside>
 
     <!-- center graph stage -->
     <div id="stage">
-      <div id="cy" role="img" aria-label="SARS-CoV-2 to human interaction graph. Mouse-driven; use the Ask the map buttons on the left as the keyboard path to open dossiers."></div>
+      <div id="cy" role="img" aria-label="SARS-CoV-2 to human interaction graph. Use the Ask the map search to probe a viral protein or run the evaluator."></div>
+
+      <!-- primary action: Ask the map -->
+      <div id="search-wrap">
+        <div class="search-row">
+          <span class="search-ic" aria-hidden="true">&#9906;</span>
+          <input id="ask-input" type="text" placeholder="Ask the map …" autocomplete="off"
+                 aria-label="Ask the map" spellcheck="false">
+        </div>
+        <div id="ask-chips" class="ask-chips"></div>
+      </div>
+
       <div id="ask-toast" class="ask-toast hidden" role="status" aria-live="polite"></div>
       <div id="precision-chip" class="precision-chip hidden" role="status" aria-live="polite"></div>
       <div id="legend" class="legend"></div>
     </div>
 
     <!-- right dossier panel -->
-    <aside id="dossier" class="scroll" role="complementary" aria-label="edge dossier">
+    <aside id="dossier" class="scroll" role="complementary" aria-label="dossier">
       <div id="dossier-body"></div>
     </aside>
   </div>
 
-  <!-- app-owned fullscreen structure viewer. Replaces Mol*'s native expand so no
-       app panel can ever occlude the exit control (fixes the P0 expanded trap). -->
+  <!-- app-owned fullscreen structure viewer -->
   <div id="struct-fullscreen" class="hidden" role="dialog" aria-modal="true" aria-label="expanded 3D structure">
     <div class="fs-bar">
       <span id="fs-title" class="fs-title"></span>
       <div class="fs-actions">
-        <button id="fs-spin" class="fs-btn" title="Toggle spin">⟳ Spin</button>
-        <button id="fs-reset" class="fs-btn" title="Reset view">⤢ Reset</button>
-        <button id="fs-close" class="fs-btn fs-close" title="Exit fullscreen (Esc)">✕ Close</button>
+        <button id="fs-spin" class="fs-btn" title="Toggle spin">&#8635; Spin</button>
+        <button id="fs-reset" class="fs-btn" title="Reset view">&#10530; Reset</button>
+        <button id="fs-close" class="fs-btn fs-close" title="Exit fullscreen (Esc)">&#10005; Close</button>
       </div>
     </div>
     <div id="fs-mount"></div>
@@ -104,13 +104,12 @@
       <div class="modal-head">
         <div id="modal-title" class="modal-title"></div>
         <div id="modal-actions" class="modal-actions"></div>
-        <button id="modal-close" class="fs-btn fs-close" title="Close (Esc)">✕ Close</button>
+        <button id="modal-close" class="fs-btn fs-close" title="Close (Esc)">&#10005; Close</button>
       </div>
       <div id="modal-body" class="modal-body scroll"></div>
     </div>
   </div>
 
-  <!-- lightweight graph hover tooltip -->
   <div id="cy-tip" class="cy-tip hidden" role="tooltip"></div>
 </div>
 <script src="app.js"></script>

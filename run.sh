@@ -32,9 +32,9 @@ case "${1:-serve}" in
   serve)
     setup; build
     echo ""
-    echo "==> serving the STATIC demo at http://127.0.0.1:${PORT}/index.html"
-    echo "    (offline, no API; Ctrl-C to stop)"
-    cd frontend && exec ../.venv/bin/python -m http.server "$PORT" --bind 127.0.0.1 ;;
+    echo "==> serving the OFFLINE workbench at http://127.0.0.1:${PORT}/index.html"
+    echo "    (no API; live-only controls disabled; Ctrl-C to stop)"
+    exec ./.venv/bin/python -m backend.serve_static "$PORT" ;;
   api)
     setup; build
     echo ""

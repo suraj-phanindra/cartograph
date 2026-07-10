@@ -40,9 +40,44 @@ async function boot(){
   buildGraph();
   buildControls();
   buildLegend();
+  buildSearch();
+  wireTopActions();
   renderIdle();
-  document.getElementById('pill-data').textContent =
-    `Gordon 2020 · ${DATA.meta.n_edges} edges · ${DATA.meta.n_baits} baits`;
+  detectMode();
+}
+
+let MODE = 'offline';
+async function detectMode(){
+  try {
+    const r = await fetch('/api/health');
+    const j = await r.json();
+    MODE = (j && j.mode === 'online') ? 'online' : 'offline';
+  } catch { MODE = 'offline'; }
+  const pill=document.getElementById('mode-pill');
+  pill.textContent = MODE==='online' ? 'live · api' : 'offline';
+  pill.classList.toggle('online', MODE==='online');
+  // gate live-only controls; leave a quiet tooltip when disabled
+  document.querySelectorAll('[data-live]').forEach(el=>{
+    const feature=el.dataset.live;
+    const enabled = MODE==='online' && feature!=='compare';   // compare = phase two, not built
+    el.disabled = !enabled;
+    el.title = enabled ? '' :
+      (feature==='compare' ? 'Cross-coronavirus comparison — not in this build'
+       : 'Requires the API server (./run.sh api)');
+  });
+}
+
+function wireTopActions(){
+  document.getElementById('act-upload').onclick=()=>{ if(MODE==='online') openUpload(); };
+  document.getElementById('act-export').onclick=exportCurrent;
+  // compare stays disabled (phase two)
+}
+
+// Export: current dossier -> self-contained report, else the worklist -> CSV
+let _currentDossierKey=null;
+function exportCurrent(){
+  if(_currentDossierKey && DATA.dossiers[_currentDossierKey]) exportDossierReport(_currentDossierKey);
+  else exportWorklistCsv();
 }
 
 /* ---------- graph ---------- */
@@ -115,8 +150,13 @@ function cyStyle(){
       'shape':'ellipse','background-color':'#16233f','border-color':COL.human,'color':COL.ink } },
     { selector:'node.dim', style:{ 'opacity':0.22 } },
     { selector:'node.pathlit', style:{ 'border-color':COL.predicted,'border-width':4,
-      'background-color':'#123', 'shadow-blur':24,'shadow-color':COL.predicted,'shadow-opacity':0.9 } },
+      'background-color':'#0c2230', 'shadow-blur':24,'shadow-color':COL.predicted,'shadow-opacity':0.9 } },
     { selector:'node.dossier-target', style:{ 'border-color':COL.predicted,'border-width':3 } },
+    // selected/active nodes get a dark box behind the label so it stays readable
+    // even on a light hexagon or a darkened (path-lit) fill (bug: black label on ORF6)
+    { selector:'node.pathlit, node.dossier-target', style:{
+      'color':'#eafcff','text-outline-width':3,'text-outline-color':'#04121a',
+      'text-outline-opacity':1,'font-weight':800 } },
 
     { selector:'edge', style:{ 'curve-style':'straight','width':2,'line-color':COL.known,
       'target-arrow-shape':'none','opacity':0.85 } },
@@ -152,18 +192,11 @@ function buildControls(){
     row.onkeydown=(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleLayer(k,row); } };
     wrap.appendChild(row);
   }
-  document.querySelectorAll('.ask-preset').forEach(b=> b.onclick=()=>runQuery(b.dataset.q));
   document.getElementById('btn-eval').onclick=runEval;
   document.getElementById('btn-loop').onclick=runLoop;
   document.getElementById('btn-reset').onclick=()=>location.reload();
   document.getElementById('btn-worklist').onclick=openWorklist;
   document.getElementById('btn-evaltrans').onclick=openEvalTransparency;
-  document.getElementById('btn-upload').onclick=openUpload;
-
-  const il=document.getElementById('integrity-list'); il.innerHTML='';
-  const items=[DATA.integrity.deterministic_path, DATA.integrity.no_citation_no_render,
-    DATA.integrity.predicted_labeled, DATA.integrity.locked_evaluator];
-  for(const t of items){ const li=document.createElement('li'); li.textContent=t; il.appendChild(li); }
 }
 
 function toggleLayer(k,row){
@@ -191,16 +224,75 @@ function buildLegend(){
   L.innerHTML=rows.map(([_,c,t])=>`<span><i class="g" style="background:${c}"></i>${t}</span>`).join('');
 }
 
-/* ---------- ask / flagship animation ---------- */
+/* ---------- Ask the map: deterministic intent parser + dispatch ---------- */
 let queryToken=0;
-function runQuery(q){
+const BAIT_ALIAS = { nucleocapsid:'N', envelope:'E', membrane:'M', spike:'Spike' };
+
+function buildSearch(){
+  const input=document.getElementById('ask-input');
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ runSearch(input.value); } });
+  const chips=[['ORF6’s unmapped targets','orf6 unmapped targets'],
+    ['Most druggable predicted','most druggable predicted'],
+    ['Run locked evaluation','run locked evaluation']];
+  const wrap=document.getElementById('ask-chips'); wrap.innerHTML='';
+  for(const [label,q] of chips){
+    const b=document.createElement('button'); b.type='button'; b.className='ask-chip'; b.textContent=label;
+    b.onclick=()=>{ input.value=q; runSearch(q); };
+    wrap.appendChild(b);
+  }
+}
+
+function graphBaits(){ return DATA.graph.nodes.filter(n=>n.type==='viral').map(n=>n.id); }
+function allBaits(){ return [...new Set(DATA.worklist.map(r=>r.bait))]; }
+
+function parseIntent(text){
+  const t=(text||'').toLowerCase().trim();
+  if(!t) return {type:'none'};
+  if(/\b(loop)\b/.test(t)) return {type:'loop'};
+  if(/(evaluat|precision|\brun\b.*\beval|benchmark|held.?out)/.test(t)) return {type:'eval'};
+  if(/(druggab|repurpos|approved drug|most.drugg)/.test(t)) return {type:'druggable'};
+  const g=graphBaits();
+  for(const b of g){ if(new RegExp(`\\b${b.toLowerCase()}\\b`).test(t)) return {type:'probe', bait:b}; }
+  for(const [alias,b] of Object.entries(BAIT_ALIAS)){ if(t.includes(alias)) return {type:'probe', bait:b}; }
+  for(const b of allBaits()){ if(new RegExp(`\\b${b.toLowerCase()}\\b`).test(t)) return {type:'probe_offscreen', bait:b}; }
+  return {type:'unknown'};
+}
+
+function runSearch(text){
+  const it=parseIntent(text);
+  switch(it.type){
+    case 'none': return;
+    case 'eval': runEval(); return;
+    case 'loop': if(!state.evalDone) runEval(); runLoop(); return;
+    case 'druggable':
+      wlState.onlyRepurpose=true; wlState.sort='approved_drug'; wlState.dir=-1;
+      openWorklist();
+      toast('Most-druggable predicted targets — worklist filtered to <span class="k">repurposing leads</span> (approved drug on the host target).');
+      return;
+    case 'probe': probeBait(it.bait); return;
+    case 'probe_offscreen':
+      wlState.bait=it.bait; wlState.onlyRepurpose=false; openWorklist();
+      toast(`<span class="k">${esc(it.bait)}</span> is a bait in the interactome; its predicted edges are listed in the worklist (outside the current neighbourhood view).`);
+      return;
+    default:
+      toast('Query not understood — try a viral protein (e.g. <span class="k">ORF6</span>), <span class="k">most druggable predicted</span>, or <span class="k">run evaluation</span>.');
+  }
+}
+
+function probeBait(bait){
+  if(bait==='Orf6'){ flagshipOrf6(); return; }
+  const dz=Object.keys(DATA.dossiers).find(k=>k.split('|')[0]===bait);
+  revealPredictedFor(bait);
+  if(dz){ openDossier(dz); }
+  else { selectNode(bait); cy.animate({center:{eles:cy.getElementById(bait)}},{duration:300}); }
+  toast(`Probing <span class="k">${esc(bait)}</span> — revealed its deterministic L3 predictions.`);
+}
+
+function flagshipOrf6(){
   const my=++queryToken;                          // cancel any in-flight animation
   cy.elements().removeClass('dim pathlit');
-  if(q==='orf9b'){ revealPredictedFor('Orf9b'); openDossier('Orf9b|TOMM70'); return; }
-  if(q==='n'){ revealPredictedFor('N'); openDossier('N|G3BP1'); return; }
-  // flagship: Orf6 -> RAE1 via the length-3 path
   const path = DATA.flagship.path;               // ['Orf6','NUP98','NUP214','RAE1']
-  toast(`<span class="k">Deterministic L3</span> asks: what edge is Orf6 missing? Walking the length-3 path <span class="k">${esc(path.join(' → '))}</span> …`);
+  toast(`Length-3 path <span class="k">${esc(path.join(' → '))}</span> — deterministic L3.`);
   cy.elements().addClass('dim');
   let i=0;
   const step=()=>{
@@ -212,7 +304,7 @@ function runQuery(q){
     } else {
       const pe=edgeBetween('Orf6','RAE1');
       pe.removeClass('hiddenEdge dim').addClass('pathlit'); pe.style('display','element');
-      toast(`Graph proposes the missing edge <span class="k">Orf6 → RAE1</span> (L3 rank ${esc(DATA.flagship.l3_rank)}/${esc(DATA.flagship.n_candidates)}). Opening the structural dossier…`);
+      toast(`Predicted edge <span class="k">Orf6 → RAE1</span> · L3 rank ${esc(DATA.flagship.l3_rank)}/${esc(DATA.flagship.n_candidates)}.`);
       setTimeout(()=>{ if(my!==queryToken) return; cy.elements().removeClass('dim'); openDossier('Orf6|RAE1'); }, 900);
     }
   };
@@ -297,6 +389,7 @@ function selectNode(id){
 
 function openDossier(key){
   const d=DATA.dossiers[key]; if(!d) return;
+  _currentDossierKey=key;
   cy.nodes().removeClass('dossier-target');
   cy.getElementById(d.source).addClass('dossier-target');
   cy.getElementById(d.target).addClass('dossier-target');
@@ -531,18 +624,8 @@ function renderNodePanel(id){
 }
 
 function renderIdle(){
-  const f=DATA.flagship, b=DATA.eval.baseline;
-  document.getElementById('dossier-body').innerHTML=`
-    <div class="dz-idle">
-      <h2>An AP-MS hit becomes a structural, cited, testable hypothesis.</h2>
-      <p>The graph proposes missing edges deterministically. Claude reads the literature and explains. A locked evaluator measures how often the hidden true edges come back.</p>
-      <div class="step s1"><b>Ask the map</b> — "what interaction is Orf6 missing?"</div>
-      <div class="step s2"><b>Length-3 path</b> — ${esc(f.path.join(' → '))} (genuine L3, never the 2-edge shortcut)</div>
-      <div class="step s3"><b>Structural dossier</b> — real 3D, interface residues, a mechanism where every clause opens to a paper, a proposed wet-lab test</div>
-      <div class="step s4"><b>Locked evaluator</b> — held-out Gordon edges snap green; precision@${esc(b.headline_k)} = ${Math.round(b.headline_precision_at_k*100)}%, ROC-AUC ${esc(b.roc_auc)}</div>
-      <div class="step s5"><b>One loop round</b> — confirm recovered edges, fold back, re-score</div>
-      <p style="margin-top:20px;color:${COL.mut};font-size:11px">Start with <b style="color:${COL.predicted}">"What interaction is Orf6 missing?"</b> on the left.</p>
-    </div>`;
+  document.getElementById('dossier-body').innerHTML=
+    `<div class="dz-empty">Select a node to see its edges, or an edge for its structural dossier.</div>`;
 }
 
 /* ---------- modal (worklist / eval transparency / upload) ---------- */
@@ -772,6 +855,7 @@ function renderUploadResult(d){
 
 /* ---------- panel lifecycle: one system for every transient panel ---------- */
 function closeDossier(){
+  _currentDossierKey=null;
   if(cy){ cy.nodes().removeClass('dossier-target'); }
   renderIdle();
 }

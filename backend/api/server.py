@@ -72,7 +72,7 @@ async def _guards(request: Request, call_next):
 # ---------------------------------------------------------------------------
 @app.get("/api/health")
 def health():
-    return {"ok": True, "string_version": config.STRING_VERSION}
+    return {"ok": True, "mode": "online", "string_version": config.STRING_VERSION}
 
 
 class PredictReq(BaseModel):
