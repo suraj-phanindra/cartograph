@@ -251,10 +251,11 @@ function parseIntent(text){
   if(/\b(loop)\b/.test(t)) return {type:'loop'};
   if(/(evaluat|precision|\brun\b.*\beval|benchmark|held.?out)/.test(t)) return {type:'eval'};
   if(/(druggab|repurpos|approved drug|most.drugg)/.test(t)) return {type:'druggable'};
+  const rx=s=>String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');  // escape ids from (possibly uploaded) data
   const g=graphBaits();
-  for(const b of g){ if(new RegExp(`\\b${b.toLowerCase()}\\b`).test(t)) return {type:'probe', bait:b}; }
+  for(const b of g){ if(new RegExp(`\\b${rx(b.toLowerCase())}\\b`).test(t)) return {type:'probe', bait:b}; }
   for(const [alias,b] of Object.entries(BAIT_ALIAS)){ if(t.includes(alias)) return {type:'probe', bait:b}; }
-  for(const b of allBaits()){ if(new RegExp(`\\b${b.toLowerCase()}\\b`).test(t)) return {type:'probe_offscreen', bait:b}; }
+  for(const b of allBaits()){ if(new RegExp(`\\b${rx(b.toLowerCase())}\\b`).test(t)) return {type:'probe_offscreen', bait:b}; }
   return {type:'unknown'};
 }
 
@@ -263,7 +264,10 @@ function runSearch(text){
   switch(it.type){
     case 'none': return;
     case 'eval': runEval(); return;
-    case 'loop': if(!state.evalDone) runEval(); runLoop(); return;
+    case 'loop':
+      if(!state.evalDone){ runEval(); toast('Ran the locked evaluator — <span class="k">run loop</span> again for the fold-back round.'); }
+      else runLoop();
+      return;
     case 'druggable':
       wlState.onlyRepurpose=true; wlState.sort='approved_drug'; wlState.dir=-1;
       openWorklist();
@@ -616,6 +620,7 @@ function fsOpen(){ return !document.getElementById('struct-fullscreen').classLis
 
 /* ---------- panels ---------- */
 function renderNodePanel(id){
+  _currentDossierKey=null;   // a node panel is not a dossier -> Export falls back to worklist CSV
   const n=DATA.graph.nodes.find(x=>x.id===id)||{};
   const partners=DATA.graph.edges.filter(e=>e.source===id||e.target===id);
   document.getElementById('dossier-body').innerHTML=`
