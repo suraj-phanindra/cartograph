@@ -186,3 +186,45 @@ operation of the core flow, and the < 820 px reflow. Result:
 
 **Run it:** `./run.sh` (offline static demo) or `./run.sh api` (adds the live API +
 upload). `./run.sh test` runs the suite.
+
+---
+
+## 6. Live druggability + repurposing (Phase-2 item 5)
+
+Display-only enrichment — never touches prediction, scoring, the locked evaluator,
+or the frozen split (enforced by `test_druggability_does_not_import_locked_evaluator`).
+
+**Source (schema introspected, not assumed).** Open Targets Platform GraphQL,
+**data version 26.06** (the spec's 26.03 was stale; caught by querying `meta`). The
+schema had changed: there is no `knownDrugs`/`isApproved`/numeric phase — drugs come
+from `drugAndClinicalCandidates.rows[].{maxClinicalStage, drug{...maximumClinicalStage,
+mechanismsOfAction}}`, and **approved = `maxClinicalStage == "APPROVAL"`**. Committed
+snapshots for 32 targets (demo + worklist) in `evidence/druggability/<gene>.json` with
+source + fetch date let the **offline** demo show real, dated data with **no live call**
+(the frontend never fetches `/api/druggability`); `./run.sh api` fetches uncached
+targets live.
+
+**What shipped.** Dossier druggability section = real small-molecule tractability
+bucket + the drug list (name, clinical stage, mechanism, approved flag, link) + a
+"Repurposing lead" badge + source/date; the curated tier remains only as a clearly
+labelled fallback. Worklist gains sortable/filterable **Tractability** and
+**Repurposing** columns. Everywhere the repurposing framing is explicit: *a
+hypothesis, not a validated antiviral; no drug here treats the infection.*
+
+**Adversarial review — findings and resolutions.** Two fresh agents (repurposing-
+honesty + code) verified 5/6 non-negotiables clean and confirmed offline-makes-no-
+network and display-only. The substantive finding, **verified against live Open
+Targets**: `BRD4`'s pelabresib row reports `APPROVAL` while BRD4's own tractability
+lacks the Approved-Drug bucket — Open Targets contradicting itself (pelabresib is
+Phase III, not approved). Resolution: a repurposing lead now requires **both** OT
+signals to agree (an approved drug **and** the target-level Approved-Drug tractability
+bucket), so BRD4 is correctly **not** a lead (pelabresib down-labelled to "Clinical")
+while `RPL36` (ataluren + bucket) stays a genuine lead. Low-severity fixes: compound
+stage labels, dedup-keeps-highest-stage, `AB_PRIORITY`, dropped the fake-magnitude
+tractability bar, null-guarded tractability, `safeUrl` on the worklist link, CSV guard
+covers tab/CR, and `snapshot_path` validates the gene at the sink. **48 tests pass**;
+artifact byte-identical; evaluator unchanged (precision@20 = 0.45, ROC-AUC = 0.8451).
+
+**The genuine repurposing lead:** RPL36 (approved ribosome-modulator ataluren) is the
+one lead in the current top-40 worklist; the flagship structural targets
+(RAE1/NUP98/TOMM70/G3BP1) are honestly poorly druggable (0 drugs).
