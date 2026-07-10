@@ -1,0 +1,103 @@
+{
+  "gene": "RPL36",
+  "ensembl": "ENSG00000130255",
+  "source": "Open Targets Platform GraphQL",
+  "data_version": "26.06",
+  "endpoint": "https://api.platform.opentargets.org/api/v4/graphql",
+  "fetched": "2026-07-10",
+  "tractability": {
+    "small_molecule": "Approved Drug",
+    "antibody": null,
+    "buckets": [
+      {
+        "modality": "SM",
+        "label": "Approved Drug"
+      },
+      {
+        "modality": "SM",
+        "label": "Structure with Ligand"
+      },
+      {
+        "modality": "SM",
+        "label": "High-Quality Ligand"
+      },
+      {
+        "modality": "PR",
+        "label": "Database Ubiquitination"
+      },
+      {
+        "modality": "PR",
+        "label": "Half-life Data"
+      },
+      {
+        "modality": "PR",
+        "label": "Small Molecule Binder"
+      },
+      {
+        "modality": "OC",
+        "label": "Advanced Clinical"
+      }
+    ]
+  },
+  "drugs": [
+    {
+      "id": "CHEMBL256997",
+      "name": "ATALUREN",
+      "drug_type": "Small molecule",
+      "max_stage": "APPROVAL",
+      "stage_label": "Approved",
+      "approved": true,
+      "mechanism": "80S Ribosome modulator",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL256997",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL256997"
+    },
+    {
+      "id": "CHEMBL1743000",
+      "name": "CITATUZUMAB BOGATOX",
+      "drug_type": "Antibody drug conjugate",
+      "max_stage": "PHASE_1",
+      "stage_label": "Phase I",
+      "approved": false,
+      "mechanism": "Epithelial cell adhesion molecule binding agent",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL1743000",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL1743000"
+    },
+    {
+      "id": "CHEMBL4297744",
+      "name": "ELX-02",
+      "drug_type": "Unknown",
+      "max_stage": "PHASE_2",
+      "stage_label": "Phase II",
+      "approved": false,
+      "mechanism": "80S Ribosome modulator",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL4297744",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL4297744"
+    },
+    {
+      "id": "CHEMBL4297789",
+      "name": "MT-3724",
+      "drug_type": "Unknown",
+      "max_stage": "PHASE_2",
+      "stage_label": "Phase II",
+      "approved": false,
+      "mechanism": "80S Ribosome inhibitor",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL4297789",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL4297789"
+    },
+    {
+      "id": "CHEMBL2108785",
+      "name": "ZOLIMOMAB ARITOX",
+      "drug_type": "Antibody drug conjugate",
+      "max_stage": "PHASE_2",
+      "stage_label": "Phase II",
+      "approved": false,
+      "mechanism": "T-cell surface glycoprotein CD5 binding agent",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL2108785",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL2108785"
+    }
+  ],
+  "n_drugs": 5,
+  "n_approved": 1,
+  "repurposing_lead": true,
+  "opentargets_url": "https://platform.opentargets.org/target/ENSG00000130255"
+}

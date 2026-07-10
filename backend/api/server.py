@@ -32,6 +32,7 @@ from backend.graph.enrich import enriched_graph, _fetch_string_network
 from backend.predict.l3 import l3_scores, rank_of
 from backend.eval.evaluator import evaluate
 from backend.reason.hypothesis import read_edge, EDGE_TO_PACK
+from backend.druggability import service as drug_service
 
 log = logging.getLogger("cartograph.api")
 app = FastAPI(title="Cartograph API", version="1.0")
@@ -98,6 +99,18 @@ def dossier(edge: str):
 def eval_run():
     r = evaluate()
     return {"metrics": r["metrics"]}
+
+
+@app.get("/api/druggability")
+def druggability(gene: str, ensembl: str = None):
+    """Live druggability from Open Targets (prefers the committed snapshot; only
+    hits the network when a gene has no snapshot). Display-only enrichment."""
+    from datetime import date
+    if not GENE_RE.match(gene):
+        raise HTTPException(400, "invalid gene symbol")
+    if ensembl is not None and not re.match(r"^ENSG[0-9]{11}$", ensembl):
+        raise HTTPException(400, "invalid Ensembl id")
+    return drug_service.get(gene, ensembl, live=True, fetched=str(date.today()), timeout=15)
 
 
 @app.get("/api/stream")

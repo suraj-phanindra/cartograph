@@ -359,13 +359,7 @@ function openDossier(key){
     </div>
   </div>
 
-  <div class="dz-sec">
-    <div class="dz-sec-h">Druggability <span style="color:${COL.mut};font-weight:400;text-transform:none;letter-spacing:0"> — curated prior, not computed/cited</span></div>
-    <div class="kv"><b>${esc(d.druggability.target)}</b> · tractability <b style="color:${drugColor(d.druggability.level)}">${esc(d.druggability.level)}</b>
-    <div class="drug-bar"><i style="width:${drugPct(d.druggability.level)}%;background:${drugColor(d.druggability.level)}"></i></div>
-    ${esc(d.druggability.note)}
-    ${ens?`<br><a href="https://platform.opentargets.org/target/${esc(ens)}" target="_blank" rel="noopener noreferrer" style="color:${COL.predicted};font-family:JetBrains Mono,monospace;font-size:11px">open in Open Targets →</a>`:''}</div>
-  </div>
+  ${renderDruggability(d.druggability)}
 
   <div class="dz-sec">
     <div class="dz-sec-h">Citations</div>
@@ -399,6 +393,48 @@ function gauge(cap,v,color,val,sub){
     <span class="val" style="color:${color}">${val}</span></div>
     <div class="cap">${cap}<br><span style="color:${COL.mut}">${sub||''}</span></div></div>`;
 }
+function renderDruggability(dr){
+  const live=dr.live;
+  const ens=safeEnsembl(dr.ensembl);
+  const otTarget = ens ? `https://platform.opentargets.org/target/${ens}` : null;
+  const head=`<div class="dz-sec-h">Druggability &amp; repurposing <span style="color:${COL.mut};font-weight:400;text-transform:none;letter-spacing:0"> — real Open Targets data</span></div>`;
+
+  if(!live || live.unavailable){
+    // honest fallback: no live/cached data -> the curated prior, clearly labeled
+    return `<div class="dz-sec">${head}
+      <div class="kv"><b>${esc(dr.target)}</b> · <span style="color:${COL.mut}">live druggability ${live?esc(live.reason):'not cached'}</span><br>
+      curated prior (not from a live source): tractability <b style="color:${drugColor(dr.curated_level)}">${esc(dr.curated_level)}</b> — ${esc(dr.curated_note)}
+      ${otTarget?`<br><a href="${esc(otTarget)}" target="_blank" rel="noopener noreferrer" style="color:${COL.predicted};font-family:var(--mono);font-size:11px">open in Open Targets →</a>`:''}</div></div>`;
+  }
+
+  const t=live.tractability;
+  const drugs=live.drugs||[];
+  const badge = live.repurposing_lead
+    ? `<span class="repurpose-badge">★ Repurposing lead</span>` : '';
+  const drugRows = drugs.slice(0,6).map(x=>{
+    const u=safeUrl(x.ot_url);
+    const stage = x.approved ? `<span class="wl-badge wl-yes">Approved</span>` : `<span class="drug-stage">${esc(x.stage_label)}</span>`;
+    return `<div class="drug-row">${stage}
+      <div><b>${u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(x.name)}</a>`:esc(x.name)}</b>
+      <span style="color:${COL.mut}">${x.mechanism?'· '+esc(x.mechanism):''}</span></div></div>`;
+  }).join('');
+  const more = drugs.length>6 ? `<div style="color:${COL.mut};font-size:11px;margin-top:4px">+${drugs.length-6} more in Open Targets</div>`:'';
+  const drugBlock = drugs.length
+    ? `<div class="drug-list">${drugRows}${more}</div>`
+    : `<div class="kv" style="color:${COL.mut}">No known drugs against this target in Open Targets.</div>`;
+
+  return `<div class="dz-sec">${head}
+    <div class="kv"><b>${esc(live.gene)}</b> · small-molecule tractability <b style="color:${COL.predicted}">${esc(t.small_molecule||'none reported')}</b>
+      ${t.antibody?` · antibody <b>${esc(t.antibody)}</b>`:''} ${badge}
+      <div class="drug-bar" style="margin-top:8px"><i style="width:${t.small_molecule?70:20}%;background:${live.repurposing_lead?COL.confirmed:COL.predicted}"></i></div>
+    </div>
+    ${drugBlock}
+    ${live.repurposing_lead?`<div class="repurpose-note">Existing drugs against this host target are <b>repurposing hypotheses</b> — not validated for antiviral use, and no drug here treats the infection.</div>`:''}
+    <div class="drug-src">source: ${esc(live.source)}, data ${esc(live.data_version)}, fetched ${esc(live.fetched)}
+      ${otTarget?` · <a href="${esc(otTarget)}" target="_blank" rel="noopener noreferrer" style="color:${COL.predicted}">Open Targets →</a>`:''}</div>
+  </div>`;
+}
+
 function structVal(st){ return st.confidence.type==='pLDDT'? st.confidence.value/100 : (st.confidence.type==='resolution'? 0.85 : 0.7); }
 function drugColor(l){ return l==='LOW'?COL.viral:(l==='MODERATE'?COL.topology:COL.confirmed); }
 function drugPct(l){ return l==='LOW'?30:(l==='MODERATE'?55:80); }
@@ -534,10 +570,12 @@ function closeModal(){
 function modalOpen(){ return !document.getElementById('modal').classList.contains('hidden'); }
 
 /* ---------- worklist: ranked "what to test next" ---------- */
-const wlState = { sort:'l3_score', dir:-1, bait:'all', onlyDossier:false, onlyRecovered:false };
+const wlState = { sort:'l3_score', dir:-1, bait:'all', onlyDossier:false, onlyRecovered:false, onlyRepurpose:false };
 
 function openWorklist(){
-  openModal(`What to test next <small>top ${DATA.worklist.length} graph-proposed edges across the whole map · deterministic L3</small>`,
+  const dm=DATA.druggability_meta;
+  const src = dm ? ` · druggability: ${esc(dm.source.replace(' Platform GraphQL',''))} ${esc(dm.data_version)}` : '';
+  openModal(`What to test next <small>top ${DATA.worklist.length} graph-proposed edges · deterministic L3${src}</small>`,
     `<button class="fs-btn" id="wl-csv">Export CSV</button>`, '');
   document.getElementById('wl-csv').onclick=exportWorklistCsv;
   renderWorklist();
@@ -547,6 +585,7 @@ function wlRows(){
   if(wlState.bait!=='all') rows=rows.filter(r=>r.bait===wlState.bait);
   if(wlState.onlyDossier) rows=rows.filter(r=>r.has_dossier);
   if(wlState.onlyRecovered) rows=rows.filter(r=>r.recovered);
+  if(wlState.onlyRepurpose) rows=rows.filter(r=>r.approved_drug);
   const k=wlState.sort, d=wlState.dir;
   const norm=v=> v==null ? null : (typeof v==='boolean' ? (v?1:0) : v);
   rows.sort((a,b)=>{ let x=norm(a[k]), y=norm(b[k]);
@@ -561,7 +600,7 @@ function wlRows(){
 function renderWorklist(){
   const baits=[...new Set(DATA.worklist.map(r=>r.bait))].sort();
   const cols=[['edge','Edge'],['l3_score','L3'],['rank','Rank'],['recovered','Recovered'],
-    ['structure','Structure'],['has_mechanism','Mechanism'],['druggability','Drug'],['','']];
+    ['structure','Structure'],['has_mechanism','Mechanism'],['tractability','Tractability'],['approved_drug','Repurposing'],['','']];
   const arr=k=> wlState.sort===k?`<span class="arr">${wlState.dir<0?'▼':'▲'}</span>`:'';
   const rows=wlRows();
   const badge=(on,txt,cls)=> on?`<span class="wl-badge ${cls}">${txt}</span>`:'<span class="wl-no">—</span>';
@@ -570,6 +609,7 @@ function renderWorklist(){
       <label>Bait <select id="wl-bait">${['all',...baits].map(b=>`<option ${b===wlState.bait?'selected':''}>${esc(b)}</option>`).join('')}</select></label>
       <label><input type="checkbox" id="wl-dos" ${wlState.onlyDossier?'checked':''}> has dossier</label>
       <label><input type="checkbox" id="wl-rec" ${wlState.onlyRecovered?'checked':''}> recovered held-out only</label>
+      <label><input type="checkbox" id="wl-rep" ${wlState.onlyRepurpose?'checked':''}> repurposing leads only</label>
       <span style="margin-left:auto;color:var(--mut2);font-family:var(--mono);font-size:11px">${rows.length} edges</span>
     </div>
     <table class="wl-table"><thead><tr>${cols.map(([k,l])=>l?`<th data-k="${k}">${esc(l)} ${arr(k)}</th>`:'<th></th>').join('')}</tr></thead>
@@ -581,14 +621,16 @@ function renderWorklist(){
         <td>${badge(r.recovered,'held-out ✓','wl-yes')}</td>
         <td>${r.structure==='experimental'?'<span class="wl-badge wl-exp">experimental</span>':(r.structure==='predicted'?'<span class="wl-badge wl-pred">predicted</span>':'<span class="wl-no">—</span>')}</td>
         <td>${badge(r.has_mechanism,'cited','wl-yes')}</td>
-        <td>${r.druggability?esc(r.druggability):`<a href="${esc(r.opentargets)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`}</td>
+        <td>${r.tractability?`${esc(r.tractability)}<span style="color:var(--mut2);font-size:10px">${r.n_drugs?` · ${esc(r.n_drugs)} drugs`:''}</span>`:`<a href="${esc(r.opentargets)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`}</td>
+        <td>${r.approved_drug?'<span class="wl-badge wl-yes">★ lead</span>':'<span class="wl-no">—</span>'}</td>
         <td>${r.has_dossier?'<span style="color:var(--predicted);font-size:11px">open dossier →</span>':''}</td>
       </tr>`).join('')}</tbody></table>
-    <div class="wl-note">L3 score and rank are computed on the blind training graph (held-out edges removed). <b>Recovered</b> marks a real held-out Gordon edge the graph re-proposed. <b>Structure</b>/<b>Mechanism</b>/<b>Drug</b> are shown only where verified evidence exists — blanks mean "not established", never fabricated. Conservation is omitted (no cross-coronavirus data). Rows with a dossier are clickable.</div>`;
+    <div class="wl-note">L3 score and rank are computed on the blind training graph (held-out edges removed). <b>Tractability</b>/<b>Repurposing</b> are real Open Targets data (${DATA.druggability_meta?esc(DATA.druggability_meta.source)+', '+esc(DATA.druggability_meta.data_version)+', fetched '+esc(DATA.druggability_meta.fetched):'cached'}); a <b>★ lead</b> means the host target has an approved drug — a repurposing <i>hypothesis</i>, not a validated antiviral. Blanks mean "not established", never fabricated. Rows with a dossier are clickable.</div>`;
   document.getElementById('modal-body').innerHTML=body;
   document.getElementById('wl-bait').onchange=e=>{ wlState.bait=e.target.value; renderWorklist(); };
   document.getElementById('wl-dos').onchange=e=>{ wlState.onlyDossier=e.target.checked; renderWorklist(); };
   document.getElementById('wl-rec').onchange=e=>{ wlState.onlyRecovered=e.target.checked; renderWorklist(); };
+  document.getElementById('wl-rep').onchange=e=>{ wlState.onlyRepurpose=e.target.checked; renderWorklist(); };
   document.querySelectorAll('.wl-table th[data-k]').forEach(th=>{ const k=th.dataset.k; if(!k) return;
     th.onclick=()=>{ if(wlState.sort===k) wlState.dir*=-1; else { wlState.sort=k; wlState.dir=-1; } renderWorklist(); }; });
   document.querySelectorAll('.wl-table tr.clickable').forEach(tr=>{
@@ -618,7 +660,15 @@ ${st.interface_residues.length?`<p>Interface residues (${esc(st.interface_source
 <h2>Mechanism</h2><p>${mech}</p>
 <h2>Confidence</h2><p class="mut">topology ${cf.topology!=null?esc(cf.topology.toFixed(2)):'—'}${cf.topology_rank?` (L3 rank ${esc(cf.topology_rank)})`:''} · structure ${esc(st.confidence.value)} ${esc(st.confidence.type)} · literature ${esc(cf.literature)} (${esc(cf.literature_count)} papers)</p>
 <h2>Proposed wet-lab test</h2><p>Mutations: ${d.proposed_test.residues.map(r=>`<span class="r">${esc(r)}</span>`).join('')}<br>${esc(d.proposed_test.text)}</p>
-<h2>Druggability <span class="mut">(curated prior, not computed/cited)</span></h2><p>${esc(d.druggability.target)} — tractability ${esc(d.druggability.level)}. ${esc(d.druggability.note)}</p>
+<h2>Druggability &amp; repurposing</h2>${(()=>{ const L=d.druggability.live;
+  if(L && !L.unavailable){
+    const drugs=(L.drugs||[]).slice(0,8).map(x=>`<li>${esc(x.name)} — ${x.approved?'<b>Approved</b>':esc(x.stage_label)}${x.mechanism?' · '+esc(x.mechanism):''}</li>`).join('');
+    return `<p>${esc(L.gene)} — small-molecule tractability <b>${esc(L.tractability.small_molecule||'none reported')}</b>${L.repurposing_lead?' · <b>Repurposing lead</b> (has an approved drug — a hypothesis, not a validated antiviral)':''}.</p>`
+      +(drugs?`<ol>${drugs}</ol>`:'<p class="mut">No known drugs against this target.</p>')
+      +`<p class="mut">Source: ${esc(L.source)}, data ${esc(L.data_version)}, fetched ${esc(L.fetched)}.</p>`;
+  }
+  return `<p>${esc(d.druggability.target)} — curated prior (not from a live source): tractability ${esc(d.druggability.curated_level)}. ${esc(d.druggability.curated_note)}</p>`;
+})()}
 <h2>Citations</h2><ol>${cites}</ol>
 <div class="foot">Generated by Cartograph. Every mechanistic clause opens to a real paper; predicted structures are labelled with a confidence number; the graph proposes edges deterministically and Claude only explains and cites. Ground truth: Gordon et al. 2020 (PMID 32353859).</div>
 </body></html>`;
@@ -628,7 +678,7 @@ ${st.interface_residues.length?`<p>Interface residues (${esc(st.interface_source
 }
 
 function exportWorklistCsv(){
-  const cols=['bait','prey','l3_score','rank','recovered','structure','structure_source','has_mechanism','druggability','opentargets'];
+  const cols=['bait','prey','l3_score','rank','recovered','structure','structure_source','has_mechanism','tractability','n_drugs','approved_drug','opentargets'];
   const esc2=v=>{ let s=String(v==null?'':v);
     if(/^[=+\-@]/.test(s)) s="'"+s;                    // block CSV formula injection
     return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };

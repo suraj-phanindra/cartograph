@@ -1358,8 +1358,39 @@
       "druggability": {
         "target": "RAE1",
         "ensembl": "ENSG00000101146",
-        "level": "LOW",
-        "note": "Shallow mRNA-export groove \u2014 addressable only as a PPI-inhibitor class."
+        "curated_level": "LOW",
+        "curated_note": "Shallow mRNA-export groove \u2014 addressable only as a PPI-inhibitor class.",
+        "live": {
+          "gene": "RAE1",
+          "ensembl": "ENSG00000101146",
+          "source": "Open Targets Platform GraphQL",
+          "data_version": "26.06",
+          "endpoint": "https://api.platform.opentargets.org/api/v4/graphql",
+          "fetched": "2026-07-10",
+          "tractability": {
+            "small_molecule": "High-Quality Pocket",
+            "antibody": null,
+            "buckets": [
+              {
+                "modality": "SM",
+                "label": "High-Quality Pocket"
+              },
+              {
+                "modality": "PR",
+                "label": "Database Ubiquitination"
+              },
+              {
+                "modality": "PR",
+                "label": "Half-life Data"
+              }
+            ]
+          },
+          "drugs": [],
+          "n_drugs": 0,
+          "n_approved": 0,
+          "repurposing_lead": false,
+          "opentargets_url": "https://platform.opentargets.org/target/ENSG00000101146"
+        }
       },
       "skeptic": {
         "verdict": "pass",
@@ -1499,8 +1530,39 @@
       "druggability": {
         "target": "TOMM70",
         "ensembl": "ENSG00000154174",
-        "level": "MODERATE",
-        "note": "Defined hydrophobic TPR pocket \u2014 a more tractable orthosteric handle than most PPI interfaces."
+        "curated_level": "MODERATE",
+        "curated_note": "Defined hydrophobic TPR pocket \u2014 a more tractable orthosteric handle than most PPI interfaces.",
+        "live": {
+          "gene": "TOMM70",
+          "ensembl": "ENSG00000154174",
+          "source": "Open Targets Platform GraphQL",
+          "data_version": "26.06",
+          "endpoint": "https://api.platform.opentargets.org/api/v4/graphql",
+          "fetched": "2026-07-10",
+          "tractability": {
+            "small_molecule": null,
+            "antibody": "UniProt SigP or TMHMM",
+            "buckets": [
+              {
+                "modality": "AB",
+                "label": "UniProt SigP or TMHMM"
+              },
+              {
+                "modality": "PR",
+                "label": "UniProt Ubiquitination"
+              },
+              {
+                "modality": "PR",
+                "label": "Database Ubiquitination"
+              }
+            ]
+          },
+          "drugs": [],
+          "n_drugs": 0,
+          "n_approved": 0,
+          "repurposing_lead": false,
+          "opentargets_url": "https://platform.opentargets.org/target/ENSG00000154174"
+        }
       },
       "skeptic": {
         "verdict": "pass",
@@ -1616,8 +1678,43 @@
       "druggability": {
         "target": "G3BP1",
         "ensembl": "ENSG00000145907",
-        "level": "LOW",
-        "note": "NTF2-like groove; shallow PPI-inhibitor target, no known chemical starts."
+        "curated_level": "LOW",
+        "curated_note": "NTF2-like groove; shallow PPI-inhibitor target, no known chemical starts.",
+        "live": {
+          "gene": "G3BP1",
+          "ensembl": "ENSG00000145907",
+          "source": "Open Targets Platform GraphQL",
+          "data_version": "26.06",
+          "endpoint": "https://api.platform.opentargets.org/api/v4/graphql",
+          "fetched": "2026-07-10",
+          "tractability": {
+            "small_molecule": "Structure with Ligand",
+            "antibody": null,
+            "buckets": [
+              {
+                "modality": "SM",
+                "label": "Structure with Ligand"
+              },
+              {
+                "modality": "PR",
+                "label": "UniProt Ubiquitination"
+              },
+              {
+                "modality": "PR",
+                "label": "Database Ubiquitination"
+              },
+              {
+                "modality": "PR",
+                "label": "Half-life Data"
+              }
+            ]
+          },
+          "drugs": [],
+          "n_drugs": 0,
+          "n_approved": 0,
+          "repurposing_lead": false,
+          "opentargets_url": "https://platform.opentargets.org/target/ENSG00000145907"
+        }
       },
       "skeptic": {
         "verdict": "pass",
@@ -1723,8 +1820,43 @@
       "druggability": {
         "target": "NUP98",
         "ensembl": "ENSG00000110713",
-        "level": "LOW",
-        "note": "Structural nucleoporin; not a conventional small-molecule target."
+        "curated_level": "LOW",
+        "curated_note": "Structural nucleoporin; not a conventional small-molecule target.",
+        "live": {
+          "gene": "NUP98",
+          "ensembl": "ENSG00000110713",
+          "source": "Open Targets Platform GraphQL",
+          "data_version": "26.06",
+          "endpoint": "https://api.platform.opentargets.org/api/v4/graphql",
+          "fetched": "2026-07-10",
+          "tractability": {
+            "small_molecule": null,
+            "antibody": "UniProt loc med conf",
+            "buckets": [
+              {
+                "modality": "AB",
+                "label": "UniProt loc med conf"
+              },
+              {
+                "modality": "PR",
+                "label": "UniProt Ubiquitination"
+              },
+              {
+                "modality": "PR",
+                "label": "Database Ubiquitination"
+              },
+              {
+                "modality": "PR",
+                "label": "Half-life Data"
+              }
+            ]
+          },
+          "drugs": [],
+          "n_drugs": 0,
+          "n_approved": 0,
+          "repurposing_lead": false,
+          "opentargets_url": "https://platform.opentargets.org/target/ENSG00000110713"
+        }
       },
       "skeptic": {
         "verdict": "pass",
@@ -1752,8 +1884,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP210",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000132182",
       "has_dossier": false,
       "path": [
         "Nsp9",
@@ -1772,8 +1906,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP98",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000110713",
       "has_dossier": false,
       "path": [
         "Nsp9",
@@ -1792,8 +1928,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP214",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000126883",
       "has_dossier": false,
       "path": [
         "Nsp9",
@@ -1812,8 +1950,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=RAE1",
+      "tractability": "High-Quality Pocket",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000101146",
       "has_dossier": false,
       "path": [
         "Nsp9",
@@ -1832,8 +1972,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=RPL36",
+      "tractability": "Approved Drug",
+      "n_drugs": 5,
+      "approved_drug": true,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000130255",
       "has_dossier": false,
       "path": [
         "Nsp8",
@@ -1852,8 +1994,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=TIMM10",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000134809",
       "has_dossier": false,
       "path": [
         "Nsp4",
@@ -1872,8 +2016,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=RRP9",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000114767",
       "has_dossier": false,
       "path": [
         "Nsp8",
@@ -1892,8 +2038,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=BRD4",
+      "tractability": "Advanced Clinical",
+      "n_drugs": 6,
+      "approved_drug": true,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000141867",
       "has_dossier": false,
       "path": [
         "Orf10",
@@ -1912,8 +2060,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=RIPK1",
+      "tractability": "Advanced Clinical",
+      "n_drugs": 1,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000137275",
       "has_dossier": false,
       "path": [
         "Orf10",
@@ -1932,8 +2082,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=AATF",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000275700",
       "has_dossier": false,
       "path": [
         "Nsp8",
@@ -1952,8 +2104,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=MPHOSPH10",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000124383",
       "has_dossier": false,
       "path": [
         "Nsp8",
@@ -1972,8 +2126,10 @@
       "structure": "predicted",
       "structure_source": "AlphaFold DB (AF-Q13283, G3BP1)",
       "has_mechanism": true,
-      "druggability": "LOW",
-      "opentargets": "https://platform.opentargets.org/search?q=G3BP1",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000145907",
       "has_dossier": true,
       "path": [
         "N",
@@ -1992,8 +2148,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=PABPC1",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000070756",
       "has_dossier": false,
       "path": [
         "N",
@@ -2012,8 +2170,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=PCNT",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000160299",
       "has_dossier": false,
       "path": [
         "Nsp13",
@@ -2032,8 +2192,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=FAM8A1",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000137414",
       "has_dossier": false,
       "path": [
         "Orf8",
@@ -2052,8 +2214,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=PRKAR2A",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000114302",
       "has_dossier": false,
       "path": [
         "Nsp13",
@@ -2072,8 +2236,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=TIMM29",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000142444",
       "has_dossier": false,
       "path": [
         "Nsp4",
@@ -2092,8 +2258,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=TIMM8B",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000150779",
       "has_dossier": false,
       "path": [
         "Nsp4",
@@ -2112,8 +2280,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP54",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000138750",
       "has_dossier": false,
       "path": [
         "Nsp4",
@@ -2132,8 +2302,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP88",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000108559",
       "has_dossier": false,
       "path": [
         "Nsp4",
@@ -2152,8 +2324,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP98",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000110713",
       "has_dossier": false,
       "path": [
         "Nsp4",
@@ -2172,8 +2346,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP210",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000132182",
       "has_dossier": false,
       "path": [
         "Orf6",
@@ -2192,8 +2368,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP54",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000138750",
       "has_dossier": false,
       "path": [
         "Orf6",
@@ -2212,8 +2390,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP88",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000108559",
       "has_dossier": false,
       "path": [
         "Orf6",
@@ -2232,8 +2412,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP214",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000126883",
       "has_dossier": false,
       "path": [
         "Nsp4",
@@ -2252,8 +2434,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP214",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000126883",
       "has_dossier": false,
       "path": [
         "Orf6",
@@ -2272,8 +2456,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=CSDE1",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000009307",
       "has_dossier": false,
       "path": [
         "N",
@@ -2292,8 +2478,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=LARP4B",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000107929",
       "has_dossier": false,
       "path": [
         "N",
@@ -2312,8 +2500,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=PDE4DIP",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000178104",
       "has_dossier": false,
       "path": [
         "Nsp13",
@@ -2332,8 +2522,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=LARP4B",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000107929",
       "has_dossier": false,
       "path": [
         "Nsp8",
@@ -2352,8 +2544,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=TIMM29",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000142444",
       "has_dossier": false,
       "path": [
         "Orf10",
@@ -2372,8 +2566,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=DCAF7",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000136485",
       "has_dossier": false,
       "path": [
         "Orf10",
@@ -2392,8 +2588,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=TLE1",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000196781",
       "has_dossier": false,
       "path": [
         "Nsp13",
@@ -2412,8 +2610,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=ECSIT",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000130159",
       "has_dossier": false,
       "path": [
         "Orf9c",
@@ -2432,8 +2632,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NGDN",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000129460",
       "has_dossier": false,
       "path": [
         "N",
@@ -2452,8 +2654,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NOL10",
+      "tractability": "Structure with Ligand",
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000115761",
       "has_dossier": false,
       "path": [
         "N",
@@ -2472,8 +2676,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP62",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000213024",
       "has_dossier": false,
       "path": [
         "Nsp4",
@@ -2492,8 +2698,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP62",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000213024",
       "has_dossier": false,
       "path": [
         "Orf6",
@@ -2512,8 +2720,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=VPS11",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000160695",
       "has_dossier": false,
       "path": [
         "Nsp7",
@@ -2532,8 +2742,10 @@
       "structure": "none",
       "structure_source": null,
       "has_mechanism": false,
-      "druggability": null,
-      "opentargets": "https://platform.opentargets.org/search?q=NUP58",
+      "tractability": null,
+      "n_drugs": 0,
+      "approved_drug": false,
+      "opentargets": "https://platform.opentargets.org/target/ENSG00000139496",
       "has_dossier": false,
       "path": [
         "Nsp4",
@@ -2543,6 +2755,12 @@
       ]
     }
   ],
+  "druggability_meta": {
+    "source": "Open Targets Platform GraphQL",
+    "data_version": "26.06",
+    "fetched": "2026-07-10",
+    "endpoint": "https://api.platform.opentargets.org/api/v4/graphql"
+  },
   "held_out_in_view": [
     [
       "N",

@@ -1,0 +1,79 @@
+{
+  "gene": "RIPK1",
+  "ensembl": "ENSG00000137275",
+  "source": "Open Targets Platform GraphQL",
+  "data_version": "26.06",
+  "endpoint": "https://api.platform.opentargets.org/api/v4/graphql",
+  "fetched": "2026-07-10",
+  "tractability": {
+    "small_molecule": "Advanced Clinical",
+    "antibody": "GO CC high conf",
+    "buckets": [
+      {
+        "modality": "SM",
+        "label": "Advanced Clinical"
+      },
+      {
+        "modality": "SM",
+        "label": "Structure with Ligand"
+      },
+      {
+        "modality": "SM",
+        "label": "High-Quality Ligand"
+      },
+      {
+        "modality": "SM",
+        "label": "Druggable Family"
+      },
+      {
+        "modality": "AB",
+        "label": "GO CC high conf"
+      },
+      {
+        "modality": "AB",
+        "label": "UniProt loc med conf"
+      },
+      {
+        "modality": "AB",
+        "label": "Human Protein Atlas loc"
+      },
+      {
+        "modality": "PR",
+        "label": "Literature"
+      },
+      {
+        "modality": "PR",
+        "label": "UniProt Ubiquitination"
+      },
+      {
+        "modality": "PR",
+        "label": "Database Ubiquitination"
+      },
+      {
+        "modality": "PR",
+        "label": "Half-life Data"
+      },
+      {
+        "modality": "PR",
+        "label": "Small Molecule Binder"
+      }
+    ]
+  },
+  "drugs": [
+    {
+      "id": "CHEMBL4071864",
+      "name": "GSK2982772",
+      "drug_type": "Small molecule",
+      "max_stage": "PHASE_2",
+      "stage_label": "Phase II",
+      "approved": false,
+      "mechanism": "Receptor-interacting serine/threonine-protein kinase 1 inhibitor",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL4071864",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL4071864"
+    }
+  ],
+  "n_drugs": 1,
+  "n_approved": 0,
+  "repurposing_lead": false,
+  "opentargets_url": "https://platform.opentargets.org/target/ENSG00000137275"
+}

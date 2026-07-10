@@ -1,0 +1,31 @@
+{
+  "gene": "TOMM70",
+  "ensembl": "ENSG00000154174",
+  "source": "Open Targets Platform GraphQL",
+  "data_version": "26.06",
+  "endpoint": "https://api.platform.opentargets.org/api/v4/graphql",
+  "fetched": "2026-07-10",
+  "tractability": {
+    "small_molecule": null,
+    "antibody": "UniProt SigP or TMHMM",
+    "buckets": [
+      {
+        "modality": "AB",
+        "label": "UniProt SigP or TMHMM"
+      },
+      {
+        "modality": "PR",
+        "label": "UniProt Ubiquitination"
+      },
+      {
+        "modality": "PR",
+        "label": "Database Ubiquitination"
+      }
+    ]
+  },
+  "drugs": [],
+  "n_drugs": 0,
+  "n_approved": 0,
+  "repurposing_lead": false,
+  "opentargets_url": "https://platform.opentargets.org/target/ENSG00000154174"
+}

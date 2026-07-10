@@ -1,0 +1,126 @@
+{
+  "gene": "BRD4",
+  "ensembl": "ENSG00000141867",
+  "source": "Open Targets Platform GraphQL",
+  "data_version": "26.06",
+  "endpoint": "https://api.platform.opentargets.org/api/v4/graphql",
+  "fetched": "2026-07-10",
+  "tractability": {
+    "small_molecule": "Advanced Clinical",
+    "antibody": null,
+    "buckets": [
+      {
+        "modality": "SM",
+        "label": "Advanced Clinical"
+      },
+      {
+        "modality": "SM",
+        "label": "Structure with Ligand"
+      },
+      {
+        "modality": "SM",
+        "label": "High-Quality Ligand"
+      },
+      {
+        "modality": "SM",
+        "label": "Med-Quality Pocket"
+      },
+      {
+        "modality": "SM",
+        "label": "Druggable Family"
+      },
+      {
+        "modality": "PR",
+        "label": "Literature"
+      },
+      {
+        "modality": "PR",
+        "label": "UniProt Ubiquitination"
+      },
+      {
+        "modality": "PR",
+        "label": "Database Ubiquitination"
+      },
+      {
+        "modality": "PR",
+        "label": "Half-life Data"
+      },
+      {
+        "modality": "PR",
+        "label": "Small Molecule Binder"
+      }
+    ]
+  },
+  "drugs": [
+    {
+      "id": "CHEMBL4303404",
+      "name": "PELABRESIB",
+      "drug_type": "Small molecule",
+      "max_stage": "APPROVAL",
+      "stage_label": "Approved",
+      "approved": true,
+      "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL4303404",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL4303404"
+    },
+    {
+      "id": "CHEMBL2393130",
+      "name": "APABETALONE",
+      "drug_type": "Small molecule",
+      "max_stage": "PHASE_3",
+      "stage_label": "Phase III",
+      "approved": false,
+      "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL2393130",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL2393130"
+    },
+    {
+      "id": "CHEMBL3581647",
+      "name": "BIRABRESIB",
+      "drug_type": "Small molecule",
+      "max_stage": "PHASE_2",
+      "stage_label": "Phase II",
+      "approved": false,
+      "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL3581647",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL3581647"
+    },
+    {
+      "id": "CHEMBL4297458",
+      "name": "EZOBRESIB",
+      "drug_type": "Small molecule",
+      "max_stage": "PHASE_1_2",
+      "stage_label": "Phase_1_2",
+      "approved": false,
+      "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL4297458",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL4297458"
+    },
+    {
+      "id": "CHEMBL1232461",
+      "name": "MOLIBRESIB",
+      "drug_type": "Small molecule",
+      "max_stage": "PHASE_2",
+      "stage_label": "Phase II",
+      "approved": false,
+      "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL1232461",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL1232461"
+    },
+    {
+      "id": "CHEMBL4297423",
+      "name": "RO-6870810",
+      "drug_type": "Small molecule",
+      "max_stage": "PHASE_1",
+      "stage_label": "Phase I",
+      "approved": false,
+      "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL4297423",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL4297423"
+    }
+  ],
+  "n_drugs": 6,
+  "n_approved": 1,
+  "repurposing_lead": true,
+  "opentargets_url": "https://platform.opentargets.org/target/ENSG00000141867"
+}

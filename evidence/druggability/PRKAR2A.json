@@ -1,0 +1,43 @@
+{
+  "gene": "PRKAR2A",
+  "ensembl": "ENSG00000114302",
+  "source": "Open Targets Platform GraphQL",
+  "data_version": "26.06",
+  "endpoint": "https://api.platform.opentargets.org/api/v4/graphql",
+  "fetched": "2026-07-10",
+  "tractability": {
+    "small_molecule": "Structure with Ligand",
+    "antibody": "UniProt loc high conf",
+    "buckets": [
+      {
+        "modality": "SM",
+        "label": "Structure with Ligand"
+      },
+      {
+        "modality": "AB",
+        "label": "UniProt loc high conf"
+      },
+      {
+        "modality": "AB",
+        "label": "GO CC high conf"
+      },
+      {
+        "modality": "PR",
+        "label": "Database Ubiquitination"
+      },
+      {
+        "modality": "PR",
+        "label": "Half-life Data"
+      },
+      {
+        "modality": "PR",
+        "label": "Small Molecule Binder"
+      }
+    ]
+  },
+  "drugs": [],
+  "n_drugs": 0,
+  "n_approved": 0,
+  "repurposing_lead": false,
+  "opentargets_url": "https://platform.opentargets.org/target/ENSG00000114302"
+}

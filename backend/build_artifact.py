@@ -24,6 +24,7 @@ from backend.eval.evaluator import evaluate, per_heldout_recovery
 from backend.eval.freeze_split import load_frozen
 from backend.reason.hypothesis import read_edge, skeptic_review, DOSSIER
 from backend.structure.resolve import build_structure_facts
+from backend.druggability import service as drug_service
 
 # Real baits whose neighbourhoods form the three hero clusters. The induced
 # subgraph over these is real data, curated only for on-screen legibility.
@@ -148,7 +149,12 @@ def _build_dossier(edge_key, ranked_by_bait, structure_facts, frozen):
             "literature": _literature_word(lit_n), "literature_count": lit_n,
         },
         "proposed_test": spec["test"],
-        "druggability": spec["drug"],
+        "druggability": {
+            "target": spec["drug"]["target"], "ensembl": spec["drug"].get("ensembl"),
+            "curated_level": spec["drug"]["level"], "curated_note": spec["drug"]["note"],
+            # real Open Targets snapshot (offline, dated); None if not pre-cached
+            "live": drug_service.load_snapshot(spec["drug"]["target"]),
+        },
         "skeptic": sk,
         "l3_path": path,
         "held_out": is_heldout,
@@ -172,18 +178,24 @@ def _build_worklist(ranked_all, held_set, structure_facts, top_n=40):
     rows = []
     for bait, ranked in ranked_all.items():
         for i, c in enumerate(ranked, 1):
-            edge = f"{bait}|{c['candidate']}"
+            prey = c["candidate"]
+            edge = f"{bait}|{prey}"
             has_dossier = edge in DOSSIER
             struct = structure_facts.get(edge)
+            snap = drug_service.load_snapshot(prey)  # real Open Targets snapshot or None
+            tract = snap["tractability"]["small_molecule"] if snap and not snap.get("unavailable") else None
             rows.append({
-                "bait": bait, "prey": c["candidate"], "edge": edge,
+                "bait": bait, "prey": prey, "edge": edge,
                 "l3_score": c["l3_score"], "rank": i,
-                "recovered": (bait, c["candidate"]) in held_set,
+                "recovered": (bait, prey) in held_set,
                 "structure": struct["kind"] if struct else "none",
                 "structure_source": (struct.get("pdb") or struct.get("source")) if struct else None,
                 "has_mechanism": has_dossier,
-                "druggability": DOSSIER[edge]["drug"]["level"] if has_dossier else None,
-                "opentargets": f"https://platform.opentargets.org/search?q={c['candidate']}",
+                "tractability": tract,
+                "n_drugs": snap["n_drugs"] if snap and not snap.get("unavailable") else None,
+                "approved_drug": bool(snap and snap.get("repurposing_lead")),
+                "opentargets": (snap.get("opentargets_url") if snap and not snap.get("unavailable")
+                                else f"https://platform.opentargets.org/search?q={prey}"),
                 "has_dossier": has_dossier,
                 "path": pick_display_path(c, preferred=config.FLAGSHIP_PATH),
             })
@@ -280,6 +292,12 @@ def build():
     # --- worklist: ranked "what to test next" over the whole map ------------
     worklist = _build_worklist(ranked_all, held_set, structure_facts)
 
+    # druggability source label (from any snapshot) for the UI
+    _dsnap = drug_service.load_snapshot("BRD4") or drug_service.load_snapshot("RAE1")
+    drug_meta = ({"source": _dsnap["source"], "data_version": _dsnap["data_version"],
+                  "fetched": _dsnap["fetched"], "endpoint": _dsnap["endpoint"]}
+                 if _dsnap and not _dsnap.get("unavailable") else None)
+
     # --- flagship detail ----------------------------------------------------
     flag_bait, flag_prey = config.FLAGSHIP_HELDOUT_EDGE
     flag_entry = next((c for c in ranked_by_bait[flag_bait] if c["candidate"] == flag_prey), None)
@@ -357,6 +375,7 @@ def build():
         "flagship": flagship,
         "dossiers": dossiers,
         "worklist": worklist,
+        "druggability_meta": drug_meta,
         "held_out_in_view": sorted([[s, t] for (s, t) in held_set
                                     if s in DEMO_BAITS and t in visible]),
         "per_heldout_recovery": rec,

@@ -66,3 +66,16 @@ def test_upload_own_eval_runs():
     body = {"edges": "\n".join(f"B{i%3},P{i}" for i in range(30)), "heldout_fraction": 0.2}
     d = client.post("/api/upload", json=body).json()
     assert d["eval"] is not None and d["eval"]["seed"] == UPLOAD_SEED
+
+
+def test_druggability_cached_snapshot():
+    # BRD4 has a committed snapshot -> served offline, no network, a real lead
+    d = client.get("/api/druggability", params={"gene": "BRD4"}).json()
+    assert d["repurposing_lead"] is True
+    assert d["source"] == "Open Targets Platform GraphQL"
+    assert all(x["ot_url"].startswith("https://platform.opentargets.org/drug/") for x in d["drugs"])
+
+
+def test_druggability_rejects_bad_gene():
+    assert client.get("/api/druggability", params={"gene": "<script>"}).status_code == 400
+    assert client.get("/api/druggability", params={"gene": "RAE1", "ensembl": "bad"}).status_code == 400

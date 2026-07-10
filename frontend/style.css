@@ -160,6 +160,18 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .integrity-foot b { color:var(--mut); }
 .drug-bar { height:7px; border-radius:4px; background:#182238; overflow:hidden; margin:7px 0; }
 .drug-bar > i { display:block; height:100%; border-radius:4px; }
+.repurpose-badge { display:inline-block; font:700 9.5px/1 var(--mono); letter-spacing:.04em; color:#04202a;
+  background:var(--confirmed); padding:4px 8px; border-radius:5px; margin-left:6px; }
+.repurpose-note { margin-top:9px; font-size:11px; line-height:1.5; color:var(--mut); font-style:italic;
+  border-left:2px solid var(--confirmed); padding-left:9px; }
+.drug-list { margin-top:10px; display:flex; flex-direction:column; gap:7px; }
+.drug-row { display:flex; gap:9px; align-items:flex-start; font-size:12px; line-height:1.45; }
+.drug-row a { color:var(--ink); text-decoration:none; }
+.drug-row a:hover { color:var(--predicted); }
+.drug-stage { font:600 9px/1 var(--mono); color:var(--topology); border:1px solid rgba(255,209,102,.4);
+  padding:4px 6px; border-radius:5px; flex:none; text-transform:uppercase; white-space:nowrap; }
+.drug-src { margin-top:11px; font:500 10px/1.5 var(--mono); color:var(--mut2); }
+.drug-src a { color:var(--predicted); }
 
 /* ---- Mol*: hide ALL native viewport controls; we supply our own trimmed bar ---- */
 .msp-viewport-controls, .msp-viewport-top-left-controls, .msp-hover-info,
