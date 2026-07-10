@@ -57,8 +57,8 @@
       "name": "PELABRESIB",
       "drug_type": "Small molecule",
       "max_stage": "APPROVAL",
-      "stage_label": "Approved",
-      "approved": true,
+      "stage_label": "Clinical",
+      "approved": false,
       "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
       "ot_url": "https://platform.opentargets.org/drug/CHEMBL4303404",
       "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL4303404"
@@ -86,17 +86,6 @@
       "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL3581647"
     },
     {
-      "id": "CHEMBL4297458",
-      "name": "EZOBRESIB",
-      "drug_type": "Small molecule",
-      "max_stage": "PHASE_1_2",
-      "stage_label": "Phase_1_2",
-      "approved": false,
-      "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
-      "ot_url": "https://platform.opentargets.org/drug/CHEMBL4297458",
-      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL4297458"
-    },
-    {
       "id": "CHEMBL1232461",
       "name": "MOLIBRESIB",
       "drug_type": "Small molecule",
@@ -106,6 +95,17 @@
       "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
       "ot_url": "https://platform.opentargets.org/drug/CHEMBL1232461",
       "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL1232461"
+    },
+    {
+      "id": "CHEMBL4297458",
+      "name": "EZOBRESIB",
+      "drug_type": "Small molecule",
+      "max_stage": "PHASE_1_2",
+      "stage_label": "Phase I/II",
+      "approved": false,
+      "mechanism": "Bromodomain and extra-terminal motif (BET) inhibitor",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL4297458",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL4297458"
     },
     {
       "id": "CHEMBL4297423",
@@ -120,7 +120,8 @@
     }
   ],
   "n_drugs": 6,
-  "n_approved": 1,
-  "repurposing_lead": true,
+  "n_approved": 0,
+  "repurposing_lead": false,
+  "lead_basis": null,
   "opentargets_url": "https://platform.opentargets.org/target/ENSG00000141867"
 }

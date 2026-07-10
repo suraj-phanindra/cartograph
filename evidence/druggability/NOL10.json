@@ -27,5 +27,6 @@
   "n_drugs": 0,
   "n_approved": 0,
   "repurposing_lead": false,
+  "lead_basis": null,
   "opentargets_url": "https://platform.opentargets.org/target/ENSG00000115761"
 }

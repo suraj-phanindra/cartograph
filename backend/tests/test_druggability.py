@@ -79,12 +79,39 @@ def test_committed_snapshots_real_and_labeled():
             assert dr["ot_url"].startswith("https://platform.opentargets.org/drug/")
 
 
-def test_brd4_is_a_repurposing_lead_flagship_targets_are_not():
+def test_repurposing_lead_requires_target_approved_bucket():
+    """A lead needs BOTH Open Targets signals to agree: an approved drug AND the
+    target-level Approved-Drug tractability bucket. RPL36 (ataluren + bucket) is a
+    real lead; BRD4 is NOT — its pelabresib row says APPROVAL but BRD4's own
+    tractability has no Approved-Drug bucket (OT contradicting itself), so we
+    refuse the over-claim."""
+    rpl36 = service.load_snapshot("RPL36")
+    assert rpl36["repurposing_lead"] is True and rpl36["n_approved"] >= 1
+
     brd4 = service.load_snapshot("BRD4")
-    assert brd4["repurposing_lead"] is True and brd4["n_approved"] >= 1
+    assert brd4["repurposing_lead"] is False
+    assert brd4["n_approved"] == 0
+    # pelabresib is down-labelled from Approved to Clinical (bucket disagrees)
+    pela = next(d for d in brd4["drugs"] if d["name"] == "PELABRESIB")
+    assert pela["approved"] is False and pela["stage_label"] == "Clinical"
+
     # the poorly-druggable flagship targets are honestly NOT leads
     for gene in ["RAE1", "TOMM70", "G3BP1"]:
         assert service.load_snapshot(gene)["repurposing_lead"] is False
+
+
+def test_normalize_refuses_contradictory_approval():
+    """Unit: a drug with APPROVAL stage but no target Approved-Drug bucket is not
+    counted approved and is shown as Clinical, never as a repurposing lead."""
+    tgt = {"id": "E", "approvedSymbol": "CONTRA",
+           "tractability": [{"label": "Advanced Clinical", "modality": "SM", "value": True}],
+           "drugAndClinicalCandidates": {"count": 1, "rows": [
+               {"maxClinicalStage": "APPROVAL", "drug": {
+                   "id": "CHEMBLX", "name": "DrugX", "drugType": "Small molecule",
+                   "maximumClinicalStage": "APPROVAL", "mechanismsOfAction": {"rows": []}}}]}}
+    d = service._normalize("CONTRA", "E", tgt, "2026-07-10", "26.06")
+    assert d["repurposing_lead"] is False and d["n_approved"] == 0
+    assert d["drugs"][0]["approved"] is False and d["drugs"][0]["stage_label"] == "Clinical"
 
 
 def test_druggability_does_not_import_locked_evaluator():

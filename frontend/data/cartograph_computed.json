@@ -1389,6 +1389,7 @@
           "n_drugs": 0,
           "n_approved": 0,
           "repurposing_lead": false,
+          "lead_basis": null,
           "opentargets_url": "https://platform.opentargets.org/target/ENSG00000101146"
         }
       },
@@ -1561,6 +1562,7 @@
           "n_drugs": 0,
           "n_approved": 0,
           "repurposing_lead": false,
+          "lead_basis": null,
           "opentargets_url": "https://platform.opentargets.org/target/ENSG00000154174"
         }
       },
@@ -1713,6 +1715,7 @@
           "n_drugs": 0,
           "n_approved": 0,
           "repurposing_lead": false,
+          "lead_basis": null,
           "opentargets_url": "https://platform.opentargets.org/target/ENSG00000145907"
         }
       },
@@ -1855,6 +1858,7 @@
           "n_drugs": 0,
           "n_approved": 0,
           "repurposing_lead": false,
+          "lead_basis": null,
           "opentargets_url": "https://platform.opentargets.org/target/ENSG00000110713"
         }
       },
@@ -2040,7 +2044,7 @@
       "has_mechanism": false,
       "tractability": "Advanced Clinical",
       "n_drugs": 6,
-      "approved_drug": true,
+      "approved_drug": false,
       "opentargets": "https://platform.opentargets.org/target/ENSG00000141867",
       "has_dossier": false,
       "path": [

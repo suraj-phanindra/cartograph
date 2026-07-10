@@ -407,7 +407,7 @@ function renderDruggability(dr){
       ${otTarget?`<br><a href="${esc(otTarget)}" target="_blank" rel="noopener noreferrer" style="color:${COL.predicted};font-family:var(--mono);font-size:11px">open in Open Targets →</a>`:''}</div></div>`;
   }
 
-  const t=live.tractability;
+  const t=live.tractability||{};
   const drugs=live.drugs||[];
   const badge = live.repurposing_lead
     ? `<span class="repurpose-badge">★ Repurposing lead</span>` : '';
@@ -426,7 +426,6 @@ function renderDruggability(dr){
   return `<div class="dz-sec">${head}
     <div class="kv"><b>${esc(live.gene)}</b> · small-molecule tractability <b style="color:${COL.predicted}">${esc(t.small_molecule||'none reported')}</b>
       ${t.antibody?` · antibody <b>${esc(t.antibody)}</b>`:''} ${badge}
-      <div class="drug-bar" style="margin-top:8px"><i style="width:${t.small_molecule?70:20}%;background:${live.repurposing_lead?COL.confirmed:COL.predicted}"></i></div>
     </div>
     ${drugBlock}
     ${live.repurposing_lead?`<div class="repurpose-note">Existing drugs against this host target are <b>repurposing hypotheses</b> — not validated for antiviral use, and no drug here treats the infection.</div>`:''}
@@ -621,7 +620,7 @@ function renderWorklist(){
         <td>${badge(r.recovered,'held-out ✓','wl-yes')}</td>
         <td>${r.structure==='experimental'?'<span class="wl-badge wl-exp">experimental</span>':(r.structure==='predicted'?'<span class="wl-badge wl-pred">predicted</span>':'<span class="wl-no">—</span>')}</td>
         <td>${badge(r.has_mechanism,'cited','wl-yes')}</td>
-        <td>${r.tractability?`${esc(r.tractability)}<span style="color:var(--mut2);font-size:10px">${r.n_drugs?` · ${esc(r.n_drugs)} drugs`:''}</span>`:`<a href="${esc(r.opentargets)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`}</td>
+        <td>${r.tractability?`${esc(r.tractability)}<span style="color:var(--mut2);font-size:10px">${r.n_drugs?` · ${esc(r.n_drugs)} drugs`:''}</span>`:(()=>{const u=safeUrl(r.opentargets);return u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`:'<span class="wl-no">—</span>';})()}</td>
         <td>${r.approved_drug?'<span class="wl-badge wl-yes">★ lead</span>':'<span class="wl-no">—</span>'}</td>
         <td>${r.has_dossier?'<span style="color:var(--predicted);font-size:11px">open dossier →</span>':''}</td>
       </tr>`).join('')}</tbody></table>
@@ -663,7 +662,7 @@ ${st.interface_residues.length?`<p>Interface residues (${esc(st.interface_source
 <h2>Druggability &amp; repurposing</h2>${(()=>{ const L=d.druggability.live;
   if(L && !L.unavailable){
     const drugs=(L.drugs||[]).slice(0,8).map(x=>`<li>${esc(x.name)} — ${x.approved?'<b>Approved</b>':esc(x.stage_label)}${x.mechanism?' · '+esc(x.mechanism):''}</li>`).join('');
-    return `<p>${esc(L.gene)} — small-molecule tractability <b>${esc(L.tractability.small_molecule||'none reported')}</b>${L.repurposing_lead?' · <b>Repurposing lead</b> (has an approved drug — a hypothesis, not a validated antiviral)':''}.</p>`
+    return `<p>${esc(L.gene)} — small-molecule tractability <b>${esc((L.tractability||{}).small_molecule||'none reported')}</b>${L.repurposing_lead?' · <b>Repurposing lead</b> (has an approved drug — a hypothesis, not a validated antiviral)':''}.</p>`
       +(drugs?`<ol>${drugs}</ol>`:'<p class="mut">No known drugs against this target.</p>')
       +`<p class="mut">Source: ${esc(L.source)}, data ${esc(L.data_version)}, fetched ${esc(L.fetched)}.</p>`;
   }
@@ -680,8 +679,8 @@ ${st.interface_residues.length?`<p>Interface residues (${esc(st.interface_source
 function exportWorklistCsv(){
   const cols=['bait','prey','l3_score','rank','recovered','structure','structure_source','has_mechanism','tractability','n_drugs','approved_drug','opentargets'];
   const esc2=v=>{ let s=String(v==null?'':v);
-    if(/^[=+\-@]/.test(s)) s="'"+s;                    // block CSV formula injection
-    return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
+    if(/^[=+\-@\t\r]/.test(s)) s="'"+s;                // block CSV formula injection (incl. tab/CR lead-ins)
+    return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
   const lines=[cols.join(',')].concat(wlRows().map(r=>cols.map(c=>esc2(r[c])).join(',')));
   const blob=new Blob([lines.join('\n')],{type:'text/csv'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);

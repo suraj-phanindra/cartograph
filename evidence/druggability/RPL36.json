@@ -52,17 +52,6 @@
       "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL256997"
     },
     {
-      "id": "CHEMBL1743000",
-      "name": "CITATUZUMAB BOGATOX",
-      "drug_type": "Antibody drug conjugate",
-      "max_stage": "PHASE_1",
-      "stage_label": "Phase I",
-      "approved": false,
-      "mechanism": "Epithelial cell adhesion molecule binding agent",
-      "ot_url": "https://platform.opentargets.org/drug/CHEMBL1743000",
-      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL1743000"
-    },
-    {
       "id": "CHEMBL4297744",
       "name": "ELX-02",
       "drug_type": "Unknown",
@@ -94,10 +83,22 @@
       "mechanism": "T-cell surface glycoprotein CD5 binding agent",
       "ot_url": "https://platform.opentargets.org/drug/CHEMBL2108785",
       "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL2108785"
+    },
+    {
+      "id": "CHEMBL1743000",
+      "name": "CITATUZUMAB BOGATOX",
+      "drug_type": "Antibody drug conjugate",
+      "max_stage": "PHASE_1",
+      "stage_label": "Phase I",
+      "approved": false,
+      "mechanism": "Epithelial cell adhesion molecule binding agent",
+      "ot_url": "https://platform.opentargets.org/drug/CHEMBL1743000",
+      "chembl_url": "https://www.ebi.ac.uk/chembl/explore/compound/CHEMBL1743000"
     }
   ],
   "n_drugs": 5,
   "n_approved": 1,
   "repurposing_lead": true,
+  "lead_basis": "an approved drug and Open Targets' target-level Approved-Drug tractability bucket agree",
   "opentargets_url": "https://platform.opentargets.org/target/ENSG00000130255"
 }

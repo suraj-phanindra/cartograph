@@ -69,8 +69,9 @@ def test_upload_own_eval_runs():
 
 
 def test_druggability_cached_snapshot():
-    # BRD4 has a committed snapshot -> served offline, no network, a real lead
-    d = client.get("/api/druggability", params={"gene": "BRD4"}).json()
+    # RPL36 has a committed snapshot -> served offline, no network, a genuine lead
+    # (approved drug AND Open Targets' Approved-Drug tractability bucket agree)
+    d = client.get("/api/druggability", params={"gene": "RPL36"}).json()
     assert d["repurposing_lead"] is True
     assert d["source"] == "Open Targets Platform GraphQL"
     assert all(x["ot_url"].startswith("https://platform.opentargets.org/drug/") for x in d["drugs"])
