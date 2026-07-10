@@ -84,6 +84,7 @@ All optional, none on the critical path; the offline static demo is the guarante
 - **Ranked "what to test next" worklist** — sortable/filterable triage of the top predicted edges (L3, recovered-held-out, structure, cited-mechanism, druggability), CSV export.
 - **Held-out transparency** — every one of the 57 held-out edges as recovered/missed with its L3 rank and length-3 path, and the reachability ceiling.
 - **Bring-your-own-interactome upload** (needs the API) — your edge-list → STRING enrichment → L3 → optional **own** held-out eval on a **separate seed**; uploaded data never touches the locked benchmark, and dossiers degrade honestly (no cached evidence → topology only, never fabricated).
+- **Live druggability + repurposing** — real Open Targets (data 26.06) tractability + known drugs per host target; a target with an approved drug is flagged a **repurposing lead** (a *hypothesis*, not a validated antiviral). Committed snapshots make the offline demo show real, dated data with no live call; `/api/druggability` fetches uncached targets live.
 - **FastAPI + SSE** wrapper over the engine; **dossier → self-contained HTML report** export.
 - **Expanded 3D viewer**, keyboard-operable controls, responsive reflow.
 
@@ -93,7 +94,7 @@ All optional, none on the critical path; the offline static demo is the guarante
 ./run.sh            # build + serve the OFFLINE static demo (no API)
 ./run.sh api        # build + serve the demo WITH the live API (adds upload)
 ./run.sh build      # just rebuild frontend/data/cartograph_computed.json
-./run.sh test       # run the test suite (39 tests)
+./run.sh test       # run the test suite (47 tests)
 ```
 
 Reproducibility: the STRING enrichment is pinned to v12.0 (physical channel,
