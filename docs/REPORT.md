@@ -228,3 +228,35 @@ artifact byte-identical; evaluator unchanged (precision@20 = 0.45, ROC-AUC = 0.8
 **The genuine repurposing lead:** RPL36 (approved ribosome-modulator ataluren) is the
 one lead in the current top-40 worklist; the flagship structural targets
 (RAE1/NUP98/TOMM70/G3BP1) are honestly poorly druggable (0 drugs).
+
+---
+
+## 7. UI refinement — professional interactome workbench
+
+A UI + copy pass (no data, prediction, evaluator, or citation logic changed;
+Stage-0 green after every change, evaluator unchanged at precision@20 = 0.45,
+ROC-AUC = 0.8451). The app now reads as an instrument, not a guided demo.
+
+**Shipped.**
+- **Central "Ask the map" search** replaces the three hardcoded query buttons: a free-text input + example chips, backed by a **deterministic intent parser** (`parseIntent`/`runSearch`) that works offline — probe a named viral protein (any of the 26 baits, with aliases), "most druggable predicted", "run evaluation"/"loop". Unrecognised queries return a plain "not understood" message; nothing is ever fabricated (every rendered number comes from the artifact).
+- **All tutorial / self-describing / integrity-marketing copy removed** (right-panel onboarding, the left INTEGRITY block, bottom captions). Right-panel default is the terse empty state. Section headers are bare labels.
+- **Integrity kept as functional labels only:** PREDICTED/KNOWN + EXPERIMENTAL/PREDICTED-structure badges (predicted structures still carry a confidence value), the 🔒 locked-evaluator lock, the dossier provenance footer, inline openable citations, and the "repurposing hypothesis, not a validated antiviral" disclaimer.
+- **Bug D (scroll overlap):** the sticky dossier header is now opaque with a z-index above scrolling content, and the structure badge is clipped inside the viewport (`isolation:isolate` + `overflow:hidden`) — no header/badge overlap on scroll.
+- **Bug E (selected label):** selected/path-lit node labels are high-contrast (light text + dark outline); the ORF6 hero label is readable again. Hover tooltip preserved.
+- **One unified frontend, both modes.** Mode is detected via `/api/health` — the offline static server (`backend/serve_static.py`) answers it too, so there is no console 404. Live-only controls (Bring your own map; Compare strains = phase-two) are disabled with a quiet tooltip offline and enabled in API mode. Workbench chrome: name + "interactome workbench", strain selector, top-right Compare / Bring your own map / Export.
+
+**Adversarial review — findings and resolutions.** Two fresh agents (UI-copy-honesty
++ code/interaction) confirmed the honesty bar holds (the parser never fabricates;
+all functional integrity labels survive; predicted structures still labelled; no
+tutorial/marketing copy remains) and both serving modes render the identical
+frontend. Fixes applied: dropped the remaining explanatory section-header captions
+and the upload-dialog framing (tone); deleted 11 orphaned CSS rulesets from the
+purge; made the flagship gate data-driven (`DATA.flagship.path[0]`) and the probe
+toast report the real revealed-edge count; **removed a CSS regression** where a late
+`position:relative` rule turned the eval precision card into a full-width in-flow
+bar (now a compact bottom-right card, no search-bar overlap); cleared the stale
+export key on node-panel open; de-raced the search "loop" intent; shipped
+`act-upload` disabled to avoid an enabled-yet-inert window; and escaped bait ids
+before building the intent RegExp. Verified in both modes: 0 console errors, search
+intents work, dossier scroll clean, selected labels readable. **48 tests pass**;
+artifact byte-identical; core did not regress.
