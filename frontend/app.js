@@ -280,12 +280,13 @@ function runSearch(text){
 }
 
 function probeBait(bait){
-  if(bait==='Orf6'){ flagshipOrf6(); return; }
+  if(bait===DATA.flagship.path[0]){ flagshipOrf6(); return; }   // flagship walkthrough
   const dz=Object.keys(DATA.dossiers).find(k=>k.split('|')[0]===bait);
-  revealPredictedFor(bait);
+  const n=revealPredictedFor(bait);
   if(dz){ openDossier(dz); }
   else { selectNode(bait); cy.animate({center:{eles:cy.getElementById(bait)}},{duration:300}); }
-  toast(`Probing <span class="k">${esc(bait)}</span> — revealed its deterministic L3 predictions.`);
+  toast(n ? `<span class="k">${esc(bait)}</span> — revealed ${esc(n)} deterministic L3 prediction${n===1?'':'s'}.`
+          : `<span class="k">${esc(bait)}</span> has no L3 predictions in this neighbourhood view.`);
 }
 
 function flagshipOrf6(){
@@ -311,7 +312,9 @@ function flagshipOrf6(){
   step();
 }
 function revealPredictedFor(bait){
-  cy.edges('edge[kind="predicted"]').forEach(e=>{ if(e.source().id()===bait){ e.removeClass('hiddenEdge'); e.style('display','element'); } });
+  let n=0;
+  cy.edges('edge[kind="predicted"]').forEach(e=>{ if(e.source().id()===bait){ e.removeClass('hiddenEdge'); e.style('display','element'); n++; } });
+  return n;
 }
 
 function toast(html){ const t=document.getElementById('ask-toast'); t.innerHTML=html; t.classList.remove('hidden');
@@ -799,7 +802,7 @@ function openEvalTransparency(){
 function openUpload(){
   const body=`
     <div class="up-form">
-      <div class="up-msg info">Upload an edge-list to run the deterministic L3 predictor on <b>your own</b> network. Uploaded data never enters the locked Gordon benchmark. Dossiers degrade honestly: no cached evidence means topology only, never an invented citation.</div>
+      <div class="up-msg info">Your edges &rarr; STRING enrichment &rarr; L3. Not added to the locked benchmark; edges with no cached evidence show topology only, never a fabricated mechanism or citation.</div>
       <label>Edge list (one <span class="mono">bait,prey</span> per line; a header row is optional)</label>
       <textarea id="up-edges" placeholder="ORF6,NUP98&#10;ORF6,RAE1&#10;N,G3BP1&#10;N,G3BP2"></textarea>
       <label>Held-out fraction for your own eval (0 to skip)</label>

@@ -63,10 +63,6 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .ctl-block { padding:14px 16px; border-bottom:1px solid var(--line); }
 .ctl-h { font:700 10px/1 var(--mono); letter-spacing:.14em; color:var(--predicted);
   text-transform:uppercase; margin-bottom:10px; }
-.askbox { display:flex; flex-direction:column; gap:7px; }
-.ask-preset { text-align:left; background:var(--panel2); border:1px solid var(--line2); color:var(--ink2);
-  padding:9px 11px; border-radius:8px; font:500 12px/1.35 var(--sans); cursor:pointer; transition:.15s; }
-.ask-preset:hover { border-color:var(--predicted); color:var(--ink); background:#0e1526; }
 .ctl-btn { width:100%; background:var(--panel2); border:1px solid var(--line2); color:var(--ink);
   padding:10px; border-radius:8px; font:600 12.5px/1 var(--sans); cursor:pointer; margin-bottom:8px; transition:.15s; }
 .ctl-btn:hover:not(:disabled) { border-color:var(--predicted); background:#0e1526; }
@@ -84,9 +80,6 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .layer-row .cnt { margin-left:auto; font:500 10.5px/1 var(--mono); color:var(--mut2); }
 .eval-readout { margin-top:6px; font:500 11px/1.5 var(--mono); color:var(--ink2); }
 .eval-readout b { color:var(--confirmed); }
-.ctl-integrity ul { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; }
-.ctl-integrity li { font-size:11px; line-height:1.4; color:var(--mut); display:flex; gap:7px; }
-.ctl-integrity li::before { content:'✓'; color:var(--rejected); flex:none; }
 .ctl-foot { border-bottom:none; margin-top:auto; }
 .foot-note { font:500 10px/1.4 var(--mono); color:var(--mut2); margin-top:4px; }
 
@@ -113,11 +106,6 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .dz-empty { padding:40px 26px; color:var(--mut2); font-size:13px; line-height:1.6; }
 .dz-idle { padding:40px 26px; color:var(--mut); font-size:13px; line-height:1.7; }
 .dz-idle h2 { font-size:16px; color:var(--ink); margin:0 0 12px; }
-.dz-idle .step { margin:10px 0; padding-left:26px; position:relative; }
-.dz-idle .step b { color:var(--ink2); }
-.dz-idle .step::before { position:absolute; left:0; top:0; font-family:var(--mono); color:var(--predicted); font-size:12px; }
-.dz-idle .s1::before{content:'1';} .dz-idle .s2::before{content:'2';} .dz-idle .s3::before{content:'3';}
-.dz-idle .s4::before{content:'4';} .dz-idle .s5::before{content:'5';}
 
 /* sticky header: opaque + above all scrolling content so nothing bleeds over/under it */
 .dz-head { padding:18px 22px 14px; border-bottom:1px solid var(--line); position:sticky; top:0;
