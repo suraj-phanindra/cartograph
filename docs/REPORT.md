@@ -260,3 +260,86 @@ export key on node-panel open; de-raced the search "loop" intent; shipped
 before building the intent RegExp. Verified in both modes: 0 console errors, search
 intents work, dossier scroll clean, selected labels readable. **48 tests pass**;
 artifact byte-identical; core did not regress.
+
+## 8. Virtual PPI-screening layer (pooled-AlphaFold3 direction)
+
+Positioning: pooled-AlphaFold3 (Anlin/Todor, *Mol Syst Biol* 2026) makes
+genome-wide PPI maps cheap to generate; Cartograph is the triage layer that
+decides **what to test first** with auditable evidence. Six items shipped in
+order, then roadmap articulation. The demo-critical core did not regress — the
+Stage 0 regression (`test_regression_core.py`) ran after every change and the
+baseline held at **precision@20 = 0.45, ROC-AUC = 0.8451** throughout.
+
+**8.1 Rounds-run counter.** `runLoop()` steps through an honest multi-round
+trajectory (`eval.loop.rounds`): round 1 confirms 4 recovered-true edges and
+moves the remaining-set precision@20 0.30 → 0.35; later rounds plateau honestly
+(0.20 → 0.20) as the easy edges are used up. The UI shows "rounds run: N".
+
+**8.2 Structural evidence channel + virtual validation.** `backend/structure/cofold.py`
+turns interface confidence into a banded (AF3 calibration: ≥0.80 / 0.60–0.80 /
+0.55–0.60 / <0.55), size-corrected, honestly-labelled signal, fused into the
+evaluator as a transparent additive boost. **Honest result:** on this sparse
+332-edge AP-MS map only 3 pairs have a deposited complex, so the aggregate
+precision@20 **excluding the disclosed pinned flagship is unchanged (0.45 → 0.45)**;
+the +0.05 with the pinned edge is the flagship being re-found via its own 7VPH
+structure, not a general gain. `aggregate_gain_excl_pinned = 0.0` is asserted by a
+test. The channel's value is per-hypothesis corroboration and, at scale, on a
+virtual screen.
+
+**8.3 Pooled-AlphaFold3 matrix upload.** `POST /api/screen` parses a symmetric
+protein×protein ipTM matrix, resolves chain lengths (UniProt, best-effort, cached,
+capped), **size-corrects** ipTM (de-trends vs summed chain length), thresholds to
+candidate edges, bands each, and runs the L3 topology channel on the thresholded
+network. Source labelled "virtual screen (pooled-AlphaFold3)"; every ipTM labelled
+predicted; no cached evidence → topology only, never a fabricated mechanism; never
+touches the locked benchmark (asserted by test). Trust boundary: gene allowlist on
+every name, protein/lookup/payload caps, concurrency gate.
+
+**8.4 Worklist as ranked testable hypotheses.** Each row is one testable
+interaction with a **novelty tag grounded in a real NCBI PubMed co-mention count**
+(novel = 0 co-mentions under SARS-CoV-2 context, known = recovered Gordon edge or
+cited pack, partially known = ≥1 co-mention; 40 pairs pre-cached to
+`evidence/novelty_comention.cached.json`), the Skeptic verdict (Nsp8–RPL36 vetoed
+as an AP-MS frequent-flyer), a structural band only where a real structure exists
+("no model" otherwise — no fabricated ipTM), real druggability, and the single
+next experiment. Grounding is honest: 27 of 40 rows are genuinely novel (0
+co-mentions), which is the point of the tool.
+
+**8.5 Human-in-the-loop feedback.** Confirmed / to-test / refuted + a lab note per
+dossier, persisted to `localStorage`, restored on reopen, **folded back onto the
+map** (confirmed → green edge), surfaced in a worklist "You" column + live count,
+and exported/imported as JSON. Trust boundary on import (edge-key regex, verdict
+allowlist, note cap). Never part of the locked benchmark.
+
+**8.6 Interoperable export.** The whole map as **CX2** (valid NDEx/Cytoscape
+aspect array — nodes, edges with `interaction='predicted'` + `l3_score`, reviewer
+verdicts folded in), and the ranked hypotheses as a structured **Claude Science
+handoff** JSON (mechanism, citations, novelty, Skeptic, experiment, provenance,
+data-source versions, honesty note).
+
+**Adversarial review — findings and resolutions.** A fresh red-team agent audited
+all four core items against the non-negotiables and traced each end-to-end (52
+tests re-run, artifact inspected, size-correction reproduced under partial length
+resolution). It confirmed the verified-clean set (baseline 0.45/0.8451 and frozen
+seed 42 intact; `/api/screen` reads no frozen split and uses its own graph;
+`aggregate_gain_excl_pinned = 0.0` with the honest 0.45 headlined; no fabricated
+ipTM anywhere; novelty grounded and non-contradictory on all 40 rows; trust
+boundary enforced) and raised **1 MAJOR + 3 MINOR**, all fixed:
+- **MAJOR** `/api/screen` injected a 0-length when only one protein of a pair
+  resolved in UniProt, skewing the size-correction fit for every pair and flagging
+  the partial pair `size_corrected` on a fabricated basis. Fixed: a pair is
+  size-corrected only when **both** lengths resolve; otherwise it stays at raw
+  ipTM, never invented. Covered by a new partial-length test.
+- **MINOR** the AF3 bands (calibrated on raw ipTM) were applied to the
+  size-corrected value without disclosure. Fixed: each row carries `band_basis`
+  and the screen note states it.
+- **MINOR** the with-pinned structural precision (0.50) sat one field from a
+  headline. Fixed: renamed to `l3_plus_structure_with_pinned_disclosed`.
+- **MINOR** the honesty-critical paths lacked tests. Fixed: added banding /
+  size-correction / novelty-classify / artifact-invariant / partial-length tests.
+
+**59 tests pass**; artifact rebuilt with the baseline intact; every feature
+verified in-browser (0 console errors). Roadmap (not built, deliberately scoped
+out) articulated in the README: live pooled-AF3 folding, active-learning loop,
+multi-user realtime, cross-species conservation, learned embeddings, chemical/
+functional-genomics channels — each behind the same locked-benchmark contract.

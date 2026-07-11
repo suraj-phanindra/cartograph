@@ -103,13 +103,25 @@ this 332-edge map: **structure corroborates per-hypothesis but does not raise
 aggregate precision** — exactly the kind of result the locked evaluator exists to
 surface rather than hide.
 
+### Roadmap (not built — deliberately scoped out of the hackathon)
+
+Honest about what is *not* here yet, and why each is a real next step, not vapor:
+- **Live pooled-AlphaFold3 folding** — Cartograph ingests an ipTM matrix today; the next step is to *drive* the fold jobs for the top-ranked candidate pairs on a GPU and stream ipTM back into the same channel. The size-correction and banding are already in place for it.
+- **Active-learning loop** — use the locked evaluator + reviewer verdicts to choose which pairs to fold/test next (expected-information-gain ranking), instead of folding the whole matrix. The human-in-the-loop feedback is the first half of this.
+- **Multi-user realtime** — several biologists annotating one map at once (verdicts are local-only today); needs a shared store and presence.
+- **Cross-species conservation** — a real conservation column would need cross-coronavirus (SARS-CoV-1, MERS) PPI data we do not have; it is intentionally omitted rather than fabricated.
+- **Hyperbolic / learned embeddings** — L3 is a strong deterministic baseline; a learned link-predictor (kept deterministic at inference) could raise recall on the long tail, scored against the same locked benchmark.
+- **Chemical & functional genomics** — fold in CRISPR-screen hits and compound-perturbation data as additional orthogonal channels behind the same evaluator.
+
+Each stays behind the same non-negotiable: the graph proposes, Claude explains with real literature, and a locked benchmark keeps the number honest.
+
 ## Commands
 
 ```bash
 ./run.sh            # build + serve the OFFLINE static demo (no API)
 ./run.sh api        # build + serve the demo WITH the live API (adds upload)
 ./run.sh build      # just rebuild frontend/data/cartograph_computed.json
-./run.sh test       # run the test suite (47 tests)
+./run.sh test       # run the test suite (59 tests)
 ```
 
 Reproducibility: the STRING enrichment is pinned to v12.0 (physical channel,
@@ -120,7 +132,7 @@ are committed so the demo runs offline forever after.
 
 ## What is real vs. what is a disclosed simplification
 
-- **Real:** the graph, the STRING enrichment, the L3 predictor, the locked evaluator and every number it reports, the two experimental structures (7VPH, 7DHG) and their computed interface residues, every citation (verified against NCBI), the AlphaFold-predicted G3BP1 model and its pLDDT.
+- **Real:** the graph, the STRING enrichment, the L3 predictor, the locked evaluator and every number it reports, the two experimental structures (7VPH, 7DHG) and their computed interface residues, every citation (verified against NCBI), the AlphaFold-predicted G3BP1 model and its pLDDT, the worklist **novelty tags** (grounded in real NCBI PubMed co-mention counts, cached), the **size-correction** of any uploaded ipTM matrix, and the Open Targets druggability snapshots (data 26.06).
 - **Disclosed simplification:** the reasoning-layer mechanism prose is Claude-authored at build time, grounded strictly in the verified packs (no live API on the demo path). The N–G3BP1 3D is the predicted G3BP1 *monomer* (the complex is not deposited), labeled predicted, with no fabricated contact residues. The map renders a real induced subgraph of the flagship neighborhoods for legibility; the headline metrics are computed on the full held-out set.
 
 ## License
