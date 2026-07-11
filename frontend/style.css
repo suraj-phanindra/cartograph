@@ -289,6 +289,26 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .sk-pass { color:var(--confirmed); background:rgba(66,224,138,.12); }
 .sk-down { color:#e0b341; background:rgba(224,179,65,.14); }
 .sk-veto { color:#f2686b; background:rgba(242,104,107,.15); }
+/* worklist "You" verdict chips */
+.fb-c { color:var(--confirmed); background:rgba(66,224,138,.14); }
+.fb-t { color:var(--topology); background:rgba(255,209,102,.14); }
+.fb-r { color:#f2686b; background:rgba(242,104,107,.15); }
+
+/* human-in-the-loop feedback widget (dossier) */
+.dz-sec-note { font:500 10px/1 var(--mono); color:var(--mut2); letter-spacing:.02em; text-transform:none; margin-left:8px; }
+.fb-box { display:flex; flex-direction:column; gap:10px; }
+.fb-btns { display:flex; gap:8px; }
+.fb-btn { flex:1; font:600 12px/1 var(--sans); color:var(--mut); background:var(--panel2);
+  border:1px solid var(--line2); border-radius:8px; padding:9px 8px; cursor:pointer; transition:all .12s; }
+.fb-btn:hover { color:var(--ink2); border-color:var(--line); }
+.fb-btn[data-v="confirmed"].on { color:var(--confirmed); border-color:rgba(66,224,138,.55); background:rgba(66,224,138,.10); }
+.fb-btn[data-v="to-test"].on { color:var(--topology); border-color:rgba(255,209,102,.55); background:rgba(255,209,102,.10); }
+.fb-btn[data-v="refuted"].on { color:#f2686b; border-color:rgba(242,104,107,.55); background:rgba(242,104,107,.10); }
+.fb-note { width:100%; min-height:52px; resize:vertical; background:var(--panel2); color:var(--ink);
+  border:1px solid var(--line2); border-radius:8px; padding:9px 11px; font:400 12px/1.5 var(--sans); }
+.fb-note:focus { outline:none; border-color:rgba(34,224,221,.4); }
+.fb-count { font:600 11px/1 var(--mono); color:var(--confirmed); align-self:center; margin-right:2px; }
+.fs-file { display:inline-flex; align-items:center; }
 .wl-pred { color:var(--predicted); background:rgba(34,224,221,.14); }
 .isilico-band { display:inline-block; font:600 9.5px/1 var(--mono); padding:4px 7px; border-radius:5px; text-transform:uppercase; }
 .isilico-band.tier3 { color:var(--confirmed); background:rgba(66,224,138,.14); }

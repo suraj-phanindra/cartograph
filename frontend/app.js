@@ -80,6 +80,60 @@ function exportCurrent(){
   else exportWorklistCsv();
 }
 
+/* ---------- human-in-the-loop feedback (local, exportable, feeds the map) ----
+   A wet-lab scientist's verdicts live in localStorage on THIS machine only. They
+   are the human half of the loop: confirmed edges fold into the map as real
+   green edges; refuted ones are struck out. Never touches the locked benchmark. */
+const FB_KEY='cartograph.feedback.v1';
+const FB_VERDICTS=['confirmed','to-test','refuted'];
+function fbAll(){ try{ return JSON.parse(localStorage.getItem(FB_KEY))||{}; }catch{ return {}; } }
+function fbGet(edge){ return fbAll()[edge]||null; }
+function fbSet(edge, verdict, note){
+  const a=fbAll();
+  if(!verdict && !note){ delete a[edge]; }
+  else { a[edge]={ verdict:verdict||null, note:(note||'').slice(0,600), ts:Date.now() }; }
+  localStorage.setItem(FB_KEY, JSON.stringify(a));
+  applyFeedbackToMap(); updateFbCount();
+}
+function applyFeedbackToMap(){
+  if(!window.cy) return;
+  cy.edges().removeClass('fb-confirmed fb-refuted fb-totest');
+  for(const [edge,v] of Object.entries(fbAll())){
+    const [s,t]=edge.split('|'); const e=edgeBetween(s,t);
+    if(!e.length) continue;
+    if(v.verdict==='confirmed'){ e.removeClass('hiddenEdge').style('display','element').addClass('fb-confirmed'); }
+    else if(v.verdict==='refuted'){ e.addClass('fb-refuted'); }
+    else if(v.verdict==='to-test'){ e.removeClass('hiddenEdge').style('display','element').addClass('fb-totest'); }
+  }
+}
+function updateFbCount(){
+  const n=Object.values(fbAll()).filter(v=>v.verdict).length;
+  const el=document.getElementById('fb-count'); if(el){ el.textContent=n?`${n} marked`:''; }
+}
+function exportFeedbackJson(){
+  const a=fbAll();
+  const payload={ tool:'Cartograph', kind:'human-in-the-loop-feedback', exported:new Date().toISOString(),
+    note:'Local wet-lab verdicts on L3-proposed edges. Not part of the locked benchmark.', feedback:a };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const link=document.createElement('a'); link.href=URL.createObjectURL(blob);
+  link.download='cartograph_feedback.json'; link.click(); URL.revokeObjectURL(link.href);
+}
+function importFeedbackJson(file){
+  const rd=new FileReader();
+  rd.onload=()=>{ try{
+      const p=JSON.parse(rd.result); const fb=p.feedback||p;
+      const cur=fbAll(); let n=0;
+      for(const [edge,v] of Object.entries(fb)){
+        if(typeof edge!=='string' || !/^[A-Za-z0-9_.\-]+\|[A-Za-z0-9_.\-]+$/.test(edge)) continue;   // trust boundary
+        if(v && (FB_VERDICTS.includes(v.verdict) || v.verdict==null)){
+          cur[edge]={ verdict:v.verdict||null, note:String(v.note||'').slice(0,600), ts:v.ts||Date.now() }; n++; }
+      }
+      localStorage.setItem(FB_KEY, JSON.stringify(cur));
+      applyFeedbackToMap(); updateFbCount(); toast(`Imported <span class="k">${n}</span> feedback marks.`);
+    }catch(e){ toast('Could not parse that feedback file.'); } };
+  rd.readAsText(file);
+}
+
 /* ---------- graph ---------- */
 function buildGraph(){
   const els=[];
@@ -133,6 +187,7 @@ function buildGraph(){
   });
   cy.on('mouseout','node', ()=>{ container.style.cursor='default'; tip.classList.add('hidden'); });
   cy.on('mouseout','edge', ()=>{ container.style.cursor='default'; });
+  applyFeedbackToMap();   // restore any saved verdicts onto the fresh graph
 }
 
 function cyStyle(){
@@ -171,6 +226,11 @@ function cyStyle(){
       'shadow-blur':16,'shadow-color':COL.confirmed,'shadow-opacity':1 } },
     { selector:'edge.miss', style:{ 'line-color':COL.rejected,'width':2.5,'line-style':'dashed','opacity':0.9 } },
     { selector:'edge.confirmed', style:{ 'line-color':COL.confirmed,'width':3.5,'line-style':'solid','opacity':1 } },
+    // human-in-the-loop verdicts fold back onto the map
+    { selector:'edge.fb-confirmed', style:{ 'line-color':COL.confirmed,'width':4,'line-style':'solid','opacity':1,
+      'shadow-blur':14,'shadow-color':COL.confirmed,'shadow-opacity':0.9 } },
+    { selector:'edge.fb-totest', style:{ 'line-color':COL.topology,'width':3,'line-style':'dashed','opacity':1 } },
+    { selector:'edge.fb-refuted', style:{ 'line-color':COL.rejected,'width':2,'line-style':'dotted','opacity':0.7 } },
     { selector:'edge.dim', style:{ 'opacity':0.12 } },
     { selector:'.hl', style:{ 'opacity':1 } },
   ];
@@ -465,6 +525,18 @@ function openDossier(key){
     </div>
   </div>
 
+  <div class="dz-sec">
+    <div class="dz-sec-h">Your verdict <span class="dz-sec-note">local · exportable · confirmed edges fold into the map</span></div>
+    <div class="fb-box">
+      <div class="fb-btns" id="fb-btns">
+        <button class="fb-btn" data-v="confirmed">✓ Confirmed</button>
+        <button class="fb-btn" data-v="to-test">◔ To test</button>
+        <button class="fb-btn" data-v="refuted">✕ Refuted</button>
+      </div>
+      <textarea class="fb-note" id="fb-note" placeholder="Lab note (optional): assay, result, caveat…"></textarea>
+    </div>
+  </div>
+
   ${renderDruggability(d.druggability)}
 
   <div class="dz-sec">
@@ -483,7 +555,21 @@ function openDossier(key){
   document.getElementById('dossier-body').innerHTML=html;
   // wire handlers in JS (no interpolated data in inline onclick -> no JS-context XSS)
   const rb=document.getElementById('dz-report-btn'); if(rb) rb.onclick=()=>exportDossierReport(key);
+  wireFeedback(key);
   mountStructure(st);
+}
+
+function wireFeedback(key){
+  const cur=fbGet(key);
+  const note=document.getElementById('fb-note');
+  const btns=[...document.querySelectorAll('#fb-btns .fb-btn')];
+  const paint=v=> btns.forEach(b=> b.classList.toggle('on', b.dataset.v===v));
+  if(cur){ paint(cur.verdict); if(note) note.value=cur.note||''; }
+  btns.forEach(b=> b.onclick=()=>{
+    const v = fbGet(key)?.verdict===b.dataset.v ? null : b.dataset.v;   // click again to clear
+    paint(v); fbSet(key, v, note?note.value:'');
+  });
+  if(note) note.onchange=()=> fbSet(key, fbGet(key)?.verdict||null, note.value);
 }
 
 function renderMechanism(mech){
@@ -705,8 +791,14 @@ function openWorklist(){
   const dm=DATA.druggability_meta;
   const src = dm ? ` · druggability: ${esc(dm.source.replace(' Platform GraphQL',''))} ${esc(dm.data_version)}` : '';
   openModal(`Testable hypotheses <small>${DATA.worklist.length} L3-proposed interactions, ranked · novelty grounded in PubMed${src}</small>`,
-    `<button class="fs-btn" id="wl-csv">Export CSV</button>`, '');
+    `<span id="fb-count" class="fb-count"></span>
+     <label class="fs-btn fs-file" title="Import feedback JSON">⤒ Import<input type="file" id="fb-imp" accept="application/json" hidden></label>
+     <button class="fs-btn" id="fb-exp" title="Export your verdicts">⤓ Feedback</button>
+     <button class="fs-btn" id="wl-csv">Export CSV</button>`, '');
   document.getElementById('wl-csv').onclick=exportWorklistCsv;
+  document.getElementById('fb-exp').onclick=exportFeedbackJson;
+  document.getElementById('fb-imp').onchange=e=>{ if(e.target.files[0]){ importFeedbackJson(e.target.files[0]); renderWorklist(); } };
+  updateFbCount();
   renderWorklist();
 }
 function wlRows(){
@@ -739,7 +831,7 @@ function skChip(v){ const [cls,lbl]=SK[v]||['sk-pass',v]; return `<span class="w
 function renderWorklist(){
   const baits=[...new Set(DATA.worklist.map(r=>r.bait))].sort();
   const cols=[['edge','Hypothesis'],['l3_score','L3'],['novelty','Novelty'],['skeptic','Skeptic'],
-    ['structure_band','Structure'],['tractability','Druggability'],['','']];
+    ['structure_band','Structure'],['tractability','Druggability'],['you','You'],['','']];
   const arr=k=> wlState.sort===k?`<span class="arr">${wlState.dir<0?'▼':'▲'}</span>`:'';
   const rows=wlRows();
   const body=`
@@ -763,6 +855,9 @@ function renderWorklist(){
         <td>${skChip(r.skeptic)}</td>
         <td>${r.structure_band?`<span class="wl-badge wl-exp">${esc(r.structure_band)}</span>`:'<span class="wl-no" title="not yet folded — run a pooled-AF3 screen to get an ipTM band">no model</span>'}</td>
         <td>${r.tractability?`${esc(r.tractability)}${r.approved_drug?' <span class="wl-badge wl-yes">★ lead</span>':''}<span style="color:var(--mut2);font-size:10px">${r.n_drugs?` · ${esc(r.n_drugs)} drugs`:''}</span>`:(()=>{const u=safeUrl(r.opentargets);return u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`:'<span class="wl-no">—</span>';})()}</td>
+        <td>${(()=>{const f=fbGet(r.edge); if(!f||!f.verdict) return '<span class="wl-no">—</span>';
+          const m={'confirmed':['fb-c','✓ confirmed'],'to-test':['fb-t','◔ to test'],'refuted':['fb-r','✕ refuted']}[f.verdict];
+          return `<span class="wl-badge ${m[0]}"${f.note?` title="${esc(f.note)}"`:''}>${m[1]}</span>`;})()}</td>
         <td>${r.has_dossier?'<span style="color:var(--predicted);font-size:11px">open dossier →</span>':''}</td>
       </tr>`).join('')}</tbody></table>
     <div class="wl-note">Each row is one testable interaction the deterministic L3 layer proposes, ranked by L3 score (computed on the blind training graph). <b>Novelty</b> is grounded in a real PubMed co-mention count under SARS-CoV-2 context — <i>novel</i> means 0 co-mentions, a genuinely new prediction; <i>known</i> means a recovered Gordon edge or a cited edge pack; hover for the basis. <b>Skeptic</b> is the AP-MS frequent-flyer filter (a veto is a likely co-purification artifact). <b>Structure</b> shows a band only where a real structure exists; "no model" means nothing has been folded yet — no ipTM is invented. <b>Druggability</b> is real Open Targets data (${DATA.druggability_meta?esc(DATA.druggability_meta.source)+', '+esc(DATA.druggability_meta.data_version):'cached'}); a <b>★ lead</b> is a repurposing <i>hypothesis</i>, not a validated antiviral. Blanks mean "not established", never fabricated. Rows with a dossier are clickable.</div>`;
@@ -801,6 +896,8 @@ ${st.interface_residues.length?`<p>Interface residues (${esc(st.interface_source
 <h2>Mechanism</h2><p>${mech}</p>
 <h2>Confidence</h2><p class="mut">topology ${cf.topology!=null?esc(cf.topology.toFixed(2)):'—'}${cf.topology_rank?` (L3 rank ${esc(cf.topology_rank)})`:''} · structure ${esc(st.confidence.value)} ${esc(st.confidence.type)} · literature ${esc(cf.literature)} (${esc(cf.literature_count)} papers)</p>
 <h2>Proposed wet-lab test</h2><p>Mutations: ${d.proposed_test.residues.map(r=>`<span class="r">${esc(r)}</span>`).join('')}<br>${esc(d.proposed_test.text)}</p>
+${(()=>{ const f=fbGet(key); if(!f||!f.verdict) return '';
+  return `<h2>Your verdict</h2><p><b>${esc(f.verdict)}</b>${f.note?`<br><span class="mut">${esc(f.note)}</span>`:''}<br><span class="mut">recorded locally by the reviewer; not part of the locked benchmark</span></p>`; })()}
 <h2>Druggability &amp; repurposing</h2>${(()=>{ const L=d.druggability.live;
   if(L && !L.unavailable){
     const drugs=(L.drugs||[]).slice(0,8).map(x=>`<li>${esc(x.name)} — ${x.approved?'<b>Approved</b>':esc(x.stage_label)}${x.mechanism?' · '+esc(x.mechanism):''}</li>`).join('');
