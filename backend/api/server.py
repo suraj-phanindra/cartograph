@@ -378,14 +378,21 @@ def screen(req: ScreenReq):
         thr = max(0.0, min(1.0, req.threshold if req.threshold is not None else 0.55))
         proteins, pairs = _parse_matrix(req.matrix)
         lengths = _resolve_lengths(proteins)
-        rows = [{"a": a, "b": b, "iptm": round(v, 4),
-                 "summed_len": (lengths.get(a, 0) + lengths.get(b, 0)) or None} for a, b, v in pairs]
+        # only size-correct a pair when BOTH lengths resolved; a partial lookup
+        # (one gene symbol not in UniProt) must NOT invent a 0-length -> that would
+        # corrupt the least-squares de-trend for every pair. Leave summed_len None.
+        def _summed(a, b):
+            la, lb = lengths.get(a), lengths.get(b)
+            return (la + lb) if (la and lb) else None
+        rows = [{"a": a, "b": b, "iptm": round(v, 4), "summed_len": _summed(a, b)} for a, b, v in pairs]
         cofold.size_correct(rows)
         any_corrected = any(r["size_corrected"] for r in rows)
         for r in rows:
             eff = r["iptm_size_corrected"] if r["size_corrected"] else r["iptm"]
             r["effective"] = eff
             r["band"] = cofold.band_iptm(eff)["band"]
+            # disclose which value the AF3 calibration band was applied to
+            r["band_basis"] = "size-corrected ipTM" if r["size_corrected"] else "raw ipTM"
         kept = sorted([r for r in rows if (r["effective"] or 0) >= thr], key=lambda r: -(r["effective"] or 0))
 
         # topology channel: L3 on the thresholded network -> edges the folds may have

@@ -81,12 +81,27 @@ animates the demo.
 ## Beyond the core (Phase 2)
 
 All optional, none on the critical path; the offline static demo is the guaranteed fallback.
-- **Ranked "what to test next" worklist** — sortable/filterable triage of the top predicted edges (L3, recovered-held-out, structure, cited-mechanism, druggability), CSV export.
+- **Ranked testable hypotheses** — the worklist is a triage of the top predicted edges, each a testable interaction with a **novelty tag grounded in a real PubMed co-mention count** (novel = 0 co-mentions; known = a recovered Gordon edge or cited pack), the **Skeptic verdict** (AP-MS frequent-flyer filter), a **structural band only where a real structure exists** (no fabricated ipTM), real druggability, and the single next experiment. Sortable/filterable, CSV export.
 - **Held-out transparency** — every one of the 57 held-out edges as recovered/missed with its L3 rank and length-3 path, and the reachability ceiling.
 - **Bring-your-own-interactome upload** (needs the API) — your edge-list → STRING enrichment → L3 → optional **own** held-out eval on a **separate seed**; uploaded data never touches the locked benchmark, and dossiers degrade honestly (no cached evidence → topology only, never fabricated).
+- **Pooled-AlphaFold3 virtual screen** (needs the API) — upload a symmetric protein×protein **ipTM matrix**; Cartograph **size-corrects** ipTM (it rises with summed chain length), thresholds to candidate edges, bands each (predicted, labelled), and runs the L3 topology channel to catch edges the folds may have missed. Every ipTM is labelled predicted; nothing is fabricated; not added to the locked benchmark.
+- **Structural evidence channel** — deposited complexes (7VPH, 7DHG) fuse into the evaluator as a transparent additive boost. Reported **honestly**: excluding the self-referential pinned edge, the aggregate precision gain is **0.0** on this small map — the channel corroborates individual hypotheses, it does not inflate the headline (see below).
+- **Human-in-the-loop feedback** — record confirmed / to-test / refuted + a lab note per dossier; verdicts persist locally, **fold back onto the map** (confirmed → green edge), and export/import as JSON. The human half of the loop; never touches the benchmark.
 - **Live druggability + repurposing** — real Open Targets (data 26.06) tractability + known drugs per host target; a target with an approved drug is flagged a **repurposing lead** (a *hypothesis*, not a validated antiviral). Committed snapshots make the offline demo show real, dated data with no live call; `/api/druggability` fetches uncached targets live.
+- **Interoperable export** — the whole map as **CX2** (open in Cytoscape / upload to NDEx), and the ranked hypotheses as a structured **Claude Science handoff** JSON (mechanism, citations, novelty, Skeptic, experiment, provenance).
 - **FastAPI + SSE** wrapper over the engine; **dossier → self-contained HTML report** export.
-- **Expanded 3D viewer**, keyboard-operable controls, responsive reflow.
+
+## Where this is going: the triage layer for cheap PPI maps
+
+Pooled-AlphaFold3 (Anlin/Todor, *Mol Syst Biol* 2026) makes genome-wide PPI maps
+cheap to generate — but a screen that proposes thousands of pairs needs a triage
+layer that decides **what to test first**, with the evidence to justify it.
+Cartograph is that layer: deterministic topology proposes, Claude explains with
+real literature, a locked benchmark keeps everyone honest, and now a structural
+channel ingests real fold confidence (never fabricated). The honest finding on
+this 332-edge map: **structure corroborates per-hypothesis but does not raise
+aggregate precision** — exactly the kind of result the locked evaluator exists to
+surface rather than hide.
 
 ## Commands
 

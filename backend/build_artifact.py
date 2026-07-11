@@ -428,8 +428,12 @@ def build():
                 "pairs": ["|".join(p) for p in sorted(struct_scores)],
                 "l3_only": {"precision_at_k": {str(k): m["k"][k]["precision"] for k in config.EVAL_K_VALUES},
                             "roc_auc": m["roc_auc"]},
-                "l3_plus_structure": {"precision_at_k": {str(k): m_struct["k"][k]["precision"] for k in config.EVAL_K_VALUES},
-                                      "roc_auc": m_struct["roc_auc"]},
+                # NOTE: includes the pinned flagship being re-found via its OWN 7VPH structure.
+                # This is a self-referential boost, disclosed in the key name — never headline it.
+                # The honest aggregate is `*_excl_pinned_p20` below.
+                "l3_plus_structure_with_pinned_disclosed": {
+                    "precision_at_k": {str(k): m_struct["k"][k]["precision"] for k in config.EVAL_K_VALUES},
+                    "roc_auc": m_struct["roc_auc"]},
                 # honest control: the aggregate effect with the pinned walkthrough excluded
                 "l3_only_excl_pinned_p20": m_np["k"][20]["precision"],
                 "l3_plus_structure_excl_pinned_p20": m_struct_np["k"][20]["precision"],

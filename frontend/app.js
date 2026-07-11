@@ -1103,7 +1103,7 @@ function renderScreenResult(d){
     <table class="wl-table" style="margin-top:12px"><thead><tr><th>Candidate edge</th><th>ipTM</th><th>size-corrected</th><th>band</th></tr></thead><tbody>${rows||'<tr><td colspan=4 class="wl-no">none above threshold</td></tr>'}</tbody></table>
     ${l3?`<div style="margin-top:12px;font:600 10px/1 var(--mono);letter-spacing:.1em;color:var(--mut2);text-transform:uppercase">L3 topology channel · edges the folds may have missed</div>
     <table class="wl-table"><thead><tr><th>Proposed edge</th><th>L3</th><th>path</th></tr></thead><tbody>${l3}</tbody></table>`:''}
-    <div class="wl-note">${esc(d.note)}</div>`;
+    <div class="wl-note">Bands are the AF3 ipTM calibration (≥0.80 highly confident · 0.60–0.80 confident · 0.55–0.60 weak · &lt;0.55 no better than random) applied to the <b>size-corrected</b> ipTM where correction ran (≥3 pairs with both chain lengths resolved), else the raw ipTM. Every value is predicted; a pair with an unresolved chain length is left uncorrected, never assigned an invented length. ${esc(d.note)}</div>`;
 }
 
 async function runUpload(){

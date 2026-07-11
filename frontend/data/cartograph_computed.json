@@ -70,7 +70,7 @@
         },
         "roc_auc": 0.8451
       },
-      "l3_plus_structure": {
+      "l3_plus_structure_with_pinned_disclosed": {
         "precision_at_k": {
           "10": 0.3,
           "20": 0.5,

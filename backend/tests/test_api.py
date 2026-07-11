@@ -113,6 +113,21 @@ def test_screen_rejects_empty_matrix():
     assert client.post("/api/screen", json={"matrix": "prot"}).status_code == 400
 
 
+def test_screen_partial_length_does_not_fabricate(monkeypatch):
+    # red-team MAJOR: when one protein of a pair does not resolve, that pair must
+    # be left uncorrected (no invented 0-length skewing the fit), not silently
+    # flagged size_corrected on a fabricated basis.
+    monkeypatch.setattr(server, "_resolve_lengths",
+                        lambda proteins: {p: 300 + 100 * i for i, p in enumerate(proteins) if p != "NUP214"})
+    d = client.post("/api/screen", json={"matrix": MATRIX, "threshold": 0.0}).json()
+    by_pair = {tuple(sorted((r["a"], r["b"]))): r for r in d["top"]}
+    for pair, r in by_pair.items():
+        if "NUP214" in pair:
+            assert r["size_corrected"] is False           # not corrected on a missing length
+            assert r["effective"] == r["iptm"]            # effective == raw, nothing invented
+            assert r["band_basis"] == "raw ipTM"
+
+
 def test_screen_never_touches_locked_benchmark():
     # /api/screen must not import or use the frozen split; the eval endpoint number
     # is unchanged after a screen call
