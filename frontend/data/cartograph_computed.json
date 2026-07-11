@@ -126,8 +126,10 @@
         "conserved_in_mers": 30,
         "shared_any_strain": 118,
         "cov2_specific": 214,
-        "no_ortholog_cov1": 10,
-        "no_ortholog_mers": 107
+        "no_ortholog_cov1": 9,
+        "no_ortholog_mers": 107,
+        "not_screened_cov1": 3,
+        "not_screened_mers": 20
       },
       "note": "A SARS-CoV-2 edge is corroborated when the orthologous viral protein binds the SAME human prey in SARS-CoV-1 or MERS (Gordon 2020 Science; benchmark-isolated). Used as an additive candidate prior, conservation genuinely improves accuracy and the gain SURVIVES excluding the pinned flagship: precision@10 0.30->0.60, precision@20 0.45->0.50, ROC 0.859->0.8922. This is a real orthogonal signal, kept separate from topology/structure/literature, never blended into one score."
     },
@@ -138,8 +140,10 @@
         "conserved_in_mers": 30,
         "shared_any_strain": 118,
         "cov2_specific": 214,
-        "no_ortholog_cov1": 10,
-        "no_ortholog_mers": 107
+        "no_ortholog_cov1": 9,
+        "no_ortholog_mers": 107,
+        "not_screened_cov1": 3,
+        "not_screened_mers": 20
       },
       "rows": [
         {

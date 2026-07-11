@@ -189,9 +189,9 @@ def _build_worklist(ranked_all, held_set, structure_facts, top_n=40):
     proposed bait->prey interaction with everything a biologist needs to decide
     whether to test it: a novelty tag grounded in a real PubMed co-mention count,
     the Skeptic's verdict, a structural band (only where a real structure exists),
-    a druggability read, and the one experiment to run. Every field is honestly
-    known or labelled 'not established' — nothing is fabricated. Conservation is
-    intentionally omitted (no cross-coronavirus PPI data).
+    a druggability read, the cross-species conservation state, and the one
+    experiment to run. Every field is honestly known or labelled 'not established'
+    — nothing is fabricated.
     """
     ncache = novelty.load_cache()
     rows = []
@@ -408,6 +408,9 @@ def build():
         "cov2_specific": len(gordon_pairs) - conserved_any,
         "no_ortholog_cov1": cons_states_c1.count("no_ortholog"),
         "no_ortholog_mers": cons_states_me.count("no_ortholog"),
+        # honest 4th state: ortholog exists but was not in that strain's Gordon screen
+        "not_screened_cov1": cons_states_c1.count("not_screened"),
+        "not_screened_mers": cons_states_me.count("not_screened"),
     }
     # per-edge rows for the on-map Compare-strains view: the visible viral->human
     # edges (known + revealed predicted), shared vs SARS-CoV-2-specific.

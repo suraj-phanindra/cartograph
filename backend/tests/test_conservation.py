@@ -39,17 +39,28 @@ def test_conservation_module_reads_only_cov1_mers():
     assert all(r["strain"] in ("SARS-CoV-1", "MERS-CoV") for r in rows)
 
 
-# --- three states, never collapsed -----------------------------------------
-def test_three_states_are_distinct():
+# --- four states, never collapsed ------------------------------------------
+def test_four_states_are_distinct():
     # conserved: the flagship is pan-coronavirus in SARS-CoV-1
     assert conserve.state("Orf6", "RAE1", "SARS-CoV-1") == "conserved"
     # no_ortholog: MERS has NO Orf6 -- this must NOT be rendered as 'not_conserved'
     assert conserve.state("Orf6", "RAE1", "MERS-CoV") == "no_ortholog"
-    # not_conserved: Nsp9 ortholog exists in CoV-1 but no such edge is reported
+    # not_conserved: Nsp9 IS in the CoV-1 screen but no such edge is reported
     assert conserve.state("Nsp9", "NUP98", "SARS-CoV-1") == "not_conserved"
     # Orf10 is CoV-2 putative-specific -> no ortholog in either strain
     assert conserve.state("Orf10", "BRD4", "SARS-CoV-1") == "no_ortholog"
     assert conserve.state("Orf10", "BRD4", "MERS-CoV") == "no_ortholog"
+
+
+def test_unscreened_core_is_not_screened_not_not_conserved():
+    # red-team MAJOR: a conserved-core protein absent from a strain's screen must
+    # NOT be claimed 'tested and absent'. MERS screened no Nsp12, CoV-1 no Spike.
+    assert conserve.state("Nsp12", "AKAP8", "MERS-CoV") == "not_screened"
+    assert conserve.state("Spike", "GOLGA7", "SARS-CoV-1") == "not_screened"
+    # and it must never be reported as not_conserved
+    assert conserve.state("Nsp12", "AKAP8", "MERS-CoV") != "not_conserved"
+    # but a screened core protein (Nsp9 in CoV-1) with no such edge IS not_conserved
+    assert conserve.state("Nsp9", "ZZZ", "SARS-CoV-1") == "not_conserved"
 
 
 def test_no_ortholog_never_collapsed_into_not_conserved():

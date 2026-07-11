@@ -2,22 +2,26 @@
 SARS-CoV-1 or MERS? An orthogonal corroboration signal, kept SEPARATE from
 topology / structure / literature (never blended into one score).
 
-Three states, NEVER collapsed (rendering 'no ortholog' as 'not conserved' is a
-fabrication):
+FOUR states, NEVER collapsed (rendering any of them as another is a fabrication):
   - conserved      the orthologous viral protein binds the SAME human prey in
                    that strain.
-  - not_conserved  the ortholog is represented in that strain's Gordon Science
-                   screen, but no interaction with this prey is reported.
-  - no_ortholog    no orthologous viral protein for this bait in that strain.
+  - not_conserved  the ortholog IS in that strain's Gordon Science screen (>=1
+                   interaction), but not with this prey -> a real negative.
+  - no_ortholog    the strain's virus has NO orthologous viral protein for this
+                   bait (e.g. MERS has no Orf6).
+  - not_screened   the ortholog exists biologically, but is not represented in
+                   that strain's Gordon screen, so conservation CANNOT be assessed
+                   (e.g. MERS Nsp12 and SARS-CoV-1 Spike have zero edges in this
+                   dataset -> we must NOT claim 'tested and absent').
 
 Orthology is PARTIAL and grounded in the data + comparative genomics:
-  - Nsp1-16, N, M, E, Spike have clear orthologs in both strains (conserved core;
-    Gordon screened the full ORFeome of each virus, so absence = 'no interaction').
-  - Accessory ORFs: an ortholog is counted only where that ORF is represented in
-    the strain's Gordon Science screen. MERS encodes lineage-specific ORF3/4a/4b/5
-    and has NO ortholog of any SARS accessory ORF -> every CoV-2 accessory ORF is
-    no_ortholog in MERS. Orf10 has no ortholog in either (CoV-2 putative-specific).
-    This matches the well-established SARS/MERS comparative genomics.
+  - Nsp1-16, N, M, E, Spike have clear orthologs in both strains (conserved core).
+  - Accessory ORFs: an explicit ortholog table. MERS encodes lineage-specific
+    ORF3/4a/4b/5 and has NO ortholog of any SARS accessory ORF -> every CoV-2
+    accessory ORF is no_ortholog in MERS. Orf10 has no ortholog in either.
+  - Whether an existing ortholog was actually SCREENED is read from the data (its
+    presence in the strain's edge set); a core protein with zero edges in a strain
+    is not_screened, never not_conserved.
 
 Benchmark isolation: this reads ONLY the committed CoV-1 + MERS edges. The Science
 SARS-CoV-2 map is not in the repo and never enters here.
@@ -29,6 +33,19 @@ from backend import config
 
 STRAINS = ("SARS-CoV-1", "MERS-CoV")
 CONSERVED_CORE = {f"Nsp{i}" for i in range(1, 17)} | {"N", "M", "E", "Spike"}
+# accessory-ORF orthology from SARS/MERS comparative genomics (Gordon 2020 Science):
+# SARS-CoV-1 shares SARS accessory ORFs (8a+8b -> Orf8, protein-14 -> Orf9c); MERS
+# has none of them; Orf10 is a CoV-2 putative-specific ORF with no ortholog.
+ACCESSORY_ORTHOLOG = {
+    "Orf3a": {"SARS-CoV-1": True,  "MERS-CoV": False},
+    "Orf3b": {"SARS-CoV-1": True,  "MERS-CoV": False},
+    "Orf6":  {"SARS-CoV-1": True,  "MERS-CoV": False},
+    "Orf7a": {"SARS-CoV-1": True,  "MERS-CoV": False},
+    "Orf8":  {"SARS-CoV-1": True,  "MERS-CoV": False},
+    "Orf9b": {"SARS-CoV-1": True,  "MERS-CoV": False},
+    "Orf9c": {"SARS-CoV-1": True,  "MERS-CoV": False},
+    "Orf10": {"SARS-CoV-1": False, "MERS-CoV": False},
+}
 
 
 @functools.lru_cache(maxsize=1)
@@ -50,20 +67,30 @@ def _load():
     return edges, vprots
 
 
-def _ortholog_exists(bait, strain):
-    """True if bait has an orthologous viral protein in `strain`. Conserved-core
-    proteins always do; accessory ORFs only where represented in the strain's screen
-    (which matches SARS/MERS comparative genomics for every in-scope bait)."""
+def _has_ortholog(bait, strain):
+    """True if bait's virus has a biological ortholog in `strain` (independent of
+    whether it was screened). Conserved-core proteins always do; accessory ORFs per
+    the comparative-genomics table; anything unknown -> conservatively no."""
     if bait in CONSERVED_CORE:
         return True
+    if bait in ACCESSORY_ORTHOLOG:
+        return ACCESSORY_ORTHOLOG[bait][strain]
+    return False
+
+
+def _screened(bait, strain):
+    """True if the ortholog is represented in that strain's Gordon Science screen
+    (>=1 committed edge). A protein with zero edges was not assessed for our prey."""
     _, vprots = _load()
     return bait in vprots[strain]
 
 
 def state(bait, prey, strain):
-    """One of 'conserved' | 'not_conserved' | 'no_ortholog' for one strain."""
-    if not _ortholog_exists(bait, strain):
+    """One of 'conserved' | 'not_conserved' | 'no_ortholog' | 'not_screened'."""
+    if not _has_ortholog(bait, strain):
         return "no_ortholog"
+    if not _screened(bait, strain):
+        return "not_screened"          # ortholog exists but absent from this screen -> cannot assess
     edges, _ = _load()
     if (bait, prey) in edges[strain]:
         return "conserved"
@@ -89,9 +116,12 @@ def _label(per, conserved_in):
     if conserved_in:
         return "conserved: " + ", ".join(s.replace("SARS-CoV-", "CoV-").replace("MERS-CoV", "MERS")
                                          for s in conserved_in)
-    if all(v == "no_ortholog" for v in per.values()):
+    vals = set(per.values())
+    if "not_conserved" in vals:               # a real negative in >=1 screened strain
+        return "not conserved"
+    if vals == {"no_ortholog"}:
         return "no ortholog"
-    return "not conserved"
+    return "not assessed"                     # only no_ortholog / not_screened -> no data to judge
 
 
 def scores(edges, boost=0.5):
@@ -117,11 +147,13 @@ def compare_strains_rows(cov2_edges):
 
 
 if __name__ == "__main__":
-    # demo self-check: the three states are real and never collapsed
+    # demo self-check: all four states are real and never collapsed
     assert state("Orf6", "RAE1", "SARS-CoV-1") == "conserved"          # flagship is pan-coronavirus
     assert state("Orf6", "RAE1", "MERS-CoV") == "no_ortholog"          # MERS has no Orf6 (NOT 'not conserved')
-    assert state("Nsp9", "NUP98", "SARS-CoV-1") == "not_conserved"     # Nsp9 ortholog exists, no such edge
+    assert state("Nsp9", "NUP98", "SARS-CoV-1") == "not_conserved"     # Nsp9 screened in CoV-1, no such edge
     assert state("Orf10", "BRD4", "SARS-CoV-1") == "no_ortholog"       # Orf10 is CoV-2-specific
+    assert state("Nsp12", "AKAP8", "MERS-CoV") == "not_screened"       # Nsp12 ortholog exists but 0 MERS edges
+    assert state("Spike", "GOLGA7", "SARS-CoV-1") == "not_screened"    # Spike absent from the CoV-1 screen
     fe = for_edge("Orf6", "RAE1")
     assert fe["is_conserved"] and fe["conserved_in"] == ["SARS-CoV-1"]
     assert fe["per_strain"]["MERS-CoV"] == "no_ortholog"

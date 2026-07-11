@@ -690,7 +690,9 @@ function renderConservation(c){
     ? `<b style="color:${COL.conserved}">Corroborated across coronaviruses.</b> The orthologous viral protein binds the same human prey in ${esc(c.conserved_in.map(s=>s.replace('MERS-CoV','MERS')).join(' and '))}. A pan-coronavirus interaction is a stronger candidate to test.`
     : (c.label==='no ortholog'
         ? `No orthologous viral protein in SARS-CoV-1 or MERS, so conservation cannot be assessed. This is <b>not</b> evidence against the edge — it is a distinct state, never counted as "not conserved".`
-        : `SARS-CoV-2-specific in this data: the ortholog is present in SARS-CoV-1/MERS but no interaction with this prey is reported there.`);
+    : (c.label==='not assessed'
+        ? `The ortholog exists but was not represented in the SARS-CoV-1/MERS Gordon screen, so conservation cannot be assessed here — we do <b>not</b> claim the interaction was tested and absent.`
+        : `SARS-CoV-2-specific in this data: the ortholog is in the SARS-CoV-1/MERS screen but no interaction with this prey is reported there.`));
   return `<div class="dz-sec">
     <div class="dz-sec-h">Cross-species conservation <span class="dz-sec-note">separate signal · not blended into the score</span></div>
     ${strainRow('SARS-CoV-1', c.per_strain['SARS-CoV-1'])}
@@ -951,7 +953,8 @@ function skChip(v){ const [cls,lbl]=SK[v]||['sk-pass',v]; return `<span class="w
 function consWlChip(c){ if(!c) return '<span class="wl-no">—</span>';
   if(c.is_conserved) return `<span class="wl-badge cons-yes" title="orthologous viral protein binds the same prey in ${esc(c.conserved_in.join(', '))}">✦ ${esc(c.label.replace('conserved: ',''))}</span>`;
   if(c.label==='no ortholog') return '<span class="wl-badge cons-na" title="no orthologous viral protein in SARS-CoV-1 or MERS (not the same as \'not conserved\')">no ortholog</span>';
-  return '<span class="wl-no" title="ortholog exists in CoV-1/MERS but no interaction with this prey is reported">not conserved</span>'; }
+  if(c.label==='not assessed') return '<span class="wl-badge cons-na" title="the ortholog exists but was not in the CoV-1/MERS Gordon screen — conservation cannot be assessed">not assessed</span>';
+  return '<span class="wl-no" title="ortholog is in the CoV-1/MERS screen but no interaction with this prey is reported">not conserved</span>'; }
 function renderWorklist(){
   const baits=[...new Set(DATA.worklist.map(r=>r.bait))].sort();
   const cols=[['edge','Hypothesis'],['l3_score','L3'],['novelty','Novelty'],['skeptic','Skeptic'],
@@ -1060,11 +1063,13 @@ function exportWorklistCsv(){
 /* ---------- Compare strains: cross-species conservation view ---------- */
 const CONS_STATE = {
   conserved:['cons-yes','conserved'], not_conserved:['cons-no','not conserved'],
-  no_ortholog:['cons-na','no ortholog'],
+  no_ortholog:['cons-na','no ortholog'], not_screened:['cons-na','not screened'],
 };
 function consStateChip(st){ const [cls,lbl]=CONS_STATE[st]||['cons-no',st];
   const tip=st==='no_ortholog'?'no orthologous viral protein in this strain (distinct from not-conserved)'
-    :st==='not_conserved'?'ortholog exists in this strain, but no interaction with this prey is reported':'the ortholog binds the same human prey';
+    :st==='not_screened'?'ortholog exists but is absent from this strain’s Gordon screen — conservation cannot be assessed'
+    :st==='not_conserved'?'ortholog is in this strain’s screen, but no interaction with this prey is reported'
+    :'the ortholog binds the same human prey';
   return `<span class="wl-badge ${cls}" title="${tip}">${esc(lbl)}</span>`; }
 const csState = { filter:'all' };
 function openCompareStrains(){
