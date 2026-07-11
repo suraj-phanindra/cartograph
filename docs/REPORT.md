@@ -396,9 +396,19 @@ buried one click deep. Fixes landed: the worklist experiment text wraps (was
 truncated); every disabled control carries a why-tooltip; the "every hypothesis is
 backed by an openable paper" line is kept.
 
-**Data-integrity review + CRISPR status.** A fresh adversarial review audited the
-conservation channel (states never collapsed, benchmark isolation, no fabricated
-matches, gain honest excl-pinned). The second planned channel — CRISPR functional
+**Data-integrity review — findings and resolution.** A fresh adversarial review
+audited the conservation channel and confirmed the verified-clean set (benchmark
+isolation with baseline 0.45/0.8451; no invented matches; conservation kept separate
+from the confidence score; gain honest excl-pinned). It found one **MAJOR** bug: a
+conserved-core protein absent from a strain's Gordon screen (MERS screened no Nsp12,
+SARS-CoV-1 no Spike) was mislabeled **not_conserved** — falsely claiming "tested and
+absent." Fixed by adding a fourth honest state, **not_screened** (the ortholog exists
+biologically but is not in that strain's screen, so conservation cannot be assessed);
+orthology is now biological (a conserved core + an explicit accessory-ORF table) and
+"screened" is read from the data. 20 MERS + 3 CoV-1 edges were correctly reclassified;
+the headline numbers (118 shared, +0.30/+0.05 gains) are unchanged. Two MINORs were
+also fixed (the guard test was blind to this case; a stale comment). This is the CRISPR
+status: The second planned channel — CRISPR functional
 genomics — is pending real per-screen hit-list data: `crispr_screens.json` is
 metadata-only and `crispr_gold_standard.csv` is only the ≥2-of-7 consensus (which
 overlaps our prey solely at SCAP), and a per-screen union cannot be reconstructed
