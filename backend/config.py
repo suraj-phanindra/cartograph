@@ -17,6 +17,7 @@ EVIDENCE_DIR = REPO_ROOT / "evidence"
 FRONTEND_DATA_DIR = REPO_ROOT / "frontend" / "data"
 
 EDGES_CSV = EVIDENCE_DIR / "gordon2020_edges.csv"
+COV1_MERS_CSV = EVIDENCE_DIR / "gordon2020_science_cov1_mers_edges.csv"  # conservation (CoV-1 + MERS only)
 DOMAIN_JSON = EVIDENCE_DIR / "cartograph_domain.json"
 EDGE_PACKS_DIR = EVIDENCE_DIR / "edge_packs"
 STRING_CACHE = EVIDENCE_DIR / "string_enrichment.cached.json"

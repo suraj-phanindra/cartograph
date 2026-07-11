@@ -45,6 +45,10 @@
       "headline_k": 20,
       "n_targets": 57,
       "n_recoverable": 14,
+      "reachable_recall": {
+        "recovered": 14,
+        "reachable": 14
+      },
       "without_pinned": {
         "precision_at_k": {
           "10": 0.3,
@@ -82,6 +86,698 @@
       "l3_plus_structure_excl_pinned_p20": 0.45,
       "aggregate_gain_excl_pinned": 0.0,
       "note": "Structural corroboration (an experimental complex, or a size-corrected co-fold ipTM) fused onto the topology score. On this sparse AP-MS map only 3 pairs have a deposited complex, so the aggregate precision@20 excluding the disclosed pinned edge is UNCHANGED (0.45 -> 0.45); the +0.05 with the pinned edge is the flagship being re-found via its own 7VPH structure, not a general gain. The channel's real value is per-hypothesis corroboration (the flagship IS experimentally resolved) and, at scale, on an uploaded pooled-AlphaFold3 ipTM matrix where every pair gets a structural score."
+    },
+    "conservation_channel": {
+      "source": "Gordon et al. 2020 Science (SARS-CoV-1 + MERS), IMEx IM-28441",
+      "n_conserved_candidates": 11,
+      "l3_only": {
+        "precision_at_k": {
+          "10": 0.3,
+          "20": 0.45,
+          "50": 0.26
+        },
+        "roc_auc": 0.8451,
+        "average_precision": 0.3733
+      },
+      "l3_plus_conservation": {
+        "precision_at_k": {
+          "10": 0.6,
+          "20": 0.55,
+          "50": 0.26
+        },
+        "roc_auc": 0.8953,
+        "average_precision": 0.5074
+      },
+      "l3_only_excl_pinned": {
+        "p10": 0.3,
+        "p20": 0.45,
+        "roc_auc": 0.859
+      },
+      "l3_plus_conservation_excl_pinned": {
+        "p10": 0.6,
+        "p20": 0.5,
+        "roc_auc": 0.8922
+      },
+      "p10_gain_excl_pinned": 0.3,
+      "p20_gain_excl_pinned": 0.05,
+      "summary": {
+        "n_gordon_edges": 332,
+        "conserved_in_cov1": 111,
+        "conserved_in_mers": 30,
+        "shared_any_strain": 118,
+        "cov2_specific": 214,
+        "no_ortholog_cov1": 10,
+        "no_ortholog_mers": 107
+      },
+      "note": "A SARS-CoV-2 edge is corroborated when the orthologous viral protein binds the SAME human prey in SARS-CoV-1 or MERS (Gordon 2020 Science; benchmark-isolated). Used as an additive candidate prior, conservation genuinely improves accuracy and the gain SURVIVES excluding the pinned flagship: precision@10 0.30->0.60, precision@20 0.45->0.50, ROC 0.859->0.8922. This is a real orthogonal signal, kept separate from topology/structure/literature, never blended into one score."
+    },
+    "compare_strains": {
+      "summary": {
+        "n_gordon_edges": 332,
+        "conserved_in_cov1": 111,
+        "conserved_in_mers": 30,
+        "shared_any_strain": 118,
+        "cov2_specific": 214,
+        "no_ortholog_cov1": 10,
+        "no_ortholog_mers": 107
+      },
+      "rows": [
+        {
+          "bait": "N",
+          "prey": "CSNK2A2",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1",
+            "MERS-CoV"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "CSNK2B",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "FAM98A",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "G3BP1",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "G3BP2",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "LARP1",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "MOV10",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "PABPC1",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "PABPC4",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "RPL36",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "RRP9",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "SNIP1",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "DCAF7",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "FBN2",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "MIB1",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1",
+            "MERS-CoV"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "NEK9",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "SPART",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Orf6",
+          "prey": "NUP214",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": true
+        },
+        {
+          "bait": "Orf6",
+          "prey": "NUP98",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Orf6",
+          "prey": "RAE1",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "BAG5",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "MARK1",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "MARK2",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "MARK3",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "TOMM70",
+          "per_strain": {
+            "SARS-CoV-1": "conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [
+            "SARS-CoV-1"
+          ],
+          "shared": true,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "CSDE1",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": true
+        },
+        {
+          "bait": "N",
+          "prey": "DDX21",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "RBM28",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "N",
+          "prey": "UPF1",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "EIF4H",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "FBLN5",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "FBN1",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "GTF2F2",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "MAT2B",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "NUP214",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "NUP54",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "NUP58",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "NUP62",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "NUP88",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "NUP98",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": true
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "RAE1",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": true
+        },
+        {
+          "bait": "Nsp9",
+          "prey": "ZNF503",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "not_conserved"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Orf6",
+          "prey": "MTCH1",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Orf6",
+          "prey": "NUP54",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": true
+        },
+        {
+          "bait": "Orf6",
+          "prey": "NUP58",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": true
+        },
+        {
+          "bait": "Orf6",
+          "prey": "NUP62",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": true
+        },
+        {
+          "bait": "Orf6",
+          "prey": "NUP88",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": true
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "CHMP2A",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "CSDE1",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "DCTPP1",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "DPH5",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "NHERF1",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        },
+        {
+          "bait": "Orf9b",
+          "prey": "PTBP2",
+          "per_strain": {
+            "SARS-CoV-1": "not_conserved",
+            "MERS-CoV": "no_ortholog"
+          },
+          "conserved_in": [],
+          "shared": false,
+          "predicted": false
+        }
+      ]
     },
     "loop": {
       "confirmed_edges": [
@@ -638,525 +1334,600 @@
         "target": "PABPC1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "CSNK2A2",
         "target": "CSNK2B",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "FBLN5",
         "target": "FBN1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "FBN1",
         "target": "FBN2",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "G3BP1",
         "target": "G3BP2",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "G3BP1",
         "target": "PABPC1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "G3BP1",
         "target": "UPF1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "LARP1",
         "target": "PABPC1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "MOV10",
         "target": "UPF1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "N",
         "target": "CSNK2A2",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "CSNK2B",
         "kind": "known",
         "score": 0.64,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "DDX21",
         "kind": "known",
         "score": 0.87,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "N",
         "target": "FAM98A",
         "kind": "known",
         "score": 0.73,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "G3BP1",
         "kind": "known",
         "score": 0.98,
-        "held_out": true
+        "held_out": true,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "G3BP2",
         "kind": "known",
         "score": 0.97,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "LARP1",
         "kind": "known",
         "score": 0.79,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "MOV10",
         "kind": "known",
         "score": 0.91,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "PABPC1",
         "kind": "known",
         "score": 0.8,
-        "held_out": true
+        "held_out": true,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "PABPC4",
         "kind": "known",
         "score": 0.73,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "RBM28",
         "kind": "known",
         "score": 0.73,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "N",
         "target": "RPL36",
         "kind": "known",
         "score": 0.64,
-        "held_out": true
+        "held_out": true,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "RRP9",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "SNIP1",
         "kind": "known",
         "score": 0.64,
-        "held_out": true
+        "held_out": true,
+        "conserved": true
       },
       {
         "source": "N",
         "target": "UPF1",
         "kind": "known",
         "score": 0.64,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP214",
         "target": "NUP54",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP214",
         "target": "NUP58",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP214",
         "target": "NUP62",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP214",
         "target": "NUP88",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP214",
         "target": "NUP98",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP214",
         "target": "RAE1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP54",
         "target": "NUP58",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP54",
         "target": "NUP62",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP54",
         "target": "NUP88",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP54",
         "target": "NUP98",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP54",
         "target": "RAE1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP58",
         "target": "NUP62",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP58",
         "target": "NUP88",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP58",
         "target": "NUP98",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP62",
         "target": "NUP88",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP62",
         "target": "NUP98",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP88",
         "target": "NUP98",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP88",
         "target": "RAE1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "NUP98",
         "target": "RAE1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "DCAF7",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "Nsp9",
         "target": "EIF4H",
         "kind": "known",
         "score": 0.64,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "FBLN5",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "FBN1",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "FBN2",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "Nsp9",
         "target": "GTF2F2",
         "kind": "known",
         "score": 0.73,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "MAT2B",
         "kind": "known",
         "score": 0.66,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "MIB1",
         "kind": "known",
         "score": 0.75,
-        "held_out": true
+        "held_out": true,
+        "conserved": true
       },
       {
         "source": "Nsp9",
         "target": "NEK9",
         "kind": "known",
         "score": 0.64,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "Nsp9",
         "target": "NUP214",
         "kind": "known",
         "score": 0.53,
-        "held_out": true
+        "held_out": true,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "NUP54",
         "kind": "known",
         "score": 0.66,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "NUP58",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "NUP62",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "NUP88",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
         "target": "SPART",
         "kind": "known",
         "score": 0.64,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "Nsp9",
         "target": "ZNF503",
         "kind": "known",
         "score": 0.66,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Orf6",
         "target": "MTCH1",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Orf6",
         "target": "NUP98",
         "kind": "known",
         "score": 0.91,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "Orf6",
         "target": "RAE1",
         "kind": "known",
         "score": 0.93,
-        "held_out": true
+        "held_out": true,
+        "conserved": true
       },
       {
         "source": "Orf9b",
         "target": "BAG5",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "Orf9b",
         "target": "CHMP2A",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Orf9b",
         "target": "CSDE1",
         "kind": "known",
         "score": 0.53,
-        "held_out": true
+        "held_out": true,
+        "conserved": false
       },
       {
         "source": "Orf9b",
         "target": "DCTPP1",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Orf9b",
         "target": "DPH5",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "Orf9b",
         "target": "MARK1",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "Orf9b",
         "target": "MARK2",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "Orf9b",
         "target": "MARK3",
         "kind": "known",
         "score": 0.53,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "Orf9b",
         "target": "NHERF1",
         "kind": "known",
         "score": 0.53,
-        "held_out": true
+        "held_out": true,
+        "conserved": false
       },
       {
         "source": "Orf9b",
         "target": "PTBP2",
         "kind": "known",
         "score": 0.53,
-        "held_out": true
+        "held_out": true,
+        "conserved": false
       },
       {
         "source": "Orf9b",
         "target": "TOMM70",
         "kind": "known",
         "score": 0.98,
-        "held_out": false
+        "held_out": false,
+        "conserved": true
       },
       {
         "source": "PABPC1",
         "target": "PABPC4",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       },
       {
         "source": "PABPC1",
         "target": "UPF1",
         "kind": "enrichment",
         "score": 0.001,
-        "held_out": false
+        "held_out": false,
+        "conserved": false
       }
     ],
     "predicted": [
@@ -1172,7 +1943,8 @@
         ],
         "rank": 2,
         "held_out_true": false,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
@@ -1186,7 +1958,8 @@
         ],
         "rank": 3,
         "held_out_true": true,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": false
       },
       {
         "source": "Nsp9",
@@ -1200,7 +1973,8 @@
         ],
         "rank": 4,
         "held_out_true": false,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": false
       },
       {
         "source": "N",
@@ -1214,7 +1988,8 @@
         ],
         "rank": 1,
         "held_out_true": true,
-        "has_dossier": true
+        "has_dossier": true,
+        "conserved": true
       },
       {
         "source": "N",
@@ -1228,7 +2003,8 @@
         ],
         "rank": 2,
         "held_out_true": true,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": true
       },
       {
         "source": "Orf6",
@@ -1242,7 +2018,8 @@
         ],
         "rank": 2,
         "held_out_true": false,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": false
       },
       {
         "source": "Orf6",
@@ -1256,7 +2033,8 @@
         ],
         "rank": 3,
         "held_out_true": false,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": false
       },
       {
         "source": "Orf6",
@@ -1270,7 +2048,8 @@
         ],
         "rank": 4,
         "held_out_true": false,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": true
       },
       {
         "source": "N",
@@ -1284,7 +2063,8 @@
         ],
         "rank": 3,
         "held_out_true": false,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": false
       },
       {
         "source": "Orf6",
@@ -1298,7 +2078,8 @@
         ],
         "rank": 5,
         "held_out_true": false,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": false
       },
       {
         "source": "Orf6",
@@ -1312,7 +2093,8 @@
         ],
         "rank": 6,
         "held_out_true": false,
-        "has_dossier": false
+        "has_dossier": false,
+        "conserved": false
       },
       {
         "source": "Orf6",
@@ -1326,7 +2108,8 @@
         ],
         "rank": 7,
         "held_out_true": true,
-        "has_dossier": true
+        "has_dossier": true,
+        "conserved": true
       }
     ],
     "clusters": [
@@ -1454,6 +2237,17 @@
         "assay": "co-immunoprecipitation (HEK293T)",
         "readout": "STAT1 nuclear import",
         "text": "Mutate the structure-verified ORF6 interface residues (E55A / M58R / D61A) and test for loss of RAE1 binding by co-immunoprecipitation in HEK293T; rescue of STAT1 nuclear import confirms the edge is functional."
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [
+          "SARS-CoV-1"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1"
       },
       "structural_validation": {
         "provenance": "experimental",
@@ -1640,6 +2434,17 @@
         "readout": "MAVS-driven IFN-\u03b2 reporter",
         "text": "Point-mutate the ORF9b interface (S53A phospho-null; R58E charge reversal) and confirm loss of TOM70 binding by co-immunoprecipitation; rescue of the MAVS-driven IFN-\u03b2 reporter confirms functional relief."
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [
+          "SARS-CoV-1"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1"
+      },
       "structural_validation": {
         "provenance": "experimental",
         "band": "experimental",
@@ -1801,6 +2606,17 @@
         "readout": "stress-granule assembly (immunofluorescence)",
         "text": "Mutate the N-protein ITFG G3BP1-binding motif and test for loss of G3BP1 binding by co-immunoprecipitation; score rescue of stress-granule assembly by immunofluorescence. (Specific residue numbers await a complex structure.)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [
+          "SARS-CoV-1"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1"
+      },
       "structural_validation": {
         "provenance": "predicted-monomer",
         "band": "monomer model",
@@ -1953,6 +2769,17 @@
         "readout": "host mRNA nuclear export (oligo-dT FISH)",
         "text": "Point-mutate the ORF6 C-terminal anchor (M58R) and confirm loss of the Rae1\u2013Nup98 association by co-immunoprecipitation; score rescue of host mRNA export by oligo-dT FISH."
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [
+          "SARS-CoV-1"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1"
+      },
       "structural_validation": {
         "provenance": "experimental",
         "band": "experimental",
@@ -2035,6 +2862,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2064,6 +2900,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2095,6 +2940,15 @@
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2124,6 +2978,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2155,6 +3018,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "veto",
       "structure": "none",
       "structure_band": null,
@@ -2184,6 +3056,15 @@
       "novelty": {
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2215,6 +3096,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2244,6 +3134,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "no_ortholog",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "no ortholog"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2275,6 +3174,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "no_ortholog",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "no ortholog"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2304,6 +3212,18 @@
       "novelty": {
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "conserved"
+        },
+        "conserved_in": [
+          "SARS-CoV-1",
+          "MERS-CoV"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1, MERS"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2335,6 +3255,17 @@
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [
+          "SARS-CoV-1"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2364,6 +3295,17 @@
       "novelty": {
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [
+          "SARS-CoV-1"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1"
       },
       "skeptic": "pass",
       "structure": "predicted",
@@ -2395,6 +3337,17 @@
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [
+          "SARS-CoV-1"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2424,6 +3377,18 @@
       "novelty": {
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "conserved"
+        },
+        "conserved_in": [
+          "SARS-CoV-1",
+          "MERS-CoV"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1, MERS"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2455,6 +3420,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2484,6 +3458,18 @@
       "novelty": {
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "conserved"
+        },
+        "conserved_in": [
+          "SARS-CoV-1",
+          "MERS-CoV"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1, MERS"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2515,6 +3501,15 @@
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2544,6 +3539,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2575,6 +3579,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2604,6 +3617,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2635,6 +3657,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2664,6 +3695,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2695,6 +3735,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2724,6 +3773,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2755,6 +3813,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2784,6 +3851,17 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [
+          "SARS-CoV-1"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2815,6 +3893,15 @@
         "tag": "partially known",
         "basis": "1 PubMed co-mention (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2844,6 +3931,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2875,6 +3971,18 @@
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "conserved"
+        },
+        "conserved_in": [
+          "SARS-CoV-1",
+          "MERS-CoV"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1, MERS"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2904,6 +4012,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2935,6 +4052,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "no_ortholog",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "no ortholog"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2964,6 +4090,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "no_ortholog",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "no ortholog"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -2995,6 +4130,17 @@
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [
+          "SARS-CoV-1"
+        ],
+        "is_conserved": true,
+        "label": "conserved: CoV-1"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3024,6 +4170,15 @@
       "novelty": {
         "tag": "known",
         "basis": "recovered held-out Gordon AP-MS edge"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -3055,6 +4210,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3084,6 +4248,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -3115,6 +4288,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3144,6 +4326,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "no_ortholog"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
@@ -3175,6 +4366,15 @@
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
       },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
+      },
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3204,6 +4404,15 @@
       "novelty": {
         "tag": "novel",
         "basis": "0 PubMed co-mentions (SARS-CoV-2 context)"
+      },
+      "conservation": {
+        "per_strain": {
+          "SARS-CoV-1": "not_conserved",
+          "MERS-CoV": "not_conserved"
+        },
+        "conserved_in": [],
+        "is_conserved": false,
+        "label": "not conserved"
       },
       "skeptic": "pass",
       "structure": "none",
