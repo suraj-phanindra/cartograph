@@ -23,6 +23,7 @@ from backend.predict.l3 import l3_scores, rank_of, pick_display_path
 from backend.eval.evaluator import evaluate, per_heldout_recovery
 from backend.eval.freeze_split import load_frozen
 from backend.reason.hypothesis import read_edge, skeptic_review, DOSSIER
+from backend.reason import novelty
 from backend.structure.resolve import build_structure_facts
 from backend.structure import cofold
 from backend.druggability import service as drug_service
@@ -169,30 +170,53 @@ def _build_dossier(edge_key, ranked_by_bait, structure_facts, frozen, interface_
     }
 
 
-def _build_worklist(ranked_all, held_set, structure_facts, top_n=40):
-    """The ranked 'what to test next' triage list over the WHOLE map.
+def _experiment(edge, has_dossier, is_experimental):
+    """The single most-informative next experiment. Dossier edges carry a curated
+    test; otherwise a standard honest next step keyed on what evidence exists —
+    a methodology suggestion, never a fabricated result."""
+    if has_dossier:
+        t = DOSSIER[edge]["test"]
+        return f"{t['assay']}: mutate {', '.join(t['residues'])}; read out {t['readout']}."
+    if is_experimental:
+        return "Mutate the resolved interface residues and test for loss of binding by co-IP."
+    return "Confirm by co-IP / proximity labeling in infected cells; co-fold to test for a direct interface."
 
-    Only honestly-known columns: L3 score/rank, whether the edge is a recovered
-    held-out true edge, whether we hold a structure and a cited mechanism, and a
-    druggability read. Conservation is intentionally omitted — we have no
-    cross-coronavirus PPI data, so a conservation column would be fabricated.
+
+def _build_worklist(ranked_all, held_set, structure_facts, top_n=40):
+    """The ranked list of testable hypotheses over the WHOLE map. Each row is one
+    proposed bait->prey interaction with everything a biologist needs to decide
+    whether to test it: a novelty tag grounded in a real PubMed co-mention count,
+    the Skeptic's verdict, a structural band (only where a real structure exists),
+    a druggability read, and the one experiment to run. Every field is honestly
+    known or labelled 'not established' — nothing is fabricated. Conservation is
+    intentionally omitted (no cross-coronavirus PPI data).
     """
+    ncache = novelty.load_cache()
     rows = []
     for bait, ranked in ranked_all.items():
         for i, c in enumerate(ranked, 1):
             prey = c["candidate"]
             edge = f"{bait}|{prey}"
             has_dossier = edge in DOSSIER
+            recovered = (bait, prey) in held_set
             struct = structure_facts.get(edge)
+            is_exp = bool(struct and struct["kind"] == "experimental")
+            lit_n = len(read_edge(edge)["citations"]) if has_dossier else 0
             snap = drug_service.load_snapshot(prey)  # real Open Targets snapshot or None
             tract = snap["tractability"]["small_molecule"] if snap and not snap.get("unavailable") else None
             rows.append({
                 "bait": bait, "prey": prey, "edge": edge,
+                "hypothesis": f"SARS-CoV-2 {bait} physically interacts with human {prey}",
                 "l3_score": c["l3_score"], "rank": i,
-                "recovered": (bait, prey) in held_set,
+                "recovered": recovered,
+                "novelty": novelty.classify(bait, prey, recovered, has_dossier, ncache),
+                "skeptic": skeptic_review(prey, has_structure=is_exp, literature_count=lit_n)["verdict"],
+                # structural band only where a real structure exists (no fabricated ipTM)
                 "structure": struct["kind"] if struct else "none",
+                "structure_band": "experimental complex" if is_exp else None,
                 "structure_source": (struct.get("pdb") or struct.get("source")) if struct else None,
                 "has_mechanism": has_dossier,
+                "experiment": _experiment(edge, has_dossier, is_exp),
                 "tractability": tract,
                 "n_drugs": snap["n_drugs"] if snap and not snap.get("unavailable") else None,
                 "approved_drug": bool(snap and snap.get("repurposing_lead")),

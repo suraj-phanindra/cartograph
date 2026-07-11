@@ -699,12 +699,12 @@ function closeModal(){
 function modalOpen(){ return !document.getElementById('modal').classList.contains('hidden'); }
 
 /* ---------- worklist: ranked "what to test next" ---------- */
-const wlState = { sort:'l3_score', dir:-1, bait:'all', onlyDossier:false, onlyRecovered:false, onlyRepurpose:false };
+const wlState = { sort:'l3_score', dir:-1, bait:'all', onlyDossier:false, onlyRecovered:false, onlyRepurpose:false, onlyNovel:false };
 
 function openWorklist(){
   const dm=DATA.druggability_meta;
   const src = dm ? ` · druggability: ${esc(dm.source.replace(' Platform GraphQL',''))} ${esc(dm.data_version)}` : '';
-  openModal(`What to test next <small>top ${DATA.worklist.length} graph-proposed edges · deterministic L3${src}</small>`,
+  openModal(`Testable hypotheses <small>${DATA.worklist.length} L3-proposed interactions, ranked · novelty grounded in PubMed${src}</small>`,
     `<button class="fs-btn" id="wl-csv">Export CSV</button>`, '');
   document.getElementById('wl-csv').onclick=exportWorklistCsv;
   renderWorklist();
@@ -715,8 +715,12 @@ function wlRows(){
   if(wlState.onlyDossier) rows=rows.filter(r=>r.has_dossier);
   if(wlState.onlyRecovered) rows=rows.filter(r=>r.recovered);
   if(wlState.onlyRepurpose) rows=rows.filter(r=>r.approved_drug);
+  if(wlState.onlyNovel) rows=rows.filter(r=>r.novelty && r.novelty.tag==='novel');
   const k=wlState.sort, d=wlState.dir;
-  const norm=v=> v==null ? null : (typeof v==='boolean' ? (v?1:0) : v);
+  const NVORD={ 'novel':0,'partially known':1,'known':2,'unassessed':3 };
+  const norm=v=> v==null ? null
+    : (v && typeof v==='object' && v.tag!==undefined ? NVORD[v.tag]  // novelty -> tag order
+    : (typeof v==='boolean' ? (v?1:0) : v));
   rows.sort((a,b)=>{ let x=norm(a[k]), y=norm(b[k]);
     // nulls always sort last regardless of direction
     if(x==null && y==null) return 0;
@@ -726,37 +730,45 @@ function wlRows(){
     return d*String(x).localeCompare(String(y)); });
   return rows;
 }
+const NV = { 'known':['nv-known','known'], 'partially known':['nv-partial','partially known'],
+  'novel':['nv-novel','novel'], 'unassessed':['nv-un','unassessed'] };
+const SK = { 'pass':['sk-pass','passes Skeptic'], 'downgrade':['sk-down','downgraded'], 'veto':['sk-veto','vetoed'] };
+function novChip(n){ if(!n) return '<span class="wl-no">—</span>';
+  const [cls,lbl]=NV[n.tag]||['nv-un',n.tag]; return `<span class="wl-badge ${cls}" title="${esc(n.basis)}">${esc(lbl)}</span>`; }
+function skChip(v){ const [cls,lbl]=SK[v]||['sk-pass',v]; return `<span class="wl-badge ${cls}">${esc(lbl)}</span>`; }
 function renderWorklist(){
   const baits=[...new Set(DATA.worklist.map(r=>r.bait))].sort();
-  const cols=[['edge','Edge'],['l3_score','L3'],['rank','Rank'],['recovered','Recovered'],
-    ['structure','Structure'],['has_mechanism','Mechanism'],['tractability','Tractability'],['approved_drug','Repurposing'],['','']];
+  const cols=[['edge','Hypothesis'],['l3_score','L3'],['novelty','Novelty'],['skeptic','Skeptic'],
+    ['structure_band','Structure'],['tractability','Druggability'],['','']];
   const arr=k=> wlState.sort===k?`<span class="arr">${wlState.dir<0?'▼':'▲'}</span>`:'';
   const rows=wlRows();
-  const badge=(on,txt,cls)=> on?`<span class="wl-badge ${cls}">${txt}</span>`:'<span class="wl-no">—</span>';
   const body=`
     <div class="wl-filters">
       <label>Bait <select id="wl-bait">${['all',...baits].map(b=>`<option ${b===wlState.bait?'selected':''}>${esc(b)}</option>`).join('')}</select></label>
+      <label><input type="checkbox" id="wl-nov" ${wlState.onlyNovel?'checked':''}> novel only</label>
       <label><input type="checkbox" id="wl-dos" ${wlState.onlyDossier?'checked':''}> has dossier</label>
       <label><input type="checkbox" id="wl-rec" ${wlState.onlyRecovered?'checked':''}> recovered held-out only</label>
       <label><input type="checkbox" id="wl-rep" ${wlState.onlyRepurpose?'checked':''}> repurposing leads only</label>
-      <span style="margin-left:auto;color:var(--mut2);font-family:var(--mono);font-size:11px">${rows.length} edges</span>
+      <span style="margin-left:auto;color:var(--mut2);font-family:var(--mono);font-size:11px">${rows.length} hypotheses</span>
     </div>
     <table class="wl-table"><thead><tr>${cols.map(([k,l])=>l?`<th data-k="${k}">${esc(l)} ${arr(k)}</th>`:'<th></th>').join('')}</tr></thead>
     <tbody>${rows.map(r=>`
       <tr class="${r.has_dossier?'clickable':''}" data-edge="${esc(r.edge)}">
-        <td class="wl-edge">${esc(r.bait)} → ${esc(r.prey)}</td>
-        <td class="wl-num">${r.l3_score.toFixed(3)}</td>
-        <td class="wl-num">${esc(r.rank)}</td>
-        <td>${badge(r.recovered,'held-out ✓','wl-yes')}</td>
-        <td>${r.structure==='experimental'?'<span class="wl-badge wl-exp">experimental</span>':(r.structure==='predicted'?'<span class="wl-badge wl-pred">predicted</span>':'<span class="wl-no">—</span>')}</td>
-        <td>${badge(r.has_mechanism,'cited','wl-yes')}</td>
-        <td>${r.tractability?`${esc(r.tractability)}<span style="color:var(--mut2);font-size:10px">${r.n_drugs?` · ${esc(r.n_drugs)} drugs`:''}</span>`:(()=>{const u=safeUrl(r.opentargets);return u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`:'<span class="wl-no">—</span>';})()}</td>
-        <td>${r.approved_drug?'<span class="wl-badge wl-yes">★ lead</span>':'<span class="wl-no">—</span>'}</td>
+        <td class="wl-hyp">
+          <div class="wl-edge">${esc(r.bait)} → ${esc(r.prey)}${r.recovered?' <span class="wl-badge wl-yes" title="a held-out Gordon edge L3 re-found blind">held-out ✓</span>':''}</div>
+          <div class="wl-test" title="${esc(r.experiment)}">🧪 ${esc(r.experiment)}</div>
+        </td>
+        <td class="wl-num" title="rank ${esc(r.rank)} for ${esc(r.bait)} on the blind training graph">${r.l3_score.toFixed(3)}</td>
+        <td>${novChip(r.novelty)}</td>
+        <td>${skChip(r.skeptic)}</td>
+        <td>${r.structure_band?`<span class="wl-badge wl-exp">${esc(r.structure_band)}</span>`:'<span class="wl-no" title="not yet folded — run a pooled-AF3 screen to get an ipTM band">no model</span>'}</td>
+        <td>${r.tractability?`${esc(r.tractability)}${r.approved_drug?' <span class="wl-badge wl-yes">★ lead</span>':''}<span style="color:var(--mut2);font-size:10px">${r.n_drugs?` · ${esc(r.n_drugs)} drugs`:''}</span>`:(()=>{const u=safeUrl(r.opentargets);return u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`:'<span class="wl-no">—</span>';})()}</td>
         <td>${r.has_dossier?'<span style="color:var(--predicted);font-size:11px">open dossier →</span>':''}</td>
       </tr>`).join('')}</tbody></table>
-    <div class="wl-note">L3 score and rank are computed on the blind training graph (held-out edges removed). <b>Tractability</b>/<b>Repurposing</b> are real Open Targets data (${DATA.druggability_meta?esc(DATA.druggability_meta.source)+', '+esc(DATA.druggability_meta.data_version)+', fetched '+esc(DATA.druggability_meta.fetched):'cached'}); a <b>★ lead</b> means the host target has an approved drug — a repurposing <i>hypothesis</i>, not a validated antiviral. Blanks mean "not established", never fabricated. Rows with a dossier are clickable.</div>`;
+    <div class="wl-note">Each row is one testable interaction the deterministic L3 layer proposes, ranked by L3 score (computed on the blind training graph). <b>Novelty</b> is grounded in a real PubMed co-mention count under SARS-CoV-2 context — <i>novel</i> means 0 co-mentions, a genuinely new prediction; <i>known</i> means a recovered Gordon edge or a cited edge pack; hover for the basis. <b>Skeptic</b> is the AP-MS frequent-flyer filter (a veto is a likely co-purification artifact). <b>Structure</b> shows a band only where a real structure exists; "no model" means nothing has been folded yet — no ipTM is invented. <b>Druggability</b> is real Open Targets data (${DATA.druggability_meta?esc(DATA.druggability_meta.source)+', '+esc(DATA.druggability_meta.data_version):'cached'}); a <b>★ lead</b> is a repurposing <i>hypothesis</i>, not a validated antiviral. Blanks mean "not established", never fabricated. Rows with a dossier are clickable.</div>`;
   document.getElementById('modal-body').innerHTML=body;
   document.getElementById('wl-bait').onchange=e=>{ wlState.bait=e.target.value; renderWorklist(); };
+  document.getElementById('wl-nov').onchange=e=>{ wlState.onlyNovel=e.target.checked; renderWorklist(); };
   document.getElementById('wl-dos').onchange=e=>{ wlState.onlyDossier=e.target.checked; renderWorklist(); };
   document.getElementById('wl-rec').onchange=e=>{ wlState.onlyRecovered=e.target.checked; renderWorklist(); };
   document.getElementById('wl-rep').onchange=e=>{ wlState.onlyRepurpose=e.target.checked; renderWorklist(); };
@@ -807,11 +819,14 @@ ${st.interface_residues.length?`<p>Interface residues (${esc(st.interface_source
 }
 
 function exportWorklistCsv(){
-  const cols=['bait','prey','l3_score','rank','recovered','structure','structure_source','has_mechanism','tractability','n_drugs','approved_drug','opentargets'];
+  const cols=['bait','prey','hypothesis','l3_score','rank','novelty_tag','novelty_basis','skeptic',
+    'recovered','structure','structure_band','structure_source','has_mechanism','experiment',
+    'tractability','n_drugs','approved_drug','opentargets'];
+  const flat=r=>({...r, novelty_tag:r.novelty&&r.novelty.tag, novelty_basis:r.novelty&&r.novelty.basis});
   const esc2=v=>{ let s=String(v==null?'':v);
     if(/^[=+\-@\t\r]/.test(s)) s="'"+s;                // block CSV formula injection (incl. tab/CR lead-ins)
     return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
-  const lines=[cols.join(',')].concat(wlRows().map(r=>cols.map(c=>esc2(r[c])).join(',')));
+  const lines=[cols.join(',')].concat(wlRows().map(flat).map(r=>cols.map(c=>esc2(r[c])).join(',')));
   const blob=new Blob([lines.join('\n')],{type:'text/csv'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download='cartograph_worklist.csv'; a.click(); URL.revokeObjectURL(a.href);

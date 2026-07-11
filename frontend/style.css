@@ -276,6 +276,19 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .wl-yes { color:var(--confirmed); background:rgba(66,224,138,.14); }
 .wl-no { color:var(--mut2); }
 .wl-exp { color:var(--human); background:rgba(108,159,251,.14); }
+/* hypothesis cell: edge + the one experiment underneath */
+.wl-hyp { max-width:340px; }
+.wl-test { margin-top:4px; font:500 11px/1.35 var(--sans); color:var(--mut2);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:340px; }
+/* novelty tags (grounded in a real co-mention count) */
+.nv-novel { color:var(--predicted); background:rgba(34,224,221,.14); }
+.nv-partial { color:#e0b341; background:rgba(224,179,65,.14); }
+.nv-known { color:var(--mut); background:rgba(140,150,170,.14); }
+.nv-un { color:var(--mut2); background:rgba(140,150,170,.10); }
+/* skeptic verdicts */
+.sk-pass { color:var(--confirmed); background:rgba(66,224,138,.12); }
+.sk-down { color:#e0b341; background:rgba(224,179,65,.14); }
+.sk-veto { color:#f2686b; background:rgba(242,104,107,.15); }
 .wl-pred { color:var(--predicted); background:rgba(34,224,221,.14); }
 .isilico-band { display:inline-block; font:600 9.5px/1 var(--mono); padding:4px 7px; border-radius:5px; text-transform:uppercase; }
 .isilico-band.tier3 { color:var(--confirmed); background:rgba(66,224,138,.14); }
