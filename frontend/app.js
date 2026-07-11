@@ -118,6 +118,80 @@ function exportFeedbackJson(){
   const link=document.createElement('a'); link.href=URL.createObjectURL(blob);
   link.download='cartograph_feedback.json'; link.click(); URL.revokeObjectURL(link.href);
 }
+/* ---------- item 6: NDEx/Cytoscape (CX2) + Claude Science handoff ---------- */
+function _dl(name, text, mime){
+  const blob=new Blob([text],{type:mime}); const link=document.createElement('a');
+  link.href=URL.createObjectURL(blob); link.download=name; link.click(); URL.revokeObjectURL(link.href);
+}
+// CX2 is the NDEx / Cytoscape exchange format: a JSON array of aspect objects.
+function buildCX2(nodes, edges){
+  const idx=new Map(nodes.map((n,i)=>[n.id,i]));
+  const cxNodes=nodes.map((n,i)=>({ id:i, v:{ name:n.id, type:n.type||'', uniprot:n.uniprot||'', cluster:n.cluster||'' },
+    ...(n.x!=null?{ x:Number(n.x), y:Number(n.y) }:{}) }));
+  const cxEdges=edges.filter(e=>idx.has(e.source)&&idx.has(e.target)).map((e,i)=>({ id:i,
+    s:idx.get(e.source), t:idx.get(e.target),
+    v:{ interaction:e.kind||'interacts-with',
+        ...(e.l3_score!=null?{ l3_score:Math.round(e.l3_score*1000)/1000 }:{}),
+        ...(e.held_out?{ held_out_truth:true }:{}),
+        ...(e.verdict?{ reviewer_verdict:e.verdict }:{}) } }));
+  return [
+    { CXVersion:"2.0", hasFragments:false },
+    { metaData:[ {name:"networkAttributes",elementCount:1}, {name:"nodes",elementCount:cxNodes.length},
+                 {name:"edges",elementCount:cxEdges.length} ] },
+    { networkAttributes:[ { name:"Cartograph — SARS-CoV-2 → human interactome",
+        description:"Gordon 2020 AP-MS edges + STRING v12 physical enrichment + deterministic degree-normalized L3 predictions + reviewer verdicts. Predicted edges carry interaction='predicted' and an l3_score; they are hypotheses, not measured interactions." } ] },
+    { nodes:cxNodes },
+    { edges:cxEdges },
+    { status:[ { success:true } ] },
+  ];
+}
+function exportNetworkCX2(){
+  const nodes=DATA.graph.nodes;
+  const seen=new Set(), edges=[];
+  for(const e of DATA.graph.edges){ const k=KEY(e.source,e.target); if(seen.has(k))continue; seen.add(k);
+    edges.push({ source:e.source, target:e.target, kind:e.kind, held_out:e.held_out }); }
+  for(const p of DATA.graph.predicted){ const k=KEY(p.source,p.target); if(seen.has(k))continue; seen.add(k);
+    edges.push({ source:p.source, target:p.target, kind:'predicted', l3_score:p.l3_score, held_out:p.held_out_true }); }
+  const fb=fbAll();
+  for(const e of edges){ const v=fb[KEY(e.source,e.target)]; if(v&&v.verdict) e.verdict=v.verdict; }
+  _dl('cartograph_network.cx2', JSON.stringify(buildCX2(nodes, edges), null, 2), 'application/json');
+  toast('Exported <span class="k">CX2</span> — open in Cytoscape or upload to NDEx.');
+}
+// Structured hypotheses handoff for a downstream Claude Science analysis.
+function exportHypothesesJson(){
+  const fb=fbAll();
+  const b=DATA.eval.baseline;
+  const hyps=DATA.worklist.map(r=>{
+    const d=DATA.dossiers[r.edge];
+    const v=fb[r.edge];
+    return {
+      hypothesis:r.hypothesis, bait:r.bait, prey:r.prey,
+      l3_score:r.l3_score, l3_rank_in_bait:r.rank,
+      novelty:r.novelty, skeptic_verdict:r.skeptic,
+      structure_band:r.structure_band, recovered_held_out:r.recovered,
+      proposed_experiment:r.experiment,
+      druggability:{ tractability:r.tractability, n_drugs:r.n_drugs, approved_drug_repurposing_hypothesis:r.approved_drug, open_targets:r.opentargets },
+      mechanism: d?d.mechanism.map(c=>c.text):null,
+      citations: d?d.citations.map(c=>({pmid:c.pmid, title:c.title, journal:c.journal, year:c.year})):null,
+      reviewer_verdict: v?{verdict:v.verdict, note:v.note}:null,
+    };
+  });
+  const payload={
+    tool:"Cartograph", kind:"ranked-hypotheses-handoff", generated:new Date().toISOString(),
+    provenance:{ proposed_by:"deterministic degree-normalized L3 (Kovács 2019)",
+      explained_by:"Claude reasoning layer (Reader/Skeptic), grounded in verified edge packs",
+      evaluator:"locked held-out benchmark, frozen before prediction",
+      baseline:{ precision_at_20:b.precision_at_k['20'], roc_auc:b.roc_auc, average_precision:b.average_precision } },
+    data_sources:{ interactome:"Gordon et al. 2020 SARS-CoV-2→human AP-MS (332 edges, 26 baits)",
+      enrichment:"STRING v12.0 physical channel, score>=700",
+      druggability: DATA.druggability_meta?`${DATA.druggability_meta.source} ${DATA.druggability_meta.data_version}`:"Open Targets",
+      novelty:"NCBI PubMed co-mention counts (SARS-CoV-2 context)" },
+    honesty:"Predicted edges are hypotheses, not measured interactions. Structural bands appear only where a real structure exists; no ipTM is fabricated. Repurposing flags are hypotheses, not validated antivirals. Reviewer verdicts and this handoff are NOT part of the locked benchmark.",
+    hypotheses:hyps,
+  };
+  _dl('cartograph_hypotheses.json', JSON.stringify(payload, null, 2), 'application/json');
+  toast(`Exported <span class="k">${hyps.length}</span> ranked hypotheses for Claude Science.`);
+}
 function importFeedbackJson(file){
   const rd=new FileReader();
   rd.onload=()=>{ try{
@@ -793,9 +867,13 @@ function openWorklist(){
   openModal(`Testable hypotheses <small>${DATA.worklist.length} L3-proposed interactions, ranked · novelty grounded in PubMed${src}</small>`,
     `<span id="fb-count" class="fb-count"></span>
      <label class="fs-btn fs-file" title="Import feedback JSON">⤒ Import<input type="file" id="fb-imp" accept="application/json" hidden></label>
-     <button class="fs-btn" id="fb-exp" title="Export your verdicts">⤓ Feedback</button>
-     <button class="fs-btn" id="wl-csv">Export CSV</button>`, '');
+     <button class="fs-btn" id="fb-exp" title="Export your verdicts (JSON)">⤓ Feedback</button>
+     <button class="fs-btn" id="wl-cx2" title="Network for Cytoscape / NDEx (CX2)">⤓ CX2</button>
+     <button class="fs-btn" id="wl-hyp" title="Ranked hypotheses for Claude Science (JSON)">⤓ Hypotheses</button>
+     <button class="fs-btn" id="wl-csv" title="Worklist as CSV">⤓ CSV</button>`, '');
   document.getElementById('wl-csv').onclick=exportWorklistCsv;
+  document.getElementById('wl-cx2').onclick=exportNetworkCX2;
+  document.getElementById('wl-hyp').onclick=exportHypothesesJson;
   document.getElementById('fb-exp').onclick=exportFeedbackJson;
   document.getElementById('fb-imp').onchange=e=>{ if(e.target.files[0]){ importFeedbackJson(e.target.files[0]); renderWorklist(); } };
   updateFbCount();
