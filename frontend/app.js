@@ -21,7 +21,7 @@ const safeEnsembl = e => (typeof e==='string' && /^ENSG[0-9]+$/.test(e)) ? e : n
 const edgeBetween = (a,b) => cy.getElementById(KEY(a,b)).union(cy.getElementById(KEY(b,a)));
 
 let DATA=null, cy=null, molViewer=null;
-const state = { evalDone:false, loopRound:0, layers:{known:true,enrichment:true,predicted:true,confirmed:true} };
+const state = { evalDone:false, loopRound:0, layers:{known:true,enrichment:true,predicted:true,confirmed:true,conserved:false} };
 
 async function boot(){
   try {
@@ -58,19 +58,17 @@ async function detectMode(){
   pill.classList.toggle('online', MODE==='online');
   // gate live-only controls; leave a quiet tooltip when disabled
   document.querySelectorAll('[data-live]').forEach(el=>{
-    const feature=el.dataset.live;
-    const enabled = MODE==='online' && feature!=='compare';   // compare = phase two, not built
+    const enabled = MODE==='online';
     el.disabled = !enabled;
-    el.title = enabled ? '' :
-      (feature==='compare' ? 'Cross-coronavirus comparison — not in this build'
-       : 'Requires the API server (./run.sh api)');
+    // any control still disabled explains why on hover (no silent dead buttons)
+    el.title = enabled ? '' : 'Requires the API server — run ./run.sh api';
   });
 }
 
 function wireTopActions(){
   document.getElementById('act-upload').onclick=()=>{ if(MODE==='online') openUpload(); };
   document.getElementById('act-export').onclick=exportCurrent;
-  // compare stays disabled (phase two)
+  document.getElementById('act-compare').onclick=openCompareStrains;   // works offline (data in artifact)
 }
 
 // Export: current dossier -> self-contained report, else the worklist -> CSV
@@ -133,6 +131,7 @@ function buildCX2(nodes, edges){
     v:{ interaction:e.kind||'interacts-with',
         ...(e.l3_score!=null?{ l3_score:Math.round(e.l3_score*1000)/1000 }:{}),
         ...(e.held_out?{ held_out_truth:true }:{}),
+        ...(e.conserved?{ conserved_in_cov1_or_mers:true }:{}),
         ...(e.verdict?{ reviewer_verdict:e.verdict }:{}) } }));
   return [
     { CXVersion:"2.0", hasFragments:false },
@@ -149,9 +148,9 @@ function exportNetworkCX2(){
   const nodes=DATA.graph.nodes;
   const seen=new Set(), edges=[];
   for(const e of DATA.graph.edges){ const k=KEY(e.source,e.target); if(seen.has(k))continue; seen.add(k);
-    edges.push({ source:e.source, target:e.target, kind:e.kind, held_out:e.held_out }); }
+    edges.push({ source:e.source, target:e.target, kind:e.kind, held_out:e.held_out, conserved:e.conserved }); }
   for(const p of DATA.graph.predicted){ const k=KEY(p.source,p.target); if(seen.has(k))continue; seen.add(k);
-    edges.push({ source:p.source, target:p.target, kind:'predicted', l3_score:p.l3_score, held_out:p.held_out_true }); }
+    edges.push({ source:p.source, target:p.target, kind:'predicted', l3_score:p.l3_score, held_out:p.held_out_true, conserved:p.conserved }); }
   const fb=fbAll();
   for(const e of edges){ const v=fb[KEY(e.source,e.target)]; if(v&&v.verdict) e.verdict=v.verdict; }
   _dl('cartograph_network.cx2', JSON.stringify(buildCX2(nodes, edges), null, 2), 'application/json');
@@ -168,7 +167,7 @@ function exportHypothesesJson(){
       hypothesis:r.hypothesis, bait:r.bait, prey:r.prey,
       l3_score:r.l3_score, l3_rank_in_bait:r.rank,
       novelty:r.novelty, skeptic_verdict:r.skeptic,
-      structure_band:r.structure_band, recovered_held_out:r.recovered,
+      conservation:r.conservation, structure_band:r.structure_band, recovered_held_out:r.recovered,
       proposed_experiment:r.experiment,
       druggability:{ tractability:r.tractability, n_drugs:r.n_drugs, approved_drug_repurposing_hypothesis:r.approved_drug, open_targets:r.opentargets },
       mechanism: d?d.mechanism.map(c=>c.text):null,
@@ -221,7 +220,8 @@ function buildGraph(){
     const id=KEY(e.source,e.target);
     if(seen.has(id)) continue; seen.add(id);
     els.push({ data:{ id, source:e.source, target:e.target, kind:e.kind, score:e.score,
-      hasDossier: !!DATA.dossiers[id] } });
+      hasDossier: !!DATA.dossiers[id], conserved: !!e.conserved },
+      classes: e.conserved?'isConserved':'' });
   }
   // predicted (missing) edges — hidden until revealed
   for(const p of DATA.graph.predicted){
@@ -229,7 +229,8 @@ function buildGraph(){
     if(seen.has(id)) continue; seen.add(id);
     els.push({ data:{ id, source:p.source, target:p.target, kind:'predicted',
       l3:p.l3_score, rank:p.rank, heldTrue:p.held_out_true, path:JSON.stringify(p.path||[]),
-      hasDossier: !!DATA.dossiers[id] }, classes:'predicted hiddenEdge' });
+      hasDossier: !!DATA.dossiers[id], conserved: !!p.conserved },
+      classes: 'predicted hiddenEdge' + (p.conserved?' isConserved':'') });
   }
 
   cy = cytoscape({
@@ -305,6 +306,9 @@ function cyStyle(){
       'shadow-blur':14,'shadow-color':COL.confirmed,'shadow-opacity':0.9 } },
     { selector:'edge.fb-totest', style:{ 'line-color':COL.topology,'width':3,'line-style':'dashed','opacity':1 } },
     { selector:'edge.fb-refuted', style:{ 'line-color':COL.rejected,'width':2,'line-style':'dotted','opacity':0.7 } },
+    // cross-species conservation highlight (pan-coronavirus edges)
+    { selector:'edge.conserved-hl', style:{ 'line-color':COL.conserved,'width':4,'opacity':1,
+      'shadow-blur':14,'shadow-color':COL.conserved,'shadow-opacity':0.85 } },
     { selector:'edge.dim', style:{ 'opacity':0.12 } },
     { selector:'.hl', style:{ 'opacity':1 } },
   ];
@@ -313,14 +317,20 @@ function cyStyle(){
 /* ---------- controls ---------- */
 function buildControls(){
   const defs=[['known','Known (AP-MS)',COL.known],['enrichment','STRING enrichment',COL.enrich],
-    ['predicted','Predicted (L3)',COL.predicted],['confirmed','Confirmed (loop)',COL.confirmed]];
+    ['predicted','Predicted (L3)',COL.predicted],['confirmed','Confirmed (loop)',COL.confirmed],
+    ['conserved','Conserved (CoV-1/MERS)',COL.conserved]];
+  const nConserved=()=> DATA.graph.edges.filter(e=>!e.held_out && e.conserved).length
+    + DATA.graph.predicted.filter(p=>p.conserved).length;
   const cnt=k=> k==='predicted'? DATA.graph.predicted.length
+    : k==='conserved'? nConserved()
     : DATA.graph.edges.filter(e=>!e.held_out && e.kind===k).length;
   const wrap=document.getElementById('layer-toggles'); wrap.innerHTML='';
   for(const [k,label,c] of defs){
-    const row=document.createElement('div'); row.className='layer-row on'; row.dataset.k=k;
-    row.setAttribute('role','switch'); row.setAttribute('aria-checked','true');
+    const on = state.layers[k]!==false;
+    const row=document.createElement('div'); row.className='layer-row'+(on?' on':''); row.dataset.k=k;
+    row.setAttribute('role','switch'); row.setAttribute('aria-checked',on?'true':'false');
     row.setAttribute('tabindex','0'); row.setAttribute('aria-label',`${label} layer`);
+    if(k==='conserved') row.title='Highlights edges the orthologous viral protein also makes in SARS-CoV-1 or MERS (pan-coronavirus).';
     row.innerHTML=`<span class="sw"></span><span class="dot" style="background:${c}"></span>${label}<span class="cnt">${cnt(k)}</span>`;
     row.onclick=()=>toggleLayer(k,row);
     row.onkeydown=(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleLayer(k,row); } };
@@ -337,6 +347,13 @@ function toggleLayer(k,row){
   state.layers[k]=!state.layers[k];
   row.classList.toggle('on',state.layers[k]);
   row.setAttribute('aria-checked', state.layers[k]?'true':'false');
+  if(k==='conserved'){   // a highlight overlay, not a visibility layer
+    cy.edges('.isConserved').forEach(e=>{
+      if(e.hasClass('hiddenEdge')) return;
+      e.toggleClass('conserved-hl', state.layers.conserved);
+    });
+    return;
+  }
   const sel = k==='confirmed' ? 'edge.confirmed'
     : k==='predicted' ? 'edge[kind="predicted"]'
     : `edge[kind="${k}"]`;
@@ -490,6 +507,11 @@ function showPrecision(){
     <div class="sub">precision@10 <b>${pct(pk['10'])}</b> · @20 <b>${pct(pk['20'])}</b> · @50 <b>${pct(pk['50'])}</b><br>
     ROC-AUC <b>${esc(b.roc_auc)}</b> · AP <b>${esc(b.average_precision)}</b> · recall@50 <b>${pct(b.recall_at_k['50'])}</b><br>
     on <b>${esc(b.n_targets)}</b> real held-out Gordon edges (${esc(b.n_recoverable)} reachable by L3)<br>
+    ${(()=>{ const rr=b.reachable_recall; if(!rr) return '';
+      return `<b style="color:${COL.confirmed}">recall on the reachable set: ${esc(rr.recovered)}/${esc(rr.reachable)}</b> <span style="color:${COL.mut}">— L3 recovers every held-out edge a length-3 path can reach</span><br>`; })()}
+    ${(()=>{ const cc=DATA.eval.conservation_channel; if(!cc) return '';
+      const a=cc.l3_only_excl_pinned, x=cc.l3_plus_conservation_excl_pinned;
+      return `<span style="color:${COL.conserved}">L3 + conservation (SARS-CoV-1/MERS): precision@10 ${pct(a.p10)}→<b>${pct(x.p10)}</b>, @20 ${pct(a.p20)}→<b>${pct(x.p20)}</b> excl. pinned — a real orthogonal gain</span><br>`; })()}
     ${(()=>{ const sc=DATA.eval.structure_channel; if(!sc) return '';
       return `<span style="color:${COL.mut}">L3 + structure (${esc(sc.n_pairs_with_structure)} pairs w/ a deposited complex): aggregate @20 <b>${pct(sc.l3_plus_structure_excl_pinned_p20)}</b> excl. pinned — unchanged; corroborates per-hypothesis</span><br>`; })()}
     <span style="color:${COL.mut}">without pinned edge: @20 ${pct(np.precision_at_k['20'])} (pinning does not inflate it)<br>
@@ -583,6 +605,8 @@ function openDossier(key){
 
   ${renderInSilico(d.structural_validation)}
 
+  ${renderConservation(d.conservation)}
+
   <div class="dz-sec">
     <div class="dz-sec-h">Skeptic</div>
     <div class="skeptic sk-${skClass}">
@@ -658,6 +682,22 @@ function gauge(cap,v,color,val,sub){
   return `<div class="gauge"><div class="ring" style="background:conic-gradient(from -90deg,${color} 0 ${pct}deg,#182238 ${pct}deg 360deg)">
     <span class="val" style="color:${color}">${val}</span></div>
     <div class="cap">${cap}<br><span style="color:${COL.mut}">${sub||''}</span></div></div>`;
+}
+function renderConservation(c){
+  if(!c) return '';
+  const strainRow=(name,st)=>`<div class="cons-row"><span class="cons-strain">${name}</span>${consStateChip(st)}</div>`;
+  const verdict = c.is_conserved
+    ? `<b style="color:${COL.conserved}">Corroborated across coronaviruses.</b> The orthologous viral protein binds the same human prey in ${esc(c.conserved_in.map(s=>s.replace('MERS-CoV','MERS')).join(' and '))}. A pan-coronavirus interaction is a stronger candidate to test.`
+    : (c.label==='no ortholog'
+        ? `No orthologous viral protein in SARS-CoV-1 or MERS, so conservation cannot be assessed. This is <b>not</b> evidence against the edge — it is a distinct state, never counted as "not conserved".`
+        : `SARS-CoV-2-specific in this data: the ortholog is present in SARS-CoV-1/MERS but no interaction with this prey is reported there.`);
+  return `<div class="dz-sec">
+    <div class="dz-sec-h">Cross-species conservation <span class="dz-sec-note">separate signal · not blended into the score</span></div>
+    ${strainRow('SARS-CoV-1', c.per_strain['SARS-CoV-1'])}
+    ${strainRow('MERS', c.per_strain['MERS-CoV'])}
+    <div class="cons-verdict">${verdict}</div>
+    <div class="struct-note">Gordon 2020 <i>Science</i> (SARS-CoV-1 + MERS); benchmark-isolated from the locked evaluator.</div>
+  </div>`;
 }
 function renderInSilico(sv){
   if(!sv) return '';
@@ -859,7 +899,7 @@ function closeModal(){
 function modalOpen(){ return !document.getElementById('modal').classList.contains('hidden'); }
 
 /* ---------- worklist: ranked "what to test next" ---------- */
-const wlState = { sort:'l3_score', dir:-1, bait:'all', onlyDossier:false, onlyRecovered:false, onlyRepurpose:false, onlyNovel:false };
+const wlState = { sort:'l3_score', dir:-1, bait:'all', onlyDossier:false, onlyRecovered:false, onlyRepurpose:false, onlyNovel:false, onlyConserved:false };
 
 function openWorklist(){
   const dm=DATA.druggability_meta;
@@ -886,11 +926,13 @@ function wlRows(){
   if(wlState.onlyRecovered) rows=rows.filter(r=>r.recovered);
   if(wlState.onlyRepurpose) rows=rows.filter(r=>r.approved_drug);
   if(wlState.onlyNovel) rows=rows.filter(r=>r.novelty && r.novelty.tag==='novel');
+  if(wlState.onlyConserved) rows=rows.filter(r=>r.conservation && r.conservation.is_conserved);
   const k=wlState.sort, d=wlState.dir;
   const NVORD={ 'novel':0,'partially known':1,'known':2,'unassessed':3 };
   const norm=v=> v==null ? null
     : (v && typeof v==='object' && v.tag!==undefined ? NVORD[v.tag]  // novelty -> tag order
-    : (typeof v==='boolean' ? (v?1:0) : v));
+    : (v && typeof v==='object' && v.is_conserved!==undefined ? (v.is_conserved?0:1)  // conservation -> conserved first
+    : (typeof v==='boolean' ? (v?1:0) : v)));
   rows.sort((a,b)=>{ let x=norm(a[k]), y=norm(b[k]);
     // nulls always sort last regardless of direction
     if(x==null && y==null) return 0;
@@ -906,16 +948,21 @@ const SK = { 'pass':['sk-pass','passes Skeptic'], 'downgrade':['sk-down','downgr
 function novChip(n){ if(!n) return '<span class="wl-no">—</span>';
   const [cls,lbl]=NV[n.tag]||['nv-un',n.tag]; return `<span class="wl-badge ${cls}" title="${esc(n.basis)}">${esc(lbl)}</span>`; }
 function skChip(v){ const [cls,lbl]=SK[v]||['sk-pass',v]; return `<span class="wl-badge ${cls}">${esc(lbl)}</span>`; }
+function consWlChip(c){ if(!c) return '<span class="wl-no">—</span>';
+  if(c.is_conserved) return `<span class="wl-badge cons-yes" title="orthologous viral protein binds the same prey in ${esc(c.conserved_in.join(', '))}">✦ ${esc(c.label.replace('conserved: ',''))}</span>`;
+  if(c.label==='no ortholog') return '<span class="wl-badge cons-na" title="no orthologous viral protein in SARS-CoV-1 or MERS (not the same as \'not conserved\')">no ortholog</span>';
+  return '<span class="wl-no" title="ortholog exists in CoV-1/MERS but no interaction with this prey is reported">not conserved</span>'; }
 function renderWorklist(){
   const baits=[...new Set(DATA.worklist.map(r=>r.bait))].sort();
   const cols=[['edge','Hypothesis'],['l3_score','L3'],['novelty','Novelty'],['skeptic','Skeptic'],
-    ['structure_band','Structure'],['tractability','Druggability'],['you','You'],['','']];
+    ['conservation','Conservation'],['structure_band','Structure'],['tractability','Druggability'],['you','You'],['','']];
   const arr=k=> wlState.sort===k?`<span class="arr">${wlState.dir<0?'▼':'▲'}</span>`:'';
   const rows=wlRows();
   const body=`
     <div class="wl-filters">
       <label>Bait <select id="wl-bait">${['all',...baits].map(b=>`<option ${b===wlState.bait?'selected':''}>${esc(b)}</option>`).join('')}</select></label>
       <label><input type="checkbox" id="wl-nov" ${wlState.onlyNovel?'checked':''}> novel only</label>
+      <label><input type="checkbox" id="wl-cons" ${wlState.onlyConserved?'checked':''}> conserved only</label>
       <label><input type="checkbox" id="wl-dos" ${wlState.onlyDossier?'checked':''}> has dossier</label>
       <label><input type="checkbox" id="wl-rec" ${wlState.onlyRecovered?'checked':''}> recovered held-out only</label>
       <label><input type="checkbox" id="wl-rep" ${wlState.onlyRepurpose?'checked':''}> repurposing leads only</label>
@@ -931,6 +978,7 @@ function renderWorklist(){
         <td class="wl-num" title="rank ${esc(r.rank)} for ${esc(r.bait)} on the blind training graph">${r.l3_score.toFixed(3)}</td>
         <td>${novChip(r.novelty)}</td>
         <td>${skChip(r.skeptic)}</td>
+        <td>${consWlChip(r.conservation)}</td>
         <td>${r.structure_band?`<span class="wl-badge wl-exp">${esc(r.structure_band)}</span>`:'<span class="wl-no" title="not yet folded — run a pooled-AF3 screen to get an ipTM band">no model</span>'}</td>
         <td>${r.tractability?`${esc(r.tractability)}${r.approved_drug?' <span class="wl-badge wl-yes">★ lead</span>':''}<span style="color:var(--mut2);font-size:10px">${r.n_drugs?` · ${esc(r.n_drugs)} drugs`:''}</span>`:(()=>{const u=safeUrl(r.opentargets);return u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`:'<span class="wl-no">—</span>';})()}</td>
         <td>${(()=>{const f=fbGet(r.edge); if(!f||!f.verdict) return '<span class="wl-no">—</span>';
@@ -942,6 +990,7 @@ function renderWorklist(){
   document.getElementById('modal-body').innerHTML=body;
   document.getElementById('wl-bait').onchange=e=>{ wlState.bait=e.target.value; renderWorklist(); };
   document.getElementById('wl-nov').onchange=e=>{ wlState.onlyNovel=e.target.checked; renderWorklist(); };
+  document.getElementById('wl-cons').onchange=e=>{ wlState.onlyConserved=e.target.checked; renderWorklist(); };
   document.getElementById('wl-dos').onchange=e=>{ wlState.onlyDossier=e.target.checked; renderWorklist(); };
   document.getElementById('wl-rec').onchange=e=>{ wlState.onlyRecovered=e.target.checked; renderWorklist(); };
   document.getElementById('wl-rep').onchange=e=>{ wlState.onlyRepurpose=e.target.checked; renderWorklist(); };
@@ -995,9 +1044,10 @@ ${(()=>{ const f=fbGet(key); if(!f||!f.verdict) return '';
 
 function exportWorklistCsv(){
   const cols=['bait','prey','hypothesis','l3_score','rank','novelty_tag','novelty_basis','skeptic',
-    'recovered','structure','structure_band','structure_source','has_mechanism','experiment',
+    'conservation','conserved_in','recovered','structure','structure_band','structure_source','has_mechanism','experiment',
     'tractability','n_drugs','approved_drug','opentargets'];
-  const flat=r=>({...r, novelty_tag:r.novelty&&r.novelty.tag, novelty_basis:r.novelty&&r.novelty.basis});
+  const flat=r=>({...r, novelty_tag:r.novelty&&r.novelty.tag, novelty_basis:r.novelty&&r.novelty.basis,
+    conservation:r.conservation&&r.conservation.label, conserved_in:r.conservation&&r.conservation.conserved_in.join(';')});
   const esc2=v=>{ let s=String(v==null?'':v);
     if(/^[=+\-@\t\r]/.test(s)) s="'"+s;                // block CSV formula injection (incl. tab/CR lead-ins)
     return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
@@ -1005,6 +1055,53 @@ function exportWorklistCsv(){
   const blob=new Blob([lines.join('\n')],{type:'text/csv'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download='cartograph_worklist.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ---------- Compare strains: cross-species conservation view ---------- */
+const CONS_STATE = {
+  conserved:['cons-yes','conserved'], not_conserved:['cons-no','not conserved'],
+  no_ortholog:['cons-na','no ortholog'],
+};
+function consStateChip(st){ const [cls,lbl]=CONS_STATE[st]||['cons-no',st];
+  const tip=st==='no_ortholog'?'no orthologous viral protein in this strain (distinct from not-conserved)'
+    :st==='not_conserved'?'ortholog exists in this strain, but no interaction with this prey is reported':'the ortholog binds the same human prey';
+  return `<span class="wl-badge ${cls}" title="${tip}">${esc(lbl)}</span>`; }
+const csState = { filter:'all' };
+function openCompareStrains(){
+  openModal(`Compare strains <small>SARS-CoV-2 vs SARS-CoV-1 + MERS · conservation from Gordon 2020 Science · benchmark-isolated</small>`, '', '');
+  renderCompareStrains();
+}
+function renderCompareStrains(){
+  const cs=DATA.eval.compare_strains, s=cs.summary;
+  let rows=cs.rows.slice();
+  if(csState.filter==='shared') rows=rows.filter(r=>r.shared);
+  else if(csState.filter==='specific') rows=rows.filter(r=>!r.shared);
+  const pct=n=>Math.round(100*n/s.n_gordon_edges);
+  const fbtn=(k,l)=>`<button class="cmp-fbtn ${csState.filter===k?'on':''}" data-f="${k}">${l}</button>`;
+  const body=`
+    <div class="cmp-summary">
+      <div class="cmp-stat"><b>${s.shared_any_strain}</b><span>of ${s.n_gordon_edges} CoV-2 edges are pan-coronavirus (${pct(s.shared_any_strain)}%)</span></div>
+      <div class="cmp-stat"><b>${s.conserved_in_cov1}</b><span>conserved in SARS-CoV-1</span></div>
+      <div class="cmp-stat"><b>${s.conserved_in_mers}</b><span>conserved in MERS</span></div>
+      <div class="cmp-stat"><b>${s.cov2_specific}</b><span>SARS-CoV-2-specific</span></div>
+      <div class="cmp-stat"><b>${s.no_ortholog_mers}</b><span>no MERS ortholog (accessory ORFs)</span></div>
+    </div>
+    <div class="wl-filters" style="gap:8px">
+      ${fbtn('all','all map edges')}${fbtn('shared','shared only')}${fbtn('specific','CoV-2-specific only')}
+      <span style="margin-left:auto;color:var(--mut2);font-family:var(--mono);font-size:11px">${rows.length} edges shown</span>
+    </div>
+    <table class="wl-table"><thead><tr><th>Edge</th><th>SARS-CoV-1</th><th>MERS</th><th>conservation</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr class="${DATA.dossiers[r.bait+'|'+r.prey]?'clickable':''}" data-edge="${esc(r.bait+'|'+r.prey)}">
+      <td class="wl-edge">${esc(r.bait)} → ${esc(r.prey)}${r.predicted?' <span class="wl-badge wl-pred">predicted</span>':''}</td>
+      <td>${consStateChip(r.per_strain['SARS-CoV-1'])}</td>
+      <td>${consStateChip(r.per_strain['MERS-CoV'])}</td>
+      <td>${r.shared?'<span class="wl-badge cons-yes">✦ shared</span>':'<span class="wl-no">CoV-2-specific</span>'}</td>
+    </tr>`).join('')}</tbody></table>
+    <div class="wl-note">An edge is <b>conserved</b> when the orthologous viral protein binds the <b>same</b> human prey in that strain (Gordon 2020 <i>Science</i>, SARS-CoV-1 366 + MERS 296 interactions; the Science SARS-CoV-2 map is deliberately excluded so it cannot touch the locked benchmark). Viral orthology is partial: Nsp1-16, N, M, E, Spike are conserved across all three; MERS encodes lineage-specific ORF3/4a/4b/5 and has <b>no ortholog</b> of any SARS accessory ORF. <b>“No ortholog” is not “not conserved”</b> — a missing ortholog is shown as its own state, never as a failed conservation. Conservation is a separate corroboration signal, never blended into the L3 score; measured as an evaluator prior it improves precision (see the evaluator panel).</div>`;
+  document.getElementById('modal-body').innerHTML=body;
+  document.querySelectorAll('.cmp-fbtn').forEach(b=> b.onclick=()=>{ csState.filter=b.dataset.f; renderCompareStrains(); });
+  document.querySelectorAll('.wl-table tr.clickable').forEach(tr=>{
+    tr.onclick=()=>{ closeModal(); openDossier(tr.dataset.edge); }; });
 }
 
 /* ---------- eval transparency: recovered vs missed held-out edges ---------- */

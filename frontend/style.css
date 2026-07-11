@@ -278,8 +278,9 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .wl-exp { color:var(--human); background:rgba(108,159,251,.14); }
 /* hypothesis cell: edge + the one experiment underneath */
 .wl-hyp { max-width:340px; }
-.wl-test { margin-top:4px; font:500 11px/1.35 var(--sans); color:var(--mut2);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:340px; }
+/* the experiment is the most useful cell — wrap it so it reads fully (was truncated) */
+.wl-test { margin-top:4px; font:500 11px/1.4 var(--sans); color:var(--mut2);
+  white-space:normal; max-width:340px; }
 /* novelty tags (grounded in a real co-mention count) */
 .nv-novel { color:var(--predicted); background:rgba(34,224,221,.14); }
 .nv-partial { color:#e0b341; background:rgba(224,179,65,.14); }
@@ -289,6 +290,22 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .sk-pass { color:var(--confirmed); background:rgba(66,224,138,.12); }
 .sk-down { color:#e0b341; background:rgba(224,179,65,.14); }
 .sk-veto { color:#f2686b; background:rgba(242,104,107,.15); }
+/* conservation state chips (never collapse no-ortholog into not-conserved) */
+.cons-yes { color:var(--conserved); background:rgba(185,139,255,.16); }
+.cons-no { color:var(--mut); background:rgba(140,150,170,.12); }
+.cons-na { color:var(--mut2); background:rgba(140,150,170,.06); border:1px dashed var(--line2); }
+/* Compare strains view */
+.cmp-summary { display:flex; gap:22px; flex-wrap:wrap; padding:4px 2px 14px; }
+.cmp-stat { display:flex; flex-direction:column; gap:2px; }
+.cmp-stat b { font:700 22px/1 var(--mono); color:var(--conserved); }
+.cmp-stat span { font:500 11px/1.3 var(--sans); color:var(--mut); max-width:150px; }
+.cmp-fbtn { font:600 11px/1 var(--sans); color:var(--mut); background:var(--panel2); border:1px solid var(--line2);
+  border-radius:7px; padding:7px 11px; cursor:pointer; }
+.cmp-fbtn.on { color:var(--conserved); border-color:rgba(185,139,255,.5); background:#141026; }
+/* dossier conservation block */
+.cons-row { display:flex; align-items:center; gap:10px; padding:3px 0; }
+.cons-strain { font:600 12px/1 var(--mono); color:var(--ink2); min-width:92px; }
+.cons-verdict { margin-top:8px; font:400 12.5px/1.5 var(--sans); color:var(--ink2); }
 /* worklist "You" verdict chips */
 .fb-c { color:var(--confirmed); background:rgba(66,224,138,.14); }
 .fb-t { color:var(--topology); background:rgba(255,209,102,.14); }
