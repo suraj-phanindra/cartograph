@@ -26,6 +26,9 @@ from backend import config
 # screens whose hit list is paper-curated top-N rather than a reproducible
 # genome-wide FDR list (treat with most caution for overlap analysis)
 SOFT_PROVENANCE = {"Wei et al. (Cell 2021)", "Baggen et al. (Nat Genet 2021)"}
+# screens whose ANTIVIRAL calls are CRISPR-activation (GOF: overexpression restricts),
+# NOT knockout-defined restriction — not direction-comparable to the other screens.
+GOF_ANTIVIRAL = {"Biering et al. (Nat Genet 2022)"}
 N_SCREENS = 7
 
 
@@ -41,8 +44,10 @@ def _load():
         pmids[name] = str(blk.get("pmid", ""))
         for h in blk["hits"]:
             g = h["gene"]
+            d = h.get("direction")
+            if d not in ("proviral", "antiviral"):
+                continue                       # strict: never default an unknown direction into the weight
             rec = genes.setdefault(g, {"proviral": [], "antiviral": []})
-            d = h.get("direction", "proviral")
             if name not in rec[d]:
                 rec[d].append(name)
     return genes, pmids
@@ -60,13 +65,17 @@ def for_gene(gene):
         return None
     pro = rec["proviral"]
     screens = [{"name": s, "pmid": pmids.get(s, ""), "soft": s in SOFT_PROVENANCE} for s in pro]
+    # separate knockout-defined restriction from CRISPR-activation (GOF) restriction
+    ko_antiviral = [s for s in rec["antiviral"] if s not in GOF_ANTIVIRAL]
+    gof_antiviral = [s for s in rec["antiviral"] if s in GOF_ANTIVIRAL]
     return {
         "n_screens": len(pro),
         "n_screens_excl_soft": sum(1 for s in pro if s not in SOFT_PROVENANCE),
         "of_total": N_SCREENS,
         "screens": screens,
         "direction": "proviral (dependency)",
-        "also_restriction_hit": bool(rec["antiviral"]),
+        "also_restriction_hit": bool(ko_antiviral),        # knockout-defined restriction (comparable)
+        "also_gof_restriction": bool(gof_antiviral),       # activation-defined: overexpression restricts
         "note": "functional dependency evidence — NOT evidence of a physical interaction",
     }
 

@@ -712,7 +712,7 @@ function renderCrispr(c){
   const soft=c.n_screens>c.n_screens_excl_soft?` (${esc(c.n_screens_excl_soft)} excluding the soft-provenance screens *)`:'';
   return `<div class="dz-sec">
     <div class="dz-sec-h">Independent functional evidence <span class="dz-sec-note">CRISPR · orthogonal to binding</span></div>
-    <div class="cons-verdict">Host factor in <b style="color:${COL.topology}">${esc(c.n_screens)} of ${esc(c.of_total)}</b> genome-wide CRISPR screens${soft}: ${screens}.${c.also_restriction_hit?' Also reported as a restriction (antiviral) factor.':''}</div>
+    <div class="cons-verdict">Host factor in <b style="color:${COL.topology}">${esc(c.n_screens)} of ${esc(c.of_total)}</b> genome-wide CRISPR screens${soft}: ${screens}.${c.also_restriction_hit?' Also a knockout-defined restriction (antiviral) factor.':''}${c.also_gof_restriction?' Also restricts on overexpression (CRISPR-activation / GOF — not knockout-comparable).':''}</div>
     <div class="struct-note">A functional dependency hit is <b>not</b> evidence of a direct physical interaction — CRISPR screens and AP-MS binding capture different biology.${c.n_screens>c.n_screens_excl_soft?' * Wei / Baggen lack a reproducible genome-wide FDR list.':''}</div>
   </div>`;
 }
