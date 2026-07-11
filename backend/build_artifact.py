@@ -27,6 +27,7 @@ from backend.reason import novelty
 from backend.structure.resolve import build_structure_facts
 from backend.structure import cofold
 from backend.conservation import conserve
+from backend.crispr import crispr
 from backend.druggability import service as drug_service
 
 # Real baits whose neighbourhoods form the three hero clusters. The induced
@@ -153,6 +154,7 @@ def _build_dossier(edge_key, ranked_by_bait, structure_facts, frozen, interface_
         },
         "proposed_test": spec["test"],
         "conservation": conserve.for_edge(bait, prey),
+        "crispr": crispr.for_gene(prey),
         "structural_validation": cofold.structural_block(edge_key, structure_facts, interface_counts),
         "druggability": {
             "target": spec["drug"]["target"], "ensembl": spec["drug"].get("ensembl"),
@@ -213,6 +215,7 @@ def _build_worklist(ranked_all, held_set, structure_facts, top_n=40):
                 "recovered": recovered,
                 "novelty": novelty.classify(bait, prey, recovered, has_dossier, ncache),
                 "conservation": conserve.for_edge(bait, prey),
+                "crispr": crispr.for_gene(prey),
                 "skeptic": skeptic_review(prey, has_structure=is_exp, literature_count=lit_n)["verdict"],
                 # structural band only where a real structure exists (no fabricated ipTM)
                 "structure": struct["kind"] if struct else "none",
@@ -527,6 +530,12 @@ def build():
                          "separate from topology/structure/literature, never blended into one score."),
             },
             "compare_strains": {"summary": cons_summary, "rows": compare_rows},
+            # Option B corroboration: of the host factors in Cartograph's map, how many
+            # are independent CRISPR dependency hits (functional, NOT physical evidence).
+            "crispr_channel": {
+                "source": "7 genome-wide SARS-CoV-2 CRISPR screens (433 sourced hits)",
+                **crispr.map_summary([p for _, p in gordon_pairs]),
+            },
             "loop": {
                 "confirmed_edges": [list(e) for e in top1_greens],
                 "confirmed_in_view": [list(e) for e in top1_greens

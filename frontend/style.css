@@ -302,6 +302,9 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .cmp-fbtn { font:600 11px/1 var(--sans); color:var(--mut); background:var(--panel2); border:1px solid var(--line2);
   border-radius:7px; padding:7px 11px; cursor:pointer; }
 .cmp-fbtn.on { color:var(--conserved); border-color:rgba(185,139,255,.5); background:#141026; }
+/* CRISPR functional-evidence chip */
+.cr-yes { color:var(--topology); background:rgba(255,209,102,.14); }
+.wl-empty { padding:22px 14px; text-align:center; color:var(--mut); font:400 12.5px/1.5 var(--sans); }
 /* dossier conservation block */
 .cons-row { display:flex; align-items:center; gap:10px; padding:3px 0; }
 .cons-strain { font:600 12px/1 var(--mono); color:var(--ink2); min-width:92px; }

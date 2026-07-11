@@ -167,7 +167,7 @@ function exportHypothesesJson(){
       hypothesis:r.hypothesis, bait:r.bait, prey:r.prey,
       l3_score:r.l3_score, l3_rank_in_bait:r.rank,
       novelty:r.novelty, skeptic_verdict:r.skeptic,
-      conservation:r.conservation, structure_band:r.structure_band, recovered_held_out:r.recovered,
+      conservation:r.conservation, crispr_functional_evidence:r.crispr, structure_band:r.structure_band, recovered_held_out:r.recovered,
       proposed_experiment:r.experiment,
       druggability:{ tractability:r.tractability, n_drugs:r.n_drugs, approved_drug_repurposing_hypothesis:r.approved_drug, open_targets:r.opentargets },
       mechanism: d?d.mechanism.map(c=>c.text):null,
@@ -514,6 +514,8 @@ function showPrecision(){
       return `<span style="color:${COL.conserved}">L3 + conservation (SARS-CoV-1/MERS): precision@10 ${pct(a.p10)}→<b>${pct(x.p10)}</b>, @20 ${pct(a.p20)}→<b>${pct(x.p20)}</b> excl. pinned — a real orthogonal gain</span><br>`; })()}
     ${(()=>{ const sc=DATA.eval.structure_channel; if(!sc) return '';
       return `<span style="color:${COL.mut}">L3 + structure (${esc(sc.n_pairs_with_structure)} pairs w/ a deposited complex): aggregate @20 <b>${pct(sc.l3_plus_structure_excl_pinned_p20)}</b> excl. pinned — unchanged; corroborates per-hypothesis</span><br>`; })()}
+    ${(()=>{ const cr=DATA.eval.crispr_channel; if(!cr) return '';
+      return `<a onclick="openCrisprPanel()" style="cursor:pointer;color:${COL.topology}">Option B · functional: ${esc(cr.n_crispr_supported)}/${esc(cr.n_host_factors)} host factors are independent CRISPR hits →</a><br>`; })()}
     <span style="color:${COL.mut}">without pinned edge: @20 ${pct(np.precision_at_k['20'])} (pinning does not inflate it)<br>
     frozen seed ${esc(DATA.eval.seed)}, committed before prediction</span></div>`;
   const r=document.getElementById('eval-readout');
@@ -607,6 +609,8 @@ function openDossier(key){
 
   ${renderConservation(d.conservation)}
 
+  ${renderCrispr(d.crispr)}
+
   <div class="dz-sec">
     <div class="dz-sec-h">Skeptic</div>
     <div class="skeptic sk-${skClass}">
@@ -699,6 +703,17 @@ function renderConservation(c){
     ${strainRow('MERS', c.per_strain['MERS-CoV'])}
     <div class="cons-verdict">${verdict}</div>
     <div class="struct-note">Gordon 2020 <i>Science</i> (SARS-CoV-1 + MERS); benchmark-isolated from the locked evaluator.</div>
+  </div>`;
+}
+function renderCrispr(c){
+  if(!c) return '';
+  const screens=c.screens.map(s=>{ const u=`https://pubmed.ncbi.nlm.nih.gov/${esc(s.pmid)}/`;
+    return `<a href="${u}" target="_blank" rel="noopener noreferrer">${esc(s.name)}${s.soft?' *':''}</a>`; }).join(', ');
+  const soft=c.n_screens>c.n_screens_excl_soft?` (${esc(c.n_screens_excl_soft)} excluding the soft-provenance screens *)`:'';
+  return `<div class="dz-sec">
+    <div class="dz-sec-h">Independent functional evidence <span class="dz-sec-note">CRISPR · orthogonal to binding</span></div>
+    <div class="cons-verdict">Host factor in <b style="color:${COL.topology}">${esc(c.n_screens)} of ${esc(c.of_total)}</b> genome-wide CRISPR screens${soft}: ${screens}.${c.also_restriction_hit?' Also reported as a restriction (antiviral) factor.':''}</div>
+    <div class="struct-note">A functional dependency hit is <b>not</b> evidence of a direct physical interaction — CRISPR screens and AP-MS binding capture different biology.${c.n_screens>c.n_screens_excl_soft?' * Wei / Baggen lack a reproducible genome-wide FDR list.':''}</div>
   </div>`;
 }
 function renderInSilico(sv){
@@ -901,7 +916,7 @@ function closeModal(){
 function modalOpen(){ return !document.getElementById('modal').classList.contains('hidden'); }
 
 /* ---------- worklist: ranked "what to test next" ---------- */
-const wlState = { sort:'l3_score', dir:-1, bait:'all', onlyDossier:false, onlyRecovered:false, onlyRepurpose:false, onlyNovel:false, onlyConserved:false };
+const wlState = { sort:'l3_score', dir:-1, bait:'all', onlyDossier:false, onlyRecovered:false, onlyRepurpose:false, onlyNovel:false, onlyConserved:false, onlyCrispr:false };
 
 function openWorklist(){
   const dm=DATA.druggability_meta;
@@ -929,6 +944,7 @@ function wlRows(){
   if(wlState.onlyRepurpose) rows=rows.filter(r=>r.approved_drug);
   if(wlState.onlyNovel) rows=rows.filter(r=>r.novelty && r.novelty.tag==='novel');
   if(wlState.onlyConserved) rows=rows.filter(r=>r.conservation && r.conservation.is_conserved);
+  if(wlState.onlyCrispr) rows=rows.filter(r=>r.crispr);
   const k=wlState.sort, d=wlState.dir;
   const NVORD={ 'novel':0,'partially known':1,'known':2,'unassessed':3 };
   const norm=v=> v==null ? null
@@ -955,10 +971,13 @@ function consWlChip(c){ if(!c) return '<span class="wl-no">—</span>';
   if(c.label==='no ortholog') return '<span class="wl-badge cons-na" title="no orthologous viral protein in SARS-CoV-1 or MERS (not the same as \'not conserved\')">no ortholog</span>';
   if(c.label==='not assessed') return '<span class="wl-badge cons-na" title="the ortholog exists but was not in the CoV-1/MERS Gordon screen — conservation cannot be assessed">not assessed</span>';
   return '<span class="wl-no" title="ortholog is in the CoV-1/MERS screen but no interaction with this prey is reported">not conserved</span>'; }
+function crisprWlChip(c){ if(!c) return '<span class="wl-no">—</span>';
+  const soft=c.n_screens>c.n_screens_excl_soft?` (${c.n_screens_excl_soft} excl. soft)`:'';
+  return `<span class="wl-badge cr-yes" title="dependency hit in ${c.n_screens} of ${c.of_total} CRISPR screens${soft} — functional evidence, not a physical interaction">${c.n_screens}/${c.of_total} screens</span>`; }
 function renderWorklist(){
   const baits=[...new Set(DATA.worklist.map(r=>r.bait))].sort();
   const cols=[['edge','Hypothesis'],['l3_score','L3'],['novelty','Novelty'],['skeptic','Skeptic'],
-    ['conservation','Conservation'],['structure_band','Structure'],['tractability','Druggability'],['you','You'],['','']];
+    ['conservation','Conservation'],['structure_band','Structure'],['crispr','Functional'],['tractability','Druggability'],['you','You'],['','']];
   const arr=k=> wlState.sort===k?`<span class="arr">${wlState.dir<0?'▼':'▲'}</span>`:'';
   const rows=wlRows();
   const body=`
@@ -966,6 +985,7 @@ function renderWorklist(){
       <label>Bait <select id="wl-bait">${['all',...baits].map(b=>`<option ${b===wlState.bait?'selected':''}>${esc(b)}</option>`).join('')}</select></label>
       <label><input type="checkbox" id="wl-nov" ${wlState.onlyNovel?'checked':''}> novel only</label>
       <label><input type="checkbox" id="wl-cons" ${wlState.onlyConserved?'checked':''}> conserved only</label>
+      <label><input type="checkbox" id="wl-cr" ${wlState.onlyCrispr?'checked':''}> CRISPR-supported only</label>
       <label><input type="checkbox" id="wl-dos" ${wlState.onlyDossier?'checked':''}> has dossier</label>
       <label><input type="checkbox" id="wl-rec" ${wlState.onlyRecovered?'checked':''}> recovered held-out only</label>
       <label><input type="checkbox" id="wl-rep" ${wlState.onlyRepurpose?'checked':''}> repurposing leads only</label>
@@ -983,17 +1003,19 @@ function renderWorklist(){
         <td>${skChip(r.skeptic)}</td>
         <td>${consWlChip(r.conservation)}</td>
         <td>${r.structure_band?`<span class="wl-badge wl-exp">${esc(r.structure_band)}</span>`:'<span class="wl-no" title="not yet folded — run a pooled-AF3 screen to get an ipTM band">no model</span>'}</td>
+        <td>${crisprWlChip(r.crispr)}</td>
         <td>${r.tractability?`${esc(r.tractability)}${r.approved_drug?' <span class="wl-badge wl-yes">★ lead</span>':''}<span style="color:var(--mut2);font-size:10px">${r.n_drugs?` · ${esc(r.n_drugs)} drugs`:''}</span>`:(()=>{const u=safeUrl(r.opentargets);return u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" style="color:var(--mut2);font-size:11px" onclick="event.stopPropagation()">Open Targets ↗</a>`:'<span class="wl-no">—</span>';})()}</td>
         <td>${(()=>{const f=fbGet(r.edge); if(!f||!f.verdict) return '<span class="wl-no">—</span>';
           const m={'confirmed':['fb-c','✓ confirmed'],'to-test':['fb-t','◔ to test'],'refuted':['fb-r','✕ refuted']}[f.verdict];
           return `<span class="wl-badge ${m[0]}"${f.note?` title="${esc(f.note)}"`:''}>${m[1]}</span>`;})()}</td>
         <td>${r.has_dossier?'<span style="color:var(--predicted);font-size:11px">open dossier →</span>':''}</td>
-      </tr>`).join('')}</tbody></table>
-    <div class="wl-note">Each row is one testable interaction the deterministic L3 layer proposes, ranked by L3 score (computed on the blind training graph). <b>Novelty</b> is grounded in a real PubMed co-mention count under SARS-CoV-2 context — <i>novel</i> means 0 co-mentions, a genuinely new prediction; <i>known</i> means a recovered Gordon edge or a cited edge pack; hover for the basis. <b>Skeptic</b> is the AP-MS frequent-flyer filter (a veto is a likely co-purification artifact). <b>Structure</b> shows a band only where a real structure exists; "no model" means nothing has been folded yet — no ipTM is invented. <b>Druggability</b> is real Open Targets data (${DATA.druggability_meta?esc(DATA.druggability_meta.source)+', '+esc(DATA.druggability_meta.data_version):'cached'}); a <b>★ lead</b> is a repurposing <i>hypothesis</i>, not a validated antiviral. Blanks mean "not established", never fabricated. Rows with a dossier are clickable.</div>`;
+      </tr>`).join('')||`<tr><td colspan="10" class="wl-empty">No hypotheses match this filter.${wlState.onlyCrispr?' None of the top L3 predictions target a known CRISPR dependency factor — binding partners and functional hits are different biology (see Option B in the evaluator panel for the map-wide overlap).':''}</td></tr>`}</tbody></table>
+    <div class="wl-note">Each row is one testable interaction the deterministic L3 layer proposes, ranked by L3 score (computed on the blind training graph). <b>Novelty</b> is grounded in a real PubMed co-mention count under SARS-CoV-2 context — <i>novel</i> means 0 co-mentions, a genuinely new prediction; <i>known</i> means a recovered Gordon edge or a cited edge pack; hover for the basis. <b>Skeptic</b> is the AP-MS frequent-flyer filter (a veto is a likely co-purification artifact). <b>Structure</b> shows a band only where a real structure exists; "no model" means nothing has been folded yet — no ipTM is invented. <b>Functional</b> shows how many of 7 genome-wide CRISPR screens call the host protein a dependency hit — orthogonal <i>functional</i> evidence, <b>not</b> proof of a physical interaction; it is expected to be sparse on these top predictions (binding partners and dependency hits are different biology), and the map-wide overlap is in the evaluator panel's Option B. <b>Druggability</b> is real Open Targets data (${DATA.druggability_meta?esc(DATA.druggability_meta.source)+', '+esc(DATA.druggability_meta.data_version):'cached'}); a <b>★ lead</b> is a repurposing <i>hypothesis</i>, not a validated antiviral. Blanks mean "not established", never fabricated. Rows with a dossier are clickable.</div>`;
   document.getElementById('modal-body').innerHTML=body;
   document.getElementById('wl-bait').onchange=e=>{ wlState.bait=e.target.value; renderWorklist(); };
   document.getElementById('wl-nov').onchange=e=>{ wlState.onlyNovel=e.target.checked; renderWorklist(); };
   document.getElementById('wl-cons').onchange=e=>{ wlState.onlyConserved=e.target.checked; renderWorklist(); };
+  document.getElementById('wl-cr').onchange=e=>{ wlState.onlyCrispr=e.target.checked; renderWorklist(); };
   document.getElementById('wl-dos').onchange=e=>{ wlState.onlyDossier=e.target.checked; renderWorklist(); };
   document.getElementById('wl-rec').onchange=e=>{ wlState.onlyRecovered=e.target.checked; renderWorklist(); };
   document.getElementById('wl-rep').onchange=e=>{ wlState.onlyRepurpose=e.target.checked; renderWorklist(); };
@@ -1047,10 +1069,11 @@ ${(()=>{ const f=fbGet(key); if(!f||!f.verdict) return '';
 
 function exportWorklistCsv(){
   const cols=['bait','prey','hypothesis','l3_score','rank','novelty_tag','novelty_basis','skeptic',
-    'conservation','conserved_in','recovered','structure','structure_band','structure_source','has_mechanism','experiment',
+    'conservation','conserved_in','crispr_n_screens','recovered','structure','structure_band','structure_source','has_mechanism','experiment',
     'tractability','n_drugs','approved_drug','opentargets'];
   const flat=r=>({...r, novelty_tag:r.novelty&&r.novelty.tag, novelty_basis:r.novelty&&r.novelty.basis,
-    conservation:r.conservation&&r.conservation.label, conserved_in:r.conservation&&r.conservation.conserved_in.join(';')});
+    conservation:r.conservation&&r.conservation.label, conserved_in:r.conservation&&r.conservation.conserved_in.join(';'),
+    crispr_n_screens:r.crispr&&r.crispr.n_screens});
   const esc2=v=>{ let s=String(v==null?'':v);
     if(/^[=+\-@\t\r]/.test(s)) s="'"+s;                // block CSV formula injection (incl. tab/CR lead-ins)
     return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
@@ -1107,6 +1130,24 @@ function renderCompareStrains(){
   document.querySelectorAll('.cmp-fbtn').forEach(b=> b.onclick=()=>{ csState.filter=b.dataset.f; renderCompareStrains(); });
   document.querySelectorAll('.wl-table tr.clickable').forEach(tr=>{
     tr.onclick=()=>{ closeModal(); openDossier(tr.dataset.edge); }; });
+}
+
+/* ---------- Functional genomics (CRISPR) — Option B corroboration ---------- */
+function openCrisprPanel(){
+  const c=DATA.eval.crispr_channel; if(!c) return;
+  openModal(`Functional genomics corroboration <small>7 genome-wide CRISPR screens · Option B · orthogonal to physical binding</small>`, '', '');
+  const rows=c.supported.map(s=>`<tr>
+    <td class="wl-edge">${esc(s.gene)}</td>
+    <td><span class="wl-badge cr-yes">${esc(s.n_screens)}/${esc(c.n_screens_total)} screens</span>${s.n_screens_excl_soft<s.n_screens?` <span class="wl-no" style="font-size:10px">(${esc(s.n_screens_excl_soft)} excl. soft)</span>`:''}</td>
+    <td class="mono" style="font-size:11px;color:var(--mut)">${s.screens.map(x=>esc(x.split(' ')[0])).join(', ')}</td></tr>`).join('');
+  document.getElementById('modal-body').innerHTML=`
+    <div class="cmp-summary">
+      <div class="cmp-stat"><b>${esc(c.n_crispr_supported)}</b><span>of ${esc(c.n_host_factors)} host factors in the map are independent CRISPR dependency hits</span></div>
+      <div class="cmp-stat"><b>${esc(c.n_crispr_supported_excl_soft)}</b><span>excluding the two soft-provenance screens (Wei, Baggen)</span></div>
+      <div class="cmp-stat"><b>${esc(c.n_screens_total)}</b><span>genome-wide screens · 433 sourced hits</span></div>
+    </div>
+    <table class="wl-table"><thead><tr><th>Host factor</th><th>Dependency hit in</th><th>screens</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="wl-note">${esc(c.caveat)} Option A (the frozen held-out benchmark) remains the guaranteed number; this is corroboration, never the headline.</div>`;
 }
 
 /* ---------- eval transparency: recovered vs missed held-out edges ---------- */

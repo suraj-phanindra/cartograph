@@ -18,6 +18,8 @@ FRONTEND_DATA_DIR = REPO_ROOT / "frontend" / "data"
 
 EDGES_CSV = EVIDENCE_DIR / "gordon2020_edges.csv"
 COV1_MERS_CSV = EVIDENCE_DIR / "gordon2020_science_cov1_mers_edges.csv"  # conservation (CoV-1 + MERS only)
+CRISPR_HITS = EVIDENCE_DIR / "crispr_screen_hits.json"                   # 7 genome-wide CRISPR screens
+CRISPR_SCREENS = EVIDENCE_DIR / "crispr_screens.json"                    # screen provenance (pmid/cell line)
 DOMAIN_JSON = EVIDENCE_DIR / "cartograph_domain.json"
 EDGE_PACKS_DIR = EVIDENCE_DIR / "edge_packs"
 STRING_CACHE = EVIDENCE_DIR / "string_enrichment.cached.json"

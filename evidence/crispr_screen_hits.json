@@ -1,0 +1,2412 @@
+{
+  "_metadata": {
+    "description": "Significant screen-hit lists from 7 published genome-wide CRISPR host-factor screens for SARS-CoV-2. Each hit is a gene that passed the paper's own significance threshold and is traceable to a specific supplementary table or main figure. Extracted directly from each paper's supplementary hit tables (6 via PubMed Central / Europe PMC open-access supplements; Baggen via Springer publisher supplement).",
+    "direction_convention": "proviral = knockout/knockdown REDUCES infection (dependency factor); antiviral = knockout INCREASES infection (restriction factor). For CRISPR-activation (GOF) hits (Biering antiviral set only), 'antiviral' means OVEREXPRESSION reduces infection; flagged per-hit.",
+    "gene_symbols": "Current official HGNC symbols (verified via rest.genenames.org, 2026). 28 hit records had a previous/alias symbol updated to the current one, with the original retained in 'original_symbol' and an 'hgnc_note'. Separately, Daniloski's duplicate CTSL/CTSL1 library rows were merged into one CTSL hit (hgnc_note only, no original_symbol). Monkey (Chlorocebus) LOC gene models from the Vero-E6 screen and one withdrawn HGNC entry (SPHAR) are flagged rather than remapped.",
+    "no_fabrication": "Every hit is sourced to a specific table/figure. No genes were inferred from abstracts or discussion text.",
+    "screen_count": 7
+  },
+  "Wei et al. (Cell 2021)": {
+    "pmid": "33147444",
+    "hit_source": "Table S1 (mmc1), sheet 'VeroE6 SARS-2 genomewide zscore'; hit set reproduces Fig 2B (top 25 resistance + top 25 sensitization ranked by mean Cas9-v2 z-score)",
+    "threshold": "Paper calls hits by gene-level FDR (Fisher's method across 5 Cas9-v2 conditions + Benjamini-Hochberg on averaged z-scores). Supplement provides per-condition z-scores only, not FDR; the reproducible paper-defined hit set is the top-25-per-direction shown in Fig 2B, ranked by 'Cas9-v2 Avg.' z-score.",
+    "coverage": "top/high-confidence hits only: top 25 proviral (resistance, highest +z) + top 25 antiviral (sensitization, lowest -z). Full genome-wide FDR list not provided in supplement.",
+    "n_hits": 50,
+    "completeness_note": "Complete for the paper's displayed hit set. The supplement (Table S1) provides only per-condition z-scores for all ~21,672 genes, not the gene-level FDR the paper uses to formally call hits, so a fully reproducible genome-wide FDR list is not extractable. The reported set is the paper's own Fig 2B hit set: top 25 resistance (proviral) + top 25 sensitization (antiviral) ranked by mean Cas9-v2 z-score. Key anchors (ACE2, SMARCA4, CTSL, DYRK1A up; HIRA, CABIN1 down) reproduce exactly. Three monkey (Chlorocebus) LOC gene models in the proviral top-25 have no clean human ortholog and are flagged.",
+    "hits": [
+      {
+        "gene": "ACE2",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 4.866
+      },
+      {
+        "gene": "SMARCA4",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 4.842
+      },
+      {
+        "gene": "DYRK1A",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 4.363
+      },
+      {
+        "gene": "KDM6A",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 4.07
+      },
+      {
+        "gene": "DPF2",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.888
+      },
+      {
+        "gene": "JMJD6",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.732
+      },
+      {
+        "gene": "UBXN7",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.637
+      },
+      {
+        "gene": "RAD54L2",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.626
+      },
+      {
+        "gene": "ARID1A",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.619
+      },
+      {
+        "gene": "LOC103214541",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.577,
+        "hgnc_note": "Chlorocebus sabaeus (Vero-E6) gene model; no clean human ortholog symbol"
+      },
+      {
+        "gene": "TRAF3",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.208
+      },
+      {
+        "gene": "LOC103226512",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.15,
+        "hgnc_note": "Chlorocebus sabaeus (Vero-E6) gene model; no clean human ortholog symbol"
+      },
+      {
+        "gene": "SERTAD4",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.142
+      },
+      {
+        "gene": "PHIP",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.138
+      },
+      {
+        "gene": "SMAD4",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.135
+      },
+      {
+        "gene": "SH3YL1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.119
+      },
+      {
+        "gene": "LDB1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 3.065
+      },
+      {
+        "gene": "CTSL",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 2.996
+      },
+      {
+        "gene": "CREBBP",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 2.827
+      },
+      {
+        "gene": "SMARCE1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 2.82
+      },
+      {
+        "gene": "SMAD3",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 2.798
+      },
+      {
+        "gene": "LOC103244676",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 2.796,
+        "hgnc_note": "Chlorocebus sabaeus (Vero-E6) gene model; no clean human ortholog symbol"
+      },
+      {
+        "gene": "OSBPL8",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 2.779
+      },
+      {
+        "gene": "SPTY2D1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 2.773
+      },
+      {
+        "gene": "RYBP",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 resistance per Fig 2B",
+        "z": 2.737
+      },
+      {
+        "gene": "HIRA",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -5.708
+      },
+      {
+        "gene": "CABIN1",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -5.378
+      },
+      {
+        "gene": "TRIP12",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -4.499
+      },
+      {
+        "gene": "BPTF",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -4.35
+      },
+      {
+        "gene": "NONO",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -4.338
+      },
+      {
+        "gene": "NDOR1",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -4.11
+      },
+      {
+        "gene": "TIMM10",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.99
+      },
+      {
+        "gene": "EMSY",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.966
+      },
+      {
+        "gene": "ZNF250",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.939
+      },
+      {
+        "gene": "ZMYM2",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.882
+      },
+      {
+        "gene": "XRCC3",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.882
+      },
+      {
+        "gene": "SMARCA5",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.874
+      },
+      {
+        "gene": "ADAT2",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.814
+      },
+      {
+        "gene": "SMG5",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.778
+      },
+      {
+        "gene": "TAF13",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.724
+      },
+      {
+        "gene": "KDM1A",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.701
+      },
+      {
+        "gene": "MED16",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.692
+      },
+      {
+        "gene": "KAT14",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.669
+      },
+      {
+        "gene": "PIAS2",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.597
+      },
+      {
+        "gene": "GTF2H2",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.597
+      },
+      {
+        "gene": "EIF2AK4",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.578
+      },
+      {
+        "gene": "PSME3",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.564
+      },
+      {
+        "gene": "PIAS1",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.557
+      },
+      {
+        "gene": "POP5",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.529
+      },
+      {
+        "gene": "DDX42",
+        "direction": "antiviral",
+        "source": "Table S1 (mmc1) 'VeroE6 SARS-2 genomewide zscore', Cas9-v2 Avg. z-score; top-25 sensitization per Fig 2B",
+        "z": -3.499
+      }
+    ]
+  },
+  "Daniloski et al. (Cell 2021)": {
+    "pmid": "33147445",
+    "hit_source": "Table S1 (mmc1), sheet 'Sheet1' \u2014 genome-wide MAGeCK positive-selection results at MOI 0.01 (MOI1) and MOI 0.3 (MOI3) in A549-ACE2",
+    "threshold": "MAGeCK FDR < 0.05 with positive log-fold-change (enrichment) in at least one MOI condition. Screen is positive-selection (survival) only, so all hits are proviral/dependency factors; there is no antiviral arm.",
+    "coverage": "full genome-wide significant-hit list at FDR<0.05 (union of the two MOI conditions). Paper also discusses top-50-ranked and RRA p<0.05 (~1000 genes); FDR<0.05 is the stringent reproducible set.",
+    "n_hits": 28,
+    "completeness_note": "Complete and reproducible. Full genome-wide MAGeCK hit list extracted at the stringent FDR<0.05 in either MOI condition (28 unique genes after merging a duplicate CTSL/CTSL1 library row). Positive-selection screen, so all hits are proviral; there is no antiviral arm. Paper also discusses looser sets (top-50 overlap, RRA p<0.05 ~1000 genes) available in the same table if a broader cut is wanted.",
+    "hits": [
+      {
+        "gene": "VPS35",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045, MOI0.3 FDR=0.00062"
+      },
+      {
+        "gene": "ATP6AP1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045, MOI0.3 FDR=0.00062"
+      },
+      {
+        "gene": "SNX27",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045, MOI0.3 FDR=0.00062"
+      },
+      {
+        "gene": "ATP6V0C",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045, MOI0.3 FDR=0.0027"
+      },
+      {
+        "gene": "ATP6V0B",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045, MOI0.3 FDR=0.034"
+      },
+      {
+        "gene": "ATP6V1G1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045, MOI0.3 FDR=0.014"
+      },
+      {
+        "gene": "ATP6V1B2",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045, MOI0.3 FDR=0.0027"
+      },
+      {
+        "gene": "ACE2",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045"
+      },
+      {
+        "gene": "ATP6V0D1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045"
+      },
+      {
+        "gene": "RAB7A",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045"
+      },
+      {
+        "gene": "COMMD2",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00045, MOI0.3 FDR=0.0032"
+      },
+      {
+        "gene": "VPS29",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.0027, MOI0.3 FDR=0.00062"
+      },
+      {
+        "gene": "ATP6AP2",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.023, MOI0.3 FDR=0.00062"
+      },
+      {
+        "gene": "COMMD3",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.018, MOI0.3 FDR=0.00062"
+      },
+      {
+        "gene": "COMMD3-BMI1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.006, MOI0.3 FDR=0.00062"
+      },
+      {
+        "gene": "CCDC22",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.018, MOI0.3 FDR=0.00062"
+      },
+      {
+        "gene": "SPEN",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.00082, MOI0.3 FDR=0.0016"
+      },
+      {
+        "gene": "WASHC4",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.3 FDR=0.0025",
+        "original_symbol": "KIAA1033",
+        "hgnc_note": "'KIAA1033' is a previous HGNC symbol"
+      },
+      {
+        "gene": "ATP6V1H",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.0089, MOI0.3 FDR=0.0027"
+      },
+      {
+        "gene": "ACTR3",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.009"
+      },
+      {
+        "gene": "VMA12",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.018",
+        "original_symbol": "TMEM199",
+        "hgnc_note": "'TMEM199' is a previous HGNC symbol"
+      },
+      {
+        "gene": "CCZ1B",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.3 FDR=0.02"
+      },
+      {
+        "gene": "ATP6V1E1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.025"
+      },
+      {
+        "gene": "ARPC4-TTLL3",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.037"
+      },
+      {
+        "gene": "VPS26A",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.3 FDR=0.038"
+      },
+      {
+        "gene": "LAMP5",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.3 FDR=0.038"
+      },
+      {
+        "gene": "ATP6V1C1",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; MOI0.01 FDR=0.046"
+      },
+      {
+        "gene": "CTSL",
+        "direction": "proviral",
+        "source": "Table S1 (mmc1), MAGeCK positive-selection; listed twice in library as 'CTSL' and legacy 'CTSL1' \u2014 collapsed to one hit",
+        "hgnc_note": "library contained duplicate rows CTSL and CTSL1 (previous symbol); merged"
+      }
+    ]
+  },
+  "Schneider et al. (Cell 2021)": {
+    "pmid": "33382968",
+    "hit_source": "Table S1A (mmc1), sheet 'Table_S1A' \u2014 Huh-7.5 37 C SARS-CoV-2 genome-wide screen (Brunello library, MAGeCK); genes with the supplement's own 'Sig' flag",
+    "threshold": "FDR < 0.05 (MAGeCK-derived gene-wise fitness score). Direction by z-score sign: z>0 = proviral (candidate host/dependency factor), z<0 = antiviral (candidate restriction factor). Paper text states 84 proviral + 62 antiviral = 146 at 37C; the supplement 'Sig' flag marks 147 (84 proviral + 63 antiviral), one antiviral gene at FDR~0.048 on the boundary.",
+    "coverage": "full genome-wide significant-hit list (all Sig-flagged genes, both directions) for the primary 37C SARS-CoV-2 screen.",
+    "n_hits": 147,
+    "completeness_note": "Complete and fully reproducible. The supplement carries the paper's own 'Sig' hit flag; 147 flagged genes in the primary Huh-7.5 37C SARS-CoV-2 screen (84 proviral z>0, 63 antiviral z<0) at FDR<0.05. Matches the paper's stated 146 (84+62) within one boundary antiviral gene at FDR~0.048. TMEM41B and GAG/SREBP pathway hits present as expected.",
+    "hits": [
+      {
+        "gene": "MBTPS1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=9.6e-36, z=7.83)"
+      },
+      {
+        "gene": "SLC35B2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=3.5e-35, z=7.77)"
+      },
+      {
+        "gene": "RIC1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=8.1e-31, z=7.34)"
+      },
+      {
+        "gene": "MBTPS2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=4.1e-26, z=6.79)"
+      },
+      {
+        "gene": "VAC14",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=3.2e-23, z=6.48)"
+      },
+      {
+        "gene": "DHX36",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=5.7e-23, z=6.40)"
+      },
+      {
+        "gene": "TMEM106B",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=5.8e-21, z=6.18)"
+      },
+      {
+        "gene": "STARD3",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=7.8e-21, z=-6.15)"
+      },
+      {
+        "gene": "EXT2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=9e-21, z=6.15)"
+      },
+      {
+        "gene": "EXTL3",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.8e-19, z=6.01)"
+      },
+      {
+        "gene": "SREBF2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=6e-19, z=5.95)"
+      },
+      {
+        "gene": "SCAP",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.1e-18, z=5.85)"
+      },
+      {
+        "gene": "COG4",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=3.1e-18, z=5.83)"
+      },
+      {
+        "gene": "MOSPD2",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=8.8e-17, z=-5.66)"
+      },
+      {
+        "gene": "MED15",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.1e-15, z=5.48)"
+      },
+      {
+        "gene": "SELENOI",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.8e-15, z=5.43)",
+        "original_symbol": "EPT1",
+        "hgnc_note": "'EPT1' is a previous HGNC symbol"
+      },
+      {
+        "gene": "EXT1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=3.7e-15, z=5.43)"
+      },
+      {
+        "gene": "BRI3",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=5.4e-15, z=-5.07)"
+      },
+      {
+        "gene": "EP300",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.7e-13, z=5.20)"
+      },
+      {
+        "gene": "XYLT2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2e-13, z=5.15)"
+      },
+      {
+        "gene": "RGP1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2e-12, z=4.96)"
+      },
+      {
+        "gene": "PLSCR1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2e-12, z=-5.04)"
+      },
+      {
+        "gene": "STARD3NL",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2e-12, z=-5.03)"
+      },
+      {
+        "gene": "HS2ST1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.4e-12, z=5.02)"
+      },
+      {
+        "gene": "CSNK2B",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=3.2e-12, z=4.97)"
+      },
+      {
+        "gene": "HIRA",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=5.1e-12, z=4.97)"
+      },
+      {
+        "gene": "TMEM41B",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=5.5e-12, z=4.85)"
+      },
+      {
+        "gene": "B4GALT7",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.5e-11, z=4.90)"
+      },
+      {
+        "gene": "RTCB",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=8.5e-11, z=4.65)"
+      },
+      {
+        "gene": "TADA1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.1e-10, z=4.70)"
+      },
+      {
+        "gene": "EXOC2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=4.3e-10, z=4.66)"
+      },
+      {
+        "gene": "DCPS",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=5.3e-10, z=4.62)"
+      },
+      {
+        "gene": "RHBDD2",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=7.1e-10, z=-4.57)"
+      },
+      {
+        "gene": "TAF6L",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.2e-09, z=4.54)"
+      },
+      {
+        "gene": "B3GALT6",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.4e-09, z=4.57)"
+      },
+      {
+        "gene": "NDST1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.9e-09, z=4.51)"
+      },
+      {
+        "gene": "ZBTB2",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=6.9e-09, z=-4.34)"
+      },
+      {
+        "gene": "UBE3D",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.4e-08, z=4.40)"
+      },
+      {
+        "gene": "TOM1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.6e-08, z=4.34)"
+      },
+      {
+        "gene": "HEMK2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=4.6e-08, z=4.29)",
+        "original_symbol": "N6AMT1",
+        "hgnc_note": "'N6AMT1' is a previous HGNC symbol"
+      },
+      {
+        "gene": "MGAT1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=5.1e-08, z=4.29)"
+      },
+      {
+        "gene": "COG7",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.1e-07, z=4.13)"
+      },
+      {
+        "gene": "B3GAT3",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.4e-07, z=4.14)"
+      },
+      {
+        "gene": "MED23",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.5e-07, z=4.18)"
+      },
+      {
+        "gene": "PYROXD1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=3.3e-07, z=4.10)"
+      },
+      {
+        "gene": "COG2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=4.3e-07, z=4.13)"
+      },
+      {
+        "gene": "COG8",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=4.9e-07, z=4.10)"
+      },
+      {
+        "gene": "TRIM28",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=5.6e-07, z=4.07)"
+      },
+      {
+        "gene": "RASL10A",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=6.5e-07, z=3.99)"
+      },
+      {
+        "gene": "COG3",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=8.2e-07, z=4.07)"
+      },
+      {
+        "gene": "PCYT2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=9e-07, z=4.06)"
+      },
+      {
+        "gene": "PYURF",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=9.9e-07, z=-3.87)"
+      },
+      {
+        "gene": "LCMT1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.3e-06, z=3.94)"
+      },
+      {
+        "gene": "VTA1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.3e-06, z=-3.82)"
+      },
+      {
+        "gene": "PDS5B",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=3.4e-06, z=3.95)"
+      },
+      {
+        "gene": "MED24",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=4.5e-06, z=3.90)"
+      },
+      {
+        "gene": "RAB6A",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=4.9e-06, z=3.83)"
+      },
+      {
+        "gene": "EXOC1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=5.3e-06, z=3.90)"
+      },
+      {
+        "gene": "COX6A1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=6.5e-06, z=-3.74)"
+      },
+      {
+        "gene": "WDR73",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=6.8e-06, z=3.88)"
+      },
+      {
+        "gene": "DOHH",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=1.6e-05, z=3.76)"
+      },
+      {
+        "gene": "GFM1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=2.6e-05, z=-3.66)"
+      },
+      {
+        "gene": "NDUFB3",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=3.3e-05, z=-3.74)"
+      },
+      {
+        "gene": "VPS37C",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=3.7e-05, z=-3.45)"
+      },
+      {
+        "gene": "DAZAP2",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=4.5e-05, z=-3.64)"
+      },
+      {
+        "gene": "PTRH1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=4.9e-05, z=-3.43)"
+      },
+      {
+        "gene": "ZC3H12A",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=7.1e-05, z=-3.64)"
+      },
+      {
+        "gene": "VPS28",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=8.4e-05, z=-3.55)"
+      },
+      {
+        "gene": "COX17",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=9e-05, z=-3.61)"
+      },
+      {
+        "gene": "RER1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=9.4e-05, z=-3.62)"
+      },
+      {
+        "gene": "PPP2R2A",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00012, z=3.59)"
+      },
+      {
+        "gene": "PGGT1B",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00014, z=3.56)"
+      },
+      {
+        "gene": "TMED2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00019, z=3.59)"
+      },
+      {
+        "gene": "CTSL",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0002, z=3.55)"
+      },
+      {
+        "gene": "DDX1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00021, z=3.54)"
+      },
+      {
+        "gene": "SRSF5",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00022, z=3.58)"
+      },
+      {
+        "gene": "MRPS12",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0003, z=-3.51)"
+      },
+      {
+        "gene": "COPS3",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00049, z=-3.44)"
+      },
+      {
+        "gene": "RAB10",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0005, z=3.41)"
+      },
+      {
+        "gene": "KCNJ4",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00063, z=3.47)"
+      },
+      {
+        "gene": "SLC25A25",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00063, z=-3.17)"
+      },
+      {
+        "gene": "RBM39",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00063, z=-3.47)"
+      },
+      {
+        "gene": "MED16",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00064, z=3.42)"
+      },
+      {
+        "gene": "PABIR1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00071, z=-3.43)",
+        "original_symbol": "FAM122A",
+        "hgnc_note": "'FAM122A' is a previous HGNC symbol"
+      },
+      {
+        "gene": "MCM3AP",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00073, z=-3.37)"
+      },
+      {
+        "gene": "WDR11",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00082, z=-3.46)"
+      },
+      {
+        "gene": "DRAM1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.00086, z=-3.43)"
+      },
+      {
+        "gene": "BABAM2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.001, z=3.31)",
+        "original_symbol": "BRE",
+        "hgnc_note": "'BRE' is a previous HGNC symbol"
+      },
+      {
+        "gene": "SLC30A1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0011, z=3.12)"
+      },
+      {
+        "gene": "LUC7L2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0014, z=3.40)"
+      },
+      {
+        "gene": "DHX38",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0016, z=-2.98)"
+      },
+      {
+        "gene": "CHD8",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0019, z=-3.32)"
+      },
+      {
+        "gene": "HHEX",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.002, z=-3.19)"
+      },
+      {
+        "gene": "MCM3",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0021, z=-3.28)"
+      },
+      {
+        "gene": "PRIM2",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0024, z=-2.25)"
+      },
+      {
+        "gene": "CABIN1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0025, z=3.31)"
+      },
+      {
+        "gene": "INTS13",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0026, z=3.34)",
+        "original_symbol": "ASUN",
+        "hgnc_note": "'ASUN' is a previous HGNC symbol"
+      },
+      {
+        "gene": "BRAT1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0027, z=3.23)"
+      },
+      {
+        "gene": "EXOC4",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0031, z=3.30)"
+      },
+      {
+        "gene": "CARD10",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0032, z=3.32)"
+      },
+      {
+        "gene": "HK2",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0032, z=-3.24)"
+      },
+      {
+        "gene": "RSKR",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.005, z=-2.52)",
+        "original_symbol": "SGK494",
+        "hgnc_note": "'SGK494' is an alias symbol"
+      },
+      {
+        "gene": "EGLN1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0052, z=3.21)"
+      },
+      {
+        "gene": "GPI",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0053, z=-3.25)"
+      },
+      {
+        "gene": "MICOS10",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0054, z=-3.25)",
+        "original_symbol": "MINOS1",
+        "hgnc_note": "'MINOS1' is a previous HGNC symbol"
+      },
+      {
+        "gene": "GET3",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0059, z=-3.02)",
+        "original_symbol": "ASNA1",
+        "hgnc_note": "'ASNA1' is a previous HGNC symbol"
+      },
+      {
+        "gene": "EPC2",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.006, z=-3.18)"
+      },
+      {
+        "gene": "NDUFA8",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.006, z=-3.21)"
+      },
+      {
+        "gene": "ITGA2B",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0062, z=-3.09)"
+      },
+      {
+        "gene": "ATXN7L3",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0065, z=-3.16)"
+      },
+      {
+        "gene": "METTL1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0076, z=-3.16)"
+      },
+      {
+        "gene": "PPP2CA",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0091, z=3.18)"
+      },
+      {
+        "gene": "MSMO1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0092, z=3.18)"
+      },
+      {
+        "gene": "P4HB",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.0093, z=-3.14)"
+      },
+      {
+        "gene": "VDAC1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.012, z=-2.85)"
+      },
+      {
+        "gene": "GRSF1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.012, z=-3.18)"
+      },
+      {
+        "gene": "NDUFB5",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.013, z=-3.17)"
+      },
+      {
+        "gene": "GDI2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.013, z=3.12)"
+      },
+      {
+        "gene": "TM9SF3",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.015, z=3.15)"
+      },
+      {
+        "gene": "VRK1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.015, z=3.12)"
+      },
+      {
+        "gene": "DEGS1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.015, z=3.08)"
+      },
+      {
+        "gene": "CSK",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.017, z=3.12)"
+      },
+      {
+        "gene": "SLC22A9",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.018, z=-3.04)"
+      },
+      {
+        "gene": "JTB",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.018, z=3.00)"
+      },
+      {
+        "gene": "RRP15",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.02, z=-2.99)"
+      },
+      {
+        "gene": "GOLGA8O",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.02, z=-3.13)"
+      },
+      {
+        "gene": "NDUFA2",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.021, z=-3.11)"
+      },
+      {
+        "gene": "ATP2C1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.023, z=3.12)"
+      },
+      {
+        "gene": "WEE1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.023, z=-2.98)"
+      },
+      {
+        "gene": "RPAP3",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.023, z=-3.07)"
+      },
+      {
+        "gene": "UQCC1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.023, z=-3.06)"
+      },
+      {
+        "gene": "TRAIP",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.024, z=-2.91)"
+      },
+      {
+        "gene": "GIGYF2",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.024, z=2.92)"
+      },
+      {
+        "gene": "MED10",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.026, z=3.02)"
+      },
+      {
+        "gene": "VPS35L",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.027, z=-2.86)",
+        "original_symbol": "C16orf62",
+        "hgnc_note": "'C16orf62' is a previous HGNC symbol"
+      },
+      {
+        "gene": "ATOX1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.027, z=-3.09)"
+      },
+      {
+        "gene": "CHMP5",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.029, z=-2.79)"
+      },
+      {
+        "gene": "SPHAR",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.033, z=3.06)",
+        "hgnc_note": "HGNC entry withdrawn; retained as reported"
+      },
+      {
+        "gene": "GPHRA",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.033, z=3.04)",
+        "original_symbol": "GPR89A",
+        "hgnc_note": "'GPR89A' is a previous HGNC symbol"
+      },
+      {
+        "gene": "ENO1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.034, z=-2.91)"
+      },
+      {
+        "gene": "EWSR1",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.039, z=2.89)"
+      },
+      {
+        "gene": "FOXA2",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.039, z=-3.02)"
+      },
+      {
+        "gene": "STAC3",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.04, z=-2.99)"
+      },
+      {
+        "gene": "HAUS4",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.04, z=-2.93)"
+      },
+      {
+        "gene": "SLC31A1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.04, z=-2.95)"
+      },
+      {
+        "gene": "OR4F3",
+        "direction": "proviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.044, z=1.66)"
+      },
+      {
+        "gene": "TCIRG1",
+        "direction": "antiviral",
+        "source": "Table S1A 'Huh-7.5 37C SARS-CoV-2 z scores', Sig flag (FDR=0.048, z=-2.96)"
+      }
+    ]
+  },
+  "Wang et al. (Cell 2021)": {
+    "pmid": "33333024",
+    "hit_source": "Table S1 (mmc1), sheet 'SARS-CoV-2 CRISPR screen' \u2014 primary Huh7.5.1 genome-wide MAGeCK positive-selection screen; hit set = genes above the Figure 1B threshold line (-log10 enrichment score >= 4, i.e. MAGeCK pos score <= 1e-4)",
+    "threshold": "MAGeCK positive-selection enrichment score <= 1e-4 (the -log10(ES)=4 dotted line the paper draws in Fig 1B). Screen is positive-selection (survival), so all hits are proviral/dependency factors. Note: stricter MAGeCK FDR<0.05 yields only the top 4 (TMEM106B, SCAP, VAC14, ACE2); the paper's broader GO-analysis input used ES<=0.005 (~431 genes).",
+    "coverage": "top/high-confidence hits only: the 21 genes above the Fig 1B display threshold (pos ES<=1e-4). Full unthresholded MAGeCK scores for all ~20,915 genes are in the same sheet if a different cutoff is wanted.",
+    "n_hits": 21,
+    "completeness_note": "Partial by design. FDR<0.05 yields only 4 genes; the reproducible reported set is the 21 genes above the paper's own Fig 1B display line (MAGeCK pos enrichment score <=1e-4). Positive-selection screen, all proviral. Full unthresholded MAGeCK scores for all ~20,915 genes are in the same sheet for any alternative cutoff (e.g. the ES<=0.005 / ~431-gene set the paper used as GO-analysis input).",
+    "hits": [
+      {
+        "gene": "TMEM106B",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 1 (ES=4.6e-12, fdr=0.00124)"
+      },
+      {
+        "gene": "SCAP",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 2 (ES=3.2e-10, fdr=0.00124)"
+      },
+      {
+        "gene": "VAC14",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 3 (ES=7.2e-09, fdr=0.00124)"
+      },
+      {
+        "gene": "ACE2",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 4 (ES=1.3e-06, fdr=0.0386)"
+      },
+      {
+        "gene": "ARF5",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 5 (ES=6e-06, fdr=0.129)"
+      },
+      {
+        "gene": "EXOC2",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 6 (ES=6.5e-06, fdr=0.129)"
+      },
+      {
+        "gene": "CYS1",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 7 (ES=7.1e-06, fdr=0.129)"
+      },
+      {
+        "gene": "MBTPS2",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 8 (ES=1.4e-05, fdr=0.203)"
+      },
+      {
+        "gene": "EXT1",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 9 (ES=1.7e-05, fdr=0.222)"
+      },
+      {
+        "gene": "PCDH19",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 10 (ES=2.2e-05, fdr=0.241)"
+      },
+      {
+        "gene": "EXOC8",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 11 (ES=2.6e-05, fdr=0.247)"
+      },
+      {
+        "gene": "MYOCD",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 12 (ES=2.7e-05, fdr=0.247)"
+      },
+      {
+        "gene": "EXTL3",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 13 (ES=3.4e-05, fdr=0.299)"
+      },
+      {
+        "gene": "TAS2R41",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 14 (ES=4.5e-05, fdr=0.355)"
+      },
+      {
+        "gene": "TM6SF1",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 15 (ES=5.4e-05, fdr=0.39)"
+      },
+      {
+        "gene": "CHD6",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 16 (ES=6.4e-05, fdr=0.423)"
+      },
+      {
+        "gene": "EGR1",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 17 (ES=7.3e-05, fdr=0.45)"
+      },
+      {
+        "gene": "CUL4A",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 18 (ES=8.1e-05, fdr=0.45)"
+      },
+      {
+        "gene": "PLIN2",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 19 (ES=8.2e-05, fdr=0.45)"
+      },
+      {
+        "gene": "RHBDD3",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 20 (ES=8.5e-05, fdr=0.45)"
+      },
+      {
+        "gene": "B4GALT7",
+        "direction": "proviral",
+        "source": "Table S1 'SARS-CoV-2 CRISPR screen', MAGeCK pos enrichment rank 21 (ES=9.4e-05, fdr=0.484)"
+      }
+    ]
+  },
+  "Baggen et al. (Nat Genet 2021)": {
+    "pmid": "33686287",
+    "hit_source": "Supplementary Table 2 (MOESM3, sheet 'Suppl Table 2'), rows with source='Baggen' \u2014 the authors' curated top-ranked gene set for their Huh7 SARS-CoV-2 low-stringency screen. Underlying gene-level analysis: Suppl Tables 7 (high-stringency) / 10-11 (low-stringency).",
+    "threshold": "Baggen compute gene-level p-values (one-sided Student's t-test on sgRNA log2FC + Fisher's method, NO multiple-testing adjustment); no single FDR cutoff is applied in the supplement. The high-stringency SARS-CoV-2 screen (Suppl Table 7) yielded exactly ONE significantly enriched gene: TMEM106B (the paper's headline hit). The reproducible broader hit set is the authors' curated 'top 50+' enriched genes from the low-stringency screen (Suppl Table 2), all enriched-on-infection = proviral.",
+    "coverage": "top/high-confidence hits only: the authors' curated top-52 enriched (proviral) gene set (Suppl Table 2). High-stringency screen has only 1 formal hit (TMEM106B); full unadjusted gene-level p-value tables for all ~19,120 genes are in Suppl Tables 7/10/11 but the supplement flags no genome-wide significance-thresholded hit list.",
+    "n_hits": 52,
+    "completeness_note": "Partial \u2014 this is the weakest-provenance screen and the paper itself provides no genome-wide significance-thresholded hit list. Gene-level p-values in the supplement are unadjusted for multiple testing, and the high-stringency SARS-CoV-2 screen yielded exactly ONE formally significant enriched gene, TMEM106B (the paper's title hit). The reported 52-gene list is the authors' own curated 'top 50+' enriched (proviral) set from the low-stringency Huh7 screen (Suppl Table 2), all confirmed positive-log2FC/enriched. Supplement was fetched from the publisher (Springer) as there is no PMC open-access copy.",
+    "hits": [
+      {
+        "gene": "TMEM106B",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "ACSL4",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "AHCYL1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "HSD17B12",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "KRT19",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "GLUD1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "DTD1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "PTDSS1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "OSBPL9",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "HROB",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen",
+        "original_symbol": "C17orf53",
+        "hgnc_note": "'C17orf53' is a previous HGNC symbol"
+      },
+      {
+        "gene": "CCZ1B",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "SALL2",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "EXT1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "CDC50A",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen",
+        "original_symbol": "TMEM30A",
+        "hgnc_note": "'TMEM30A' is a previous HGNC symbol"
+      },
+      {
+        "gene": "CEP350",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "CPLANE2",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen",
+        "original_symbol": "RSG1",
+        "hgnc_note": "'RSG1' is a previous HGNC symbol"
+      },
+      {
+        "gene": "RPL19",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "MAPKAPK3",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "ITGB6",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "PTPN23",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "LINC03043",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen",
+        "original_symbol": "C7orf77",
+        "hgnc_note": "'C7orf77' is a previous HGNC symbol"
+      },
+      {
+        "gene": "ZBTB32",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "MTRNR2L9",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "DNM2",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "SHTN1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen",
+        "original_symbol": "KIAA1598",
+        "hgnc_note": "'KIAA1598' is a previous HGNC symbol"
+      },
+      {
+        "gene": "LRRC71",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "PHIP",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "PMPCA",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "CAMLG",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "PIK3C3",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "THBS4",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "BBOF1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen",
+        "original_symbol": "CCDC176",
+        "hgnc_note": "'CCDC176' is a previous HGNC symbol"
+      },
+      {
+        "gene": "SERPINA11",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "NR2F6",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "BAP1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "TMEM41B",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "FGB",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "MAPK4",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "POP1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "PINK1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "DSTYK",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "CAPSL",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "PSMB7",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "TFG",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "CYYR1",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "TAF1B",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "SLC22A2",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "ARPC4",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "PTGES3L",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "AOC3",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "DHCR7",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      },
+      {
+        "gene": "OSBPL8",
+        "direction": "proviral",
+        "source": "Supplementary Table 2 ('Top 50+ genes', source='Baggen') \u2014 top-ranked enriched genes from the SARS-CoV-2 low-stringency Huh7 screen"
+      }
+    ]
+  },
+  "Zhu et al. (Nat Commun 2021)": {
+    "pmid": "33574281",
+    "hit_source": "Supplementary Data 1 (MOESM4_ESM.xlsx) \u2014 genome-wide MAGeCK positive-selection results, HeLa-ACE2 cells, SARS-CoV-2 Sdel entry screen (Fig 2b)",
+    "threshold": "Paper's stated hit set: top 32 genes at MAGeCK positive-selection FDR < 0.15 (the set they carried to validation). Positive-selection (survival) screen, so all hits are proviral/dependency factors. Two further genes (SHOX2, CCDC53; rank 33-34) also fall under FDR<0.15 but were outside the paper's top-32 set.",
+    "coverage": "the paper's defined hit set: top 32 ranked genes (FDR<0.15). Full genome-wide MAGeCK scores for ~19,114 genes are in the same file.",
+    "n_hits": 32,
+    "completeness_note": "Complete for the paper's defined hit set. Reported the paper's explicit 'top 32 genes at FDR<0.15' that were carried to validation (Supplementary Data 1, MAGeCK positive-selection). Positive-selection screen, all proviral; Retromer/CCC/Commander complex dominates as in the paper. Note the genome-wide screen used the Sdel spike-deletion clone (endosomal entry route) in HeLa-ACE2. Two further genes (SHOX2, CCDC53) also fall under FDR<0.15 but sit outside the paper's stated top-32 set.",
+    "hits": [
+      {
+        "gene": "ACE2",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 1 (fdr=0.000248)"
+      },
+      {
+        "gene": "COMMD3",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 2 (fdr=0.000248)"
+      },
+      {
+        "gene": "WASHC5",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 3 (fdr=0.000248)",
+        "original_symbol": "KIAA0196",
+        "hgnc_note": "'KIAA0196' is a previous HGNC symbol"
+      },
+      {
+        "gene": "VPS35L",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 4 (fdr=0.000248)",
+        "original_symbol": "C16orf62",
+        "hgnc_note": "'C16orf62' is a previous HGNC symbol"
+      },
+      {
+        "gene": "RAB7A",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 5 (fdr=0.000248)"
+      },
+      {
+        "gene": "CCDC93",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 6 (fdr=0.000248)"
+      },
+      {
+        "gene": "CCDC22",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 7 (fdr=0.000248)"
+      },
+      {
+        "gene": "COMMD2",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 8 (fdr=0.000248)"
+      },
+      {
+        "gene": "WASHC4",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 9 (fdr=0.000248)",
+        "original_symbol": "KIAA1033",
+        "hgnc_note": "'KIAA1033' is a previous HGNC symbol"
+      },
+      {
+        "gene": "CTSL",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 10 (fdr=0.000248)"
+      },
+      {
+        "gene": "VPS29",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 11 (fdr=0.000248)"
+      },
+      {
+        "gene": "COMMD8",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 12 (fdr=0.000248)"
+      },
+      {
+        "gene": "NPC1",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 13 (fdr=0.000248)"
+      },
+      {
+        "gene": "WDR81",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 14 (fdr=0.000248)"
+      },
+      {
+        "gene": "ARPC4",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 15 (fdr=0.000248)"
+      },
+      {
+        "gene": "ASCC3",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 16 (fdr=0.000248)"
+      },
+      {
+        "gene": "COMMD7",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 17 (fdr=0.000248)"
+      },
+      {
+        "gene": "VPS35",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 18 (fdr=0.000248)"
+      },
+      {
+        "gene": "ACTR3",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 19 (fdr=0.000248)"
+      },
+      {
+        "gene": "COMMD3-BMI1",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 20 (fdr=0.000248)"
+      },
+      {
+        "gene": "TFE3",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 21 (fdr=0.000646)"
+      },
+      {
+        "gene": "COMMD4",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 22 (fdr=0.000646)"
+      },
+      {
+        "gene": "CCZ1B",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 23 (fdr=0.000646)"
+      },
+      {
+        "gene": "ARPC3",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 24 (fdr=0.00103)"
+      },
+      {
+        "gene": "NPC2",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 25 (fdr=0.00139)"
+      },
+      {
+        "gene": "RMC1",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 26 (fdr=0.00194)",
+        "original_symbol": "C18orf8",
+        "hgnc_note": "'C18orf8' is a previous HGNC symbol"
+      },
+      {
+        "gene": "CCZ1",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 27 (fdr=0.00194)"
+      },
+      {
+        "gene": "ACTR2",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 28 (fdr=0.00194)"
+      },
+      {
+        "gene": "COMMD10",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 29 (fdr=0.00256)"
+      },
+      {
+        "gene": "GOLGA6L2",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 30 (fdr=0.0455)"
+      },
+      {
+        "gene": "COMMD5",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 31 (fdr=0.0455)"
+      },
+      {
+        "gene": "ATP8B1",
+        "direction": "proviral",
+        "source": "Supplementary Data 1 (MOESM4), MAGeCK pos rank 32 (fdr=0.0738)"
+      }
+    ]
+  },
+  "Biering et al. (Nat Genet 2022)": {
+    "pmid": "35879412",
+    "hit_source": "Supplementary Table 1 (LOF/knockout screen, enriched genes = proviral) and Supplementary Table 3 (GOF/CRISPRa screen, enriched genes = antiviral); Calu-3 cells, genome-wide MAGeCK RRA",
+    "threshold": "FDR < 0.05 (MAGeCK RRA), the paper's stated significance line (Fig 1c/1d). Bidirectional screens: the knockout (LOF) screen yields proviral hits (enriched = knockout protects cells); the paper reports no significant LOF-depleted/antiviral genes as a table, so knockout-defined antiviral hits are not provided. Antiviral restriction factors were instead identified by the CRISPRa (GOF) screen (overexpression protects = antiviral), reported here separately and flagged as activation-defined rather than knockout-defined.",
+    "coverage": "full genome-wide FDR<0.05 hit lists: 60 proviral (knockout/LOF screen, Table S1) + 43 antiviral (CRISPRa/GOF screen, Table S3). NOTE: the antiviral set is activation-defined, not knockout-defined, so it is not directly comparable in direction semantics to the other six knockout screens.",
+    "n_hits": 103,
+    "completeness_note": "Complete and reproducible, with an important direction caveat. This is a BIDIRECTIONAL study (CRISPR knockout LOF + CRISPR-activation GOF) in Calu-3 at FDR<0.05. The 60 proviral hits come from the knockout (LOF) screen (Suppl Table 1), directly comparable to the other six knockout screens. The paper reports no knockout-defined antiviral hit table; the 43 antiviral hits reported here come from the CRISPRa (GOF) enriched screen (Suppl Table 3) \u2014 these are activation-defined restriction factors (incl. the mucins MUC1/MUC4/MUC13/MUC21 headline) and are flagged as NOT direction-equivalent to knockout-defined antiviral hits.",
+    "hits": [
+      {
+        "gene": "ACE2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 1 (fdr=0.000309)"
+      },
+      {
+        "gene": "AP1G1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 2 (fdr=0.000309)"
+      },
+      {
+        "gene": "CHUK",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 3 (fdr=0.000309)"
+      },
+      {
+        "gene": "TMPRSS2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 4 (fdr=0.000309)"
+      },
+      {
+        "gene": "ROCK1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 5 (fdr=0.000309)"
+      },
+      {
+        "gene": "KMT2C",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 6 (fdr=0.000309)"
+      },
+      {
+        "gene": "AP1M2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 7 (fdr=0.000309)"
+      },
+      {
+        "gene": "AP1B1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 8 (fdr=0.000309)"
+      },
+      {
+        "gene": "IRF6",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 9 (fdr=0.000309)"
+      },
+      {
+        "gene": "RIPK4",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 10 (fdr=0.000309)"
+      },
+      {
+        "gene": "CDH1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 11 (fdr=0.000309)"
+      },
+      {
+        "gene": "RREB1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 12 (fdr=0.000309)"
+      },
+      {
+        "gene": "DSG4",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 13 (fdr=0.000309)"
+      },
+      {
+        "gene": "STK26",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 14 (fdr=0.000309)"
+      },
+      {
+        "gene": "PTEN",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 15 (fdr=0.000309)"
+      },
+      {
+        "gene": "DYRK1A",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 16 (fdr=0.00204)"
+      },
+      {
+        "gene": "KDF1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 17 (fdr=0.00287)"
+      },
+      {
+        "gene": "LINC02915",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 18 (fdr=0.00287)",
+        "original_symbol": "C15orf54",
+        "hgnc_note": "'C15orf54' is a previous HGNC symbol"
+      },
+      {
+        "gene": "TAOK2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 19 (fdr=0.00371)"
+      },
+      {
+        "gene": "ST14",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 20 (fdr=0.00495)"
+      },
+      {
+        "gene": "PAWR",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 21 (fdr=0.00743)"
+      },
+      {
+        "gene": "CENPB",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 22 (fdr=0.00753)"
+      },
+      {
+        "gene": "ATP8B1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 23 (fdr=0.00772)"
+      },
+      {
+        "gene": "IFNAR1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 24 (fdr=0.00772)"
+      },
+      {
+        "gene": "PRAG1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 25 (fdr=0.0099)",
+        "original_symbol": "SGK223",
+        "hgnc_note": "'SGK223' is an alias symbol"
+      },
+      {
+        "gene": "ARIH2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 26 (fdr=0.0101)"
+      },
+      {
+        "gene": "SAV1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 27 (fdr=0.0108)"
+      },
+      {
+        "gene": "TAOK1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 28 (fdr=0.0111)"
+      },
+      {
+        "gene": "HEATR5B",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 29 (fdr=0.0116)"
+      },
+      {
+        "gene": "TMOD3",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 30 (fdr=0.0116)"
+      },
+      {
+        "gene": "CHD9",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 31 (fdr=0.0116)"
+      },
+      {
+        "gene": "STAT1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 32 (fdr=0.0117)"
+      },
+      {
+        "gene": "ELAVL2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 33 (fdr=0.0132)"
+      },
+      {
+        "gene": "ARID2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 34 (fdr=0.0132)"
+      },
+      {
+        "gene": "KIF13B",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 35 (fdr=0.0132)"
+      },
+      {
+        "gene": "STAT2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 36 (fdr=0.0132)"
+      },
+      {
+        "gene": "IRF9",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 37 (fdr=0.0142)"
+      },
+      {
+        "gene": "KLF5",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 38 (fdr=0.0146)"
+      },
+      {
+        "gene": "PATJ",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 39 (fdr=0.0146)",
+        "original_symbol": "INADL",
+        "hgnc_note": "'INADL' is a previous HGNC symbol"
+      },
+      {
+        "gene": "MCTS1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 40 (fdr=0.0146)"
+      },
+      {
+        "gene": "NUPR1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 41 (fdr=0.0183)"
+      },
+      {
+        "gene": "AAGAB",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 42 (fdr=0.0183)"
+      },
+      {
+        "gene": "IFNAR2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 43 (fdr=0.0183)"
+      },
+      {
+        "gene": "HNRNPA2B1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 44 (fdr=0.0198)"
+      },
+      {
+        "gene": "AKAP13",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 45 (fdr=0.0198)"
+      },
+      {
+        "gene": "RASA2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 46 (fdr=0.022)"
+      },
+      {
+        "gene": "DGAT2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 47 (fdr=0.022)"
+      },
+      {
+        "gene": "SETDB1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 48 (fdr=0.0266)"
+      },
+      {
+        "gene": "SFMBT1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 49 (fdr=0.0302)"
+      },
+      {
+        "gene": "UTY",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 50 (fdr=0.0308)"
+      },
+      {
+        "gene": "XPNPEP1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 51 (fdr=0.0336)"
+      },
+      {
+        "gene": "GNA13",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 52 (fdr=0.0341)"
+      },
+      {
+        "gene": "ING2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 53 (fdr=0.0364)"
+      },
+      {
+        "gene": "H2AP",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 54 (fdr=0.039)",
+        "original_symbol": "HYPM",
+        "hgnc_note": "'HYPM' is a previous HGNC symbol"
+      },
+      {
+        "gene": "OVOL2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 55 (fdr=0.0416)"
+      },
+      {
+        "gene": "NCAM2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 56 (fdr=0.0428)"
+      },
+      {
+        "gene": "KIAA1328",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 57 (fdr=0.0428)"
+      },
+      {
+        "gene": "CEMIP2",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 58 (fdr=0.0446)",
+        "original_symbol": "TMEM2",
+        "hgnc_note": "'TMEM2' is a previous HGNC symbol"
+      },
+      {
+        "gene": "ZBTB7B",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 59 (fdr=0.048)"
+      },
+      {
+        "gene": "TPT1",
+        "direction": "proviral",
+        "source": "Supplementary Table 1 (LOF/knockout screen, enriched), MAGeCK pos rank 60 (fdr=0.048)"
+      },
+      {
+        "gene": "TEAD3",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 1 (fdr=0.000619)"
+      },
+      {
+        "gene": "ZNF275",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 2 (fdr=0.000619)"
+      },
+      {
+        "gene": "CCNE1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 3 (fdr=0.000619)"
+      },
+      {
+        "gene": "SPDEF",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 4 (fdr=0.000619)"
+      },
+      {
+        "gene": "JDP2",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 5 (fdr=0.000619)"
+      },
+      {
+        "gene": "CPNE3",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 6 (fdr=0.000619)"
+      },
+      {
+        "gene": "FOXE1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 7 (fdr=0.000619)"
+      },
+      {
+        "gene": "TAF7L",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 8 (fdr=0.000619)"
+      },
+      {
+        "gene": "MUC1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 9 (fdr=0.00148)"
+      },
+      {
+        "gene": "MUC21",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 10 (fdr=0.00148)"
+      },
+      {
+        "gene": "LY6E",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 11 (fdr=0.00206)"
+      },
+      {
+        "gene": "FMNL1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 12 (fdr=0.00206)"
+      },
+      {
+        "gene": "MUC4",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 13 (fdr=0.00248)"
+      },
+      {
+        "gene": "FAM9A",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 14 (fdr=0.00248)"
+      },
+      {
+        "gene": "GRK3",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 15 (fdr=0.00363)"
+      },
+      {
+        "gene": "KRTAP10-10",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 16 (fdr=0.00773)"
+      },
+      {
+        "gene": "FAM53B",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 17 (fdr=0.0114)"
+      },
+      {
+        "gene": "URI1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 18 (fdr=0.0117)"
+      },
+      {
+        "gene": "MUC13",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 19 (fdr=0.0117)"
+      },
+      {
+        "gene": "CD44",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 20 (fdr=0.0121)"
+      },
+      {
+        "gene": "ACBD3",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 21 (fdr=0.0163)"
+      },
+      {
+        "gene": "C5orf47",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 22 (fdr=0.0164)"
+      },
+      {
+        "gene": "STK10",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 23 (fdr=0.0212)"
+      },
+      {
+        "gene": "DOCK4",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 24 (fdr=0.0212)"
+      },
+      {
+        "gene": "ARID5B",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 25 (fdr=0.0232)"
+      },
+      {
+        "gene": "FAM13B",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 26 (fdr=0.0249)"
+      },
+      {
+        "gene": "RHPN2",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 27 (fdr=0.0277)"
+      },
+      {
+        "gene": "ANKRD17",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 28 (fdr=0.0277)"
+      },
+      {
+        "gene": "CCND1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 29 (fdr=0.0277)"
+      },
+      {
+        "gene": "GMIP",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 30 (fdr=0.0277)"
+      },
+      {
+        "gene": "H3-4",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 31 (fdr=0.0277)",
+        "original_symbol": "HIST3H3",
+        "hgnc_note": "'HIST3H3' is a previous HGNC symbol"
+      },
+      {
+        "gene": "RGL1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 32 (fdr=0.0277)"
+      },
+      {
+        "gene": "HBE1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 33 (fdr=0.0277)"
+      },
+      {
+        "gene": "ZNF462",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 34 (fdr=0.0277)"
+      },
+      {
+        "gene": "S100A1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 35 (fdr=0.0277)"
+      },
+      {
+        "gene": "CKM",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 36 (fdr=0.0277)"
+      },
+      {
+        "gene": "ZNF804B",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 37 (fdr=0.0277)"
+      },
+      {
+        "gene": "PLEKHG5",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 38 (fdr=0.0277)"
+      },
+      {
+        "gene": "PBX1",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 39 (fdr=0.0303)"
+      },
+      {
+        "gene": "SERINC2",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 40 (fdr=0.031)"
+      },
+      {
+        "gene": "IRF5",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 41 (fdr=0.031)"
+      },
+      {
+        "gene": "PRR15L",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 42 (fdr=0.0374)"
+      },
+      {
+        "gene": "CLDN25",
+        "direction": "antiviral",
+        "source": "Supplementary Table 3 (GOF/CRISPRa screen, enriched), MAGeCK pos rank 43 (fdr=0.0496)"
+      }
+    ]
+  },
+  "_optional_accessory_ORF_orthology_check": {
+    "description": "Orthology of SARS-CoV-2 accessory ORFs in SARS-CoV-1 (Sarbecovirus, closely related) vs MERS-CoV (Merbecovirus, distinct lineage). Accessory genes are NOT conserved across betacoronavirus lineages/genera; MERS carries a completely different accessory complement (ORF3, 4a, 4b, 5).",
+    "sources": [
+      "Established comparative-genomics consensus on betacoronavirus accessory-gene complements: SARS-CoV-2 encodes accessory ORFs 3a,6,7a,7b,8,9b (+debated 3b,9c,10); SARS-CoV-1 encodes 3a,3b,6,7a,7b,8a,8b,9b (+9c/ORF14); MERS-CoV encodes a DISTINCT set ORF3,4a,4b,5 with no orthologs of the SARS accessory ORFs.",
+      "SARS-CoV-2-specific / divergence details (ORF10 absent in SARS-CoV-1; ORF3b full-length in SARS-CoV-1 but truncated ~22aa in SARS-CoV-2; ORF8 orthologous locus but <20% aa identity, split into 8a/8b in SARS-CoV-1 via a 29-nt deletion) are standard sarbecovirus findings.",
+      "Further reading (titles surfaced via web search; full text not verified in-session, treat as pointers not quoted evidence): 'SARS-CoV-2 ORF8 accessory protein is a virulence factor' (PMC10653805); 'Variability of Accessory Proteins Rules the SARS-CoV-2 Pathogenicity' (bioRxiv 2020.11.06.372227); 'Hidden players of COVID-19: evolving roles of SARS-CoV-2 accessory proteins' (PMC12698434)."
+    ],
+    "orfs": {
+      "Orf3a": {
+        "SARS-CoV-1_ortholog": "yes",
+        "MERS_ortholog": "no",
+        "note": "Clear ortholog in SARS-CoV-1 (~72% aa identity). No true ortholog in MERS (MERS accessory set is 3/4a/4b/5)."
+      },
+      "Orf3b": {
+        "SARS-CoV-1_ortholog": "yes (SARS-CoV-1 canonical, full-length ~154 aa)",
+        "MERS_ortholog": "no",
+        "note": "Positionally orthologous ORF3b locus exists in SARS-CoV-1 as the canonical full-length protein; in SARS-CoV-2 ORF3b is severely truncated by a premature stop (~22 aa), so the functional full-length form is a SARS-CoV-1 feature. No MERS ortholog."
+      },
+      "Orf6": {
+        "SARS-CoV-1_ortholog": "yes",
+        "MERS_ortholog": "no",
+        "note": "Ortholog present in SARS-CoV-1. No MERS ortholog."
+      },
+      "Orf7a": {
+        "SARS-CoV-1_ortholog": "yes",
+        "MERS_ortholog": "no",
+        "note": "Ortholog present in SARS-CoV-1. No MERS ortholog."
+      },
+      "Orf7b": {
+        "SARS-CoV-1_ortholog": "yes",
+        "MERS_ortholog": "no",
+        "note": "(Not in the user's list, included for completeness.) Ortholog present in SARS-CoV-1. No MERS ortholog."
+      },
+      "Orf8": {
+        "SARS-CoV-1_ortholog": "yes (orthologous locus, highly divergent)",
+        "MERS_ortholog": "no",
+        "note": "Orthologous locus in SARS-CoV-1 but <20% aa identity; in SARS-CoV-1 a 29-nt deletion during 2002-03 human transmission split orf8 into orf8a/orf8b (early civet isolates had single orf8/orf8ab). No MERS ortholog."
+      },
+      "Orf9b": {
+        "SARS-CoV-1_ortholog": "yes",
+        "MERS_ortholog": "no",
+        "note": "Ortholog present in SARS-CoV-1 (overlaps N gene). No MERS ortholog."
+      },
+      "Orf9c": {
+        "SARS-CoV-1_ortholog": "yes (a.k.a. ORF14)",
+        "MERS_ortholog": "no",
+        "note": "Positionally orthologous ORF9c/ORF14 locus exists in SARS-CoV-1; expression/protein-coding status debated in both viruses. No MERS ortholog."
+      },
+      "Orf10": {
+        "SARS-CoV-1_ortholog": "no",
+        "MERS_ortholog": "no",
+        "note": "SARS-CoV-2-specific: no ORF10 ortholog in SARS-CoV-1. No MERS ortholog. (Coding status of SARS-CoV-2 ORF10 itself is debated.)"
+      }
+    },
+    "summary": "Among the 8 SARS-CoV-2 accessory ORFs checked, 7 (Orf3a, Orf3b, Orf6, Orf7a, Orf8, Orf9b, Orf9c) have a positional ortholog in SARS-CoV-1 and only Orf10 is SARS-CoV-2-specific with no SARS-CoV-1 ortholog. NONE of the SARS-CoV-2 accessory ORFs have a true ortholog in MERS-CoV, which carries a distinct accessory complement (ORF3, ORF4a, ORF4b, ORF5). This corroborates the user's 'MERS has ORF3/4a/4b/5, no SARS accessory ORFs' rule.",
+    "provenance_note": "Table reflects established comparative-genomics consensus, not a single retrieved dataset. Independently consistent with the user's own Gordon-et-al.-grounded rule and the 'MERS has ORF3/4a/4b/5' fact. No verbatim source quote is asserted."
+  }
+}

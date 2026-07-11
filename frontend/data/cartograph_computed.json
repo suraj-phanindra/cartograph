@@ -783,6 +783,107 @@
         }
       ]
     },
+    "crispr_channel": {
+      "source": "7 genome-wide SARS-CoV-2 CRISPR screens (433 sourced hits)",
+      "n_host_factors": 332,
+      "n_crispr_supported": 11,
+      "n_crispr_supported_excl_soft": 9,
+      "n_screens_total": 7,
+      "supported": [
+        {
+          "gene": "RAB7A",
+          "n_screens": 2,
+          "n_screens_excl_soft": 2,
+          "screens": [
+            "Daniloski et al. (Cell 2021)",
+            "Zhu et al. (Nat Commun 2021)"
+          ]
+        },
+        {
+          "gene": "SCAP",
+          "n_screens": 2,
+          "n_screens_excl_soft": 2,
+          "screens": [
+            "Schneider et al. (Cell 2021)",
+            "Wang et al. (Cell 2021)"
+          ]
+        },
+        {
+          "gene": "WASHC4",
+          "n_screens": 2,
+          "n_screens_excl_soft": 2,
+          "screens": [
+            "Daniloski et al. (Cell 2021)",
+            "Zhu et al. (Nat Commun 2021)"
+          ]
+        },
+        {
+          "gene": "ATP6AP1",
+          "n_screens": 1,
+          "n_screens_excl_soft": 1,
+          "screens": [
+            "Daniloski et al. (Cell 2021)"
+          ]
+        },
+        {
+          "gene": "CEP350",
+          "n_screens": 1,
+          "n_screens_excl_soft": 0,
+          "screens": [
+            "Baggen et al. (Nat Genet 2021)"
+          ]
+        },
+        {
+          "gene": "CSNK2B",
+          "n_screens": 1,
+          "n_screens_excl_soft": 1,
+          "screens": [
+            "Schneider et al. (Cell 2021)"
+          ]
+        },
+        {
+          "gene": "GIGYF2",
+          "n_screens": 1,
+          "n_screens_excl_soft": 1,
+          "screens": [
+            "Schneider et al. (Cell 2021)"
+          ]
+        },
+        {
+          "gene": "HS2ST1",
+          "n_screens": 1,
+          "n_screens_excl_soft": 1,
+          "screens": [
+            "Schneider et al. (Cell 2021)"
+          ]
+        },
+        {
+          "gene": "NPC2",
+          "n_screens": 1,
+          "n_screens_excl_soft": 1,
+          "screens": [
+            "Zhu et al. (Nat Commun 2021)"
+          ]
+        },
+        {
+          "gene": "PMPCA",
+          "n_screens": 1,
+          "n_screens_excl_soft": 0,
+          "screens": [
+            "Baggen et al. (Nat Genet 2021)"
+          ]
+        },
+        {
+          "gene": "RAB10",
+          "n_screens": 1,
+          "n_screens_excl_soft": 1,
+          "screens": [
+            "Schneider et al. (Cell 2021)"
+          ]
+        }
+      ],
+      "caveat": "Functional-dependency hits from 7 genome-wide CRISPR screens (the high-confidence core from each paper's own hit table/figure; Wei & Baggen lack a reproducible genome-wide FDR list, so counts are also shown excluding them). A CRISPR hit is orthogonal functional evidence, NOT proof of a physical interaction. Sparse overlap with AP-MS prey is expected \u2014 dependency screens and binding assays capture different biology. Blank means not established, never absent from biology."
+    },
     "loop": {
       "confirmed_edges": [
         [
@@ -2253,6 +2354,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1"
       },
+      "crispr": null,
       "structural_validation": {
         "provenance": "experimental",
         "band": "experimental",
@@ -2449,6 +2551,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1"
       },
+      "crispr": null,
       "structural_validation": {
         "provenance": "experimental",
         "band": "experimental",
@@ -2621,6 +2724,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1"
       },
+      "crispr": null,
       "structural_validation": {
         "provenance": "predicted-monomer",
         "band": "monomer model",
@@ -2784,6 +2888,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1"
       },
+      "crispr": null,
       "structural_validation": {
         "provenance": "experimental",
         "band": "experimental",
@@ -2875,6 +2980,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2914,6 +3020,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2953,6 +3060,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -2992,6 +3100,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3031,6 +3140,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "veto",
       "structure": "none",
       "structure_band": null,
@@ -3070,6 +3180,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3109,6 +3220,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3148,6 +3260,7 @@
         "is_conserved": false,
         "label": "no ortholog"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3187,6 +3300,7 @@
         "is_conserved": false,
         "label": "no ortholog"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3229,6 +3343,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1, MERS"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3270,6 +3385,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3311,6 +3427,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "predicted",
       "structure_band": null,
@@ -3352,6 +3469,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3394,6 +3512,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1, MERS"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3433,6 +3552,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3475,6 +3595,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1, MERS"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3514,6 +3635,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3553,6 +3675,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3592,6 +3715,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3631,6 +3755,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3670,6 +3795,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3709,6 +3835,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3748,6 +3875,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3787,6 +3915,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3826,6 +3955,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3867,6 +3997,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3906,6 +4037,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3945,6 +4077,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -3987,6 +4120,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1, MERS"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4026,6 +4160,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4065,6 +4200,7 @@
         "is_conserved": false,
         "label": "no ortholog"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4104,6 +4240,7 @@
         "is_conserved": false,
         "label": "no ortholog"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4145,6 +4282,7 @@
         "is_conserved": true,
         "label": "conserved: CoV-1"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4184,6 +4322,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4223,6 +4362,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4262,6 +4402,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4301,6 +4442,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4340,6 +4482,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4379,6 +4522,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
@@ -4418,6 +4562,7 @@
         "is_conserved": false,
         "label": "not conserved"
       },
+      "crispr": null,
       "skeptic": "pass",
       "structure": "none",
       "structure_band": null,
