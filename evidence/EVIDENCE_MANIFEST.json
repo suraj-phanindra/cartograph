@@ -38,6 +38,14 @@
       "vid": "d9e6b222-eb5e-46c6-b8f6-2e239ef24b14",
       "desc": "Flagship held-out example: Orf6\u2013RAE1 recovered via NUP98\u2013RAE1; full cited chain + Orf9b backup."
     },
+    "gordon2020_science_cov1_mers_edges.csv": {
+      "lookup": 7,
+      "desc": "Conservation ground truth: SARS-CoV-1 (366) + MERS (296) human-viral interactions from Gordon et al. 2020 Science (PMID 33060197, IMEx IM-28441), via EBI IntAct REST. Canonical numbers match the paper. The Science SARS-CoV-2 map (396) was fetched but NOT committed, so it cannot contaminate the frozen Nature-332 benchmark."
+    },
+    "gordon2020_science_cov1_mers_counts.json": {
+      "lookup": 7,
+      "desc": "Provenance + per-strain counts + orthology rules for the CoV-1/MERS conservation data. Documents benchmark isolation (Science CoV-2 excluded) and partial viral orthology (MERS has ORF3/4a/4b/5, no SARS accessory ORFs)."
+    },
     "crispr_gold_standard.csv": {
       "lookup": 5,
       "vid": "586ff35d-83e2-4f95-9ff2-22b3232c0271",

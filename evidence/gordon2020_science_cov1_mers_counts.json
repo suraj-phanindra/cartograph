@@ -1,0 +1,13 @@
+{
+ "source": "Gordon et al. 2020, Science, 'Comparative host-coronavirus protein interaction networks reveal pan-viral disease mechanisms' (PMID 33060197, DOI 10.1126/science.abe9403, PMC7808408, IMEx IM-28441), retrieved via EBI IntAct REST (findInteractions) by publication id.",
+ "retrieved": "2026-07-10",
+ "committed_edges": {
+  "SARS-CoV-1": 366,
+  "MERS-CoV": 296
+ },
+ "raw_intact_records": {
+  "total_pmid_33060197": 1061
+ },
+ "benchmark_isolation": "The Science SARS-CoV-2 map (396 PPIs, distinct from the Nature 332 the frozen benchmark uses) was fetched but is DELIBERATELY NOT committed, so it cannot modify, extend, or contaminate the frozen held-out split or ground truth. Only CoV-1 + MERS are committed, used exclusively for cross-species conservation.",
+ "orthology_note": "Viral orthology is partial. Nsp1-16, N, M, E, Spike have clear orthologs across all three viruses. Accessory ORFs do not: MERS encodes lineage-specific ORF3/4a/4b/5 (named MERS-ORF* here) and has NO ortholog of SARS Orf3a/3b/6/7a/8/9b/9c/10. SARS-CoV-1 Orf8a+Orf8b are mapped to the single SARS-CoV-2 Orf8, and SARS-CoV-1 'protein 14' to Orf9c. 'No ortholog' is a distinct state from 'not conserved' and is never collapsed."
+}
