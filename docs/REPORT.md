@@ -343,3 +343,65 @@ verified in-browser (0 console errors). Roadmap (not built, deliberately scoped
 out) articulated in the README: live pooled-AF3 folding, active-learning loop,
 multi-user realtime, cross-species conservation, learned embeddings, chemical/
 functional-genomics channels — each behind the same locked-benchmark contract.
+
+## 9. Cross-species conservation channel (SARS-CoV-1 / MERS)
+
+The first corroboration channel that **measurably improves accuracy** — and the
+gain is honest.
+
+**9.1 Data (STEP 0, verified).** The SARS-CoV-1 and MERS interactomes were fetched
+from Gordon et al. 2020 *Science* ("Comparative host-coronavirus protein
+interaction networks", PMID 33060197, DOI 10.1126/science.abe9403, IMEx IM-28441)
+via the EBI IntAct REST API — the same IMEx source as the Nature ground truth.
+Committed `evidence/gordon2020_science_cov1_mers_edges.csv`: **366 SARS-CoV-1 + 296
+MERS** interactions, both **exactly the paper's canonical numbers**. Viral proteins
+were mapped to Gordon canonical names (Nsp1-16, N/M/E/Spike, accessory ORFs; SARS-
+CoV-1 Orf8a+Orf8b→Orf8 and protein-14→Orf9c; MERS lineage-specific ORF3/4a/4b/5 kept
+distinct). Reproducible via `scripts/fetch_cov1_mers.py` + `build_cov1_mers_csv.py`.
+
+**Benchmark isolation.** The Science paper also contains a SARS-CoV-2 map (396 PPIs,
+distinct from the Nature 332 the frozen split uses). It was fetched but **deliberately
+not committed** — it never enters the repo, so it cannot modify, extend, or
+contaminate the frozen split or ground truth. Asserted by a test (`grep -c
+SARS-CoV-2` on the committed file is 0; baseline stays 0.45 / 0.8451).
+
+**9.2 Three states, never collapsed.** An edge is **conserved** if the orthologous
+viral protein binds the same human prey in a reference strain; **not_conserved** if
+that ortholog is represented in the strain's screen but no such edge is reported;
+**no_ortholog** if the strain has no orthologous viral protein. Viral orthology is
+partial: Nsp1-16/N/M/E/Spike are universal; MERS encodes lineage-specific ORF3/4a/4b/5
+and has **no ortholog** of any SARS accessory ORF; Orf10 has no ortholog in either
+(CoV-2 putative-specific). Rendering "no_ortholog" as "not_conserved" would be a
+fabrication — the flagship case Orf6→RAE1 is **conserved in SARS-CoV-1** but
+**no_ortholog in MERS**, and both are shown as distinct states everywhere (module,
+worklist, dossier, Compare-strains, exports). A test asserts the states never collapse.
+
+**9.3 Honest accuracy result.** Used as an additive candidate prior in the locked
+evaluator (kept SEPARATE from topology/structure/literature, never blended into one
+score), conservation **genuinely helps, and the gain survives excluding the pinned
+flagship**: precision@10 **0.30 → 0.60**, precision@20 **0.45 → 0.50**, ROC-AUC
+0.859 → 0.892 (excl. pinned). This is unlike the structural channel, which honestly
+reported 0.0 aggregate gain. Across all 332 Gordon edges, **118 (36%) are
+pan-coronavirus** (111 conserved in SARS-CoV-1, 30 in MERS); 107 MERS "no ortholog"
+cases are correctly distinguished from "not conserved". The baseline evaluator number
+is unchanged — conservation is reported alongside it, never replacing it.
+
+**9.4 Product surfaces.** A Conserved map layer (highlights pan-coronavirus edges);
+**Compare strains** (previously greyed out) is now a live offline view of shared vs
+SARS-CoV-2-specific edges with per-strain state; a worklist Conservation column +
+"conserved only" filter; a separate dossier corroboration block; and the evaluator
+panel reports the conservation gain plus the **free win** — "recall on the reachable
+set: **14/14**" (L3 recovers every held-out edge a length-3 path can reach), formerly
+buried one click deep. Fixes landed: the worklist experiment text wraps (was
+truncated); every disabled control carries a why-tooltip; the "every hypothesis is
+backed by an openable paper" line is kept.
+
+**Data-integrity review + CRISPR status.** A fresh adversarial review audited the
+conservation channel (states never collapsed, benchmark isolation, no fabricated
+matches, gain honest excl-pinned). The second planned channel — CRISPR functional
+genomics — is pending real per-screen hit-list data: `crispr_screens.json` is
+metadata-only and `crispr_gold_standard.csv` is only the ≥2-of-7 consensus (which
+overlaps our prey solely at SCAP), and a per-screen union cannot be reconstructed
+from full text without presenting mentions as hits. The verified hit lists are being
+sourced (via Claude Science) so the channel can be built as a real weighted union
+rather than approximated. **67 tests pass**; baseline intact; Stage 0 green.
