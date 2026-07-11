@@ -15,8 +15,10 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def _no_network(monkeypatch):
-    # never call STRING in tests; return no enrichment edges
+    # never call STRING or UniProt in tests
     monkeypatch.setattr(server, "_fetch_string_network", lambda genes: [])
+    monkeypatch.setattr(server, "_resolve_lengths",
+                        lambda proteins: {p: 300 + 100 * i for i, p in enumerate(proteins)})
 
 
 def test_health():
@@ -80,3 +82,40 @@ def test_druggability_cached_snapshot():
 def test_druggability_rejects_bad_gene():
     assert client.get("/api/druggability", params={"gene": "<script>"}).status_code == 400
     assert client.get("/api/druggability", params={"gene": "RAE1", "ensembl": "bad"}).status_code == 400
+
+
+# --- pooled-AF3 matrix screen ----------------------------------------------
+MATRIX = ("prot,NUP98,RAE1,NUP214,G3BP1\n"
+          "NUP98,1,0.88,0.72,0.15\n"
+          "RAE1,0.88,1,0.65,0.10\n"
+          "NUP214,0.72,0.65,1,0.14\n"
+          "G3BP1,0.15,0.10,0.14,1")
+
+
+def test_screen_parses_size_corrects_thresholds():
+    d = client.post("/api/screen", json={"matrix": MATRIX, "threshold": 0.55}).json()
+    assert d["source"] == "virtual screen (pooled-AlphaFold3)"
+    assert d["n_proteins"] == 4 and d["n_pairs"] == 6
+    assert d["size_corrected"] is True                      # monkeypatched lengths -> de-trend runs
+    for r in d["top"]:
+        assert r["band"] in ("highly confident", "confident", "weak", "no better than random")
+        assert "iptm_size_corrected" in r
+    # every kept pair is above threshold on its effective (size-corrected) value
+    assert all(r["effective"] >= 0.55 for r in d["top"])
+
+
+def test_screen_rejects_bad_protein_name():
+    bad = "prot,<script>\n<script>,1"
+    assert client.post("/api/screen", json={"matrix": bad}).status_code == 400
+
+
+def test_screen_rejects_empty_matrix():
+    assert client.post("/api/screen", json={"matrix": "prot"}).status_code == 400
+
+
+def test_screen_never_touches_locked_benchmark():
+    # /api/screen must not import or use the frozen split; the eval endpoint number
+    # is unchanged after a screen call
+    client.post("/api/screen", json={"matrix": MATRIX})
+    m = client.post("/api/eval/run").json()["metrics"]
+    assert m["k"]["20"]["precision"] == 0.45

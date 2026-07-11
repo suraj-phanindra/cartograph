@@ -843,22 +843,77 @@ function openEvalTransparency(){
 }
 
 /* ---------- upload: bring your own interactome (via the API) ---------- */
+let upMode='edges';
 function openUpload(){
-  const body=`
-    <div class="up-form">
-      <div class="up-msg info">Your edges &rarr; STRING enrichment &rarr; L3. Not added to the locked benchmark; edges with no cached evidence show topology only, never a fabricated mechanism or citation.</div>
-      <label>Edge list (one <span class="mono">bait,prey</span> per line; a header row is optional)</label>
-      <textarea id="up-edges" placeholder="ORF6,NUP98&#10;ORF6,RAE1&#10;N,G3BP1&#10;N,G3BP2"></textarea>
-      <label>Held-out fraction for your own eval (0 to skip)</label>
-      <input type="number" id="up-frac" min="0" max="0.5" step="0.05" value="0.2">
-      <div style="display:flex;gap:10px;align-items:center">
-        <button class="fs-btn" id="up-run" style="background:var(--panel2)">Enrich + run L3</button>
-        <span id="up-status" style="font:500 12px/1 var(--mono);color:var(--mut)"></span>
-      </div>
-      <div id="up-result"></div>
-    </div>`;
-  openModal(`Upload interactome <small>your edges → STRING enrichment → deterministic L3</small>`, '', body);
-  document.getElementById('up-run').onclick=runUpload;
+  openModal(`Bring your own map <small>your data → deterministic triage · not added to the locked benchmark</small>`,
+    `<div class="up-tabs"><button class="up-tab" data-m="edges">Edge list</button><button class="up-tab" data-m="matrix">Pooled-AF3 ipTM matrix</button></div>`, '');
+  document.querySelectorAll('.up-tab').forEach(b=> b.onclick=()=>setUpMode(b.dataset.m));
+  setUpMode('edges');
+}
+function setUpMode(m){
+  upMode=m;
+  document.querySelectorAll('.up-tab').forEach(b=> b.classList.toggle('on', b.dataset.m===m));
+  document.getElementById('modal-body').innerHTML = m==='edges' ? uploadEdgesForm() : uploadMatrixForm();
+  document.getElementById('up-run').onclick = m==='edges' ? runUpload : runScreen;
+}
+function uploadEdgesForm(){
+  return `<div class="up-form">
+    <div class="up-msg info">Your edges → STRING enrichment → L3. Not added to the locked benchmark; edges with no cached evidence show topology only, never a fabricated mechanism or citation.</div>
+    <label>Edge list (one <span class="mono">bait,prey</span> per line; a header row is optional)</label>
+    <textarea id="up-edges" placeholder="ORF6,NUP98&#10;ORF6,RAE1&#10;N,G3BP1&#10;N,G3BP2"></textarea>
+    <label>Held-out fraction for your own eval (0 to skip)</label>
+    <input type="number" id="up-frac" min="0" max="0.5" step="0.05" value="0.2">
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="fs-btn" id="up-run" style="background:var(--panel2)">Enrich + run L3</button>
+      <span id="up-status" style="font:500 12px/1 var(--mono);color:var(--mut)"></span>
+    </div><div id="up-result"></div></div>`;
+}
+function uploadMatrixForm(){
+  return `<div class="up-form">
+    <div class="up-msg info">A pooled-AlphaFold3 virtual screen: a symmetric protein×protein ipTM matrix. Cartograph size-corrects ipTM (it rises with summed chain length), thresholds to candidate edges, bands each, and runs the L3 topology channel. Every ipTM is labelled predicted; nothing is fabricated; not added to the locked benchmark.</div>
+    <label>ipTM matrix (CSV/TSV; header row of protein names, first column = names)</label>
+    <textarea id="up-matrix" placeholder="prot,NUP98,RAE1,NUP214,G3BP1&#10;NUP98,1,0.88,0.72,0.15&#10;RAE1,0.88,1,0.65,0.10&#10;NUP214,0.72,0.65,1,0.14&#10;G3BP1,0.15,0.10,0.14,1"></textarea>
+    <label>Keep pairs with (size-corrected) ipTM ≥</label>
+    <input type="number" id="up-thr" min="0" max="1" step="0.05" value="0.55">
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="fs-btn" id="up-run" style="background:var(--panel2)">Size-correct + triage</button>
+      <span id="up-status" style="font:500 12px/1 var(--mono);color:var(--mut)"></span>
+    </div><div id="up-result"></div></div>`;
+}
+
+async function runScreen(){
+  const status=document.getElementById('up-status'), result=document.getElementById('up-result');
+  const matrix=document.getElementById('up-matrix').value.trim();
+  const threshold=parseFloat(document.getElementById('up-thr').value)||0.55;
+  result.innerHTML='';
+  if(!matrix){ status.textContent='paste an ipTM matrix first.'; return; }
+  status.innerHTML='<span class="spin"></span> size-correcting + triaging…';
+  try{
+    const resp=await fetch('/api/screen',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({matrix, threshold})});
+    if(!resp.ok){ const e=await resp.json().catch(()=>({detail:`HTTP ${resp.status}`})); throw new Error(e.detail||`HTTP ${resp.status}`); }
+    status.textContent=''; renderScreenResult(await resp.json());
+  }catch(err){
+    status.textContent='';
+    result.innerHTML=`<div class="up-msg err">${esc(String(err.message||err))}<br><br>Needs the API server: <b class="mono">./run.sh api</b>.</div>`;
+  }
+}
+function bandChip(b){ const t={'highly confident':3,'confident':2,'weak':1,'no better than random':0}[b];
+  return `<span class="isilico-band tier${t==null?0:t}">${esc(b)}</span>`; }
+function renderScreenResult(d){
+  const rows=(d.top||[]).map(r=>`<tr>
+    <td class="wl-edge">${esc(r.a)} — ${esc(r.b)}</td>
+    <td class="wl-num">${esc(r.iptm)}</td>
+    <td class="wl-num">${r.size_corrected?esc(r.iptm_size_corrected):'<span class="wl-no">—</span>'}</td>
+    <td>${bandChip(r.band)}</td></tr>`).join('');
+  const l3=(d.l3_proposals||[]).map(p=>`<tr><td class="wl-edge">${esc(p.a)} — ${esc(p.b)}</td>
+    <td class="wl-num">${(p.l3_score||0).toFixed(3)}</td><td class="mono" style="font-size:11px;color:var(--mut)">${p.path?esc(p.path.join(' → ')):'—'}</td></tr>`).join('');
+  document.getElementById('up-result').innerHTML=`
+    <div class="up-msg ok">${esc(d.source)}: ${esc(d.n_proteins)} proteins, ${esc(d.n_pairs)} pairs; ${esc(d.n_kept)} above threshold ${esc(d.threshold)}. Size-correction ${d.size_corrected?`applied (${esc(d.n_lengths_resolved)} lengths from UniProt)`:'skipped (no lengths resolved)'}.</div>
+    <table class="wl-table" style="margin-top:12px"><thead><tr><th>Candidate edge</th><th>ipTM</th><th>size-corrected</th><th>band</th></tr></thead><tbody>${rows||'<tr><td colspan=4 class="wl-no">none above threshold</td></tr>'}</tbody></table>
+    ${l3?`<div style="margin-top:12px;font:600 10px/1 var(--mono);letter-spacing:.1em;color:var(--mut2);text-transform:uppercase">L3 topology channel · edges the folds may have missed</div>
+    <table class="wl-table"><thead><tr><th>Proposed edge</th><th>L3</th><th>path</th></tr></thead><tbody>${l3}</tbody></table>`:''}
+    <div class="wl-note">${esc(d.note)}</div>`;
 }
 
 async function runUpload(){

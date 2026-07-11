@@ -27,12 +27,15 @@ from pydantic import BaseModel, Field
 
 import networkx as nx
 
+import requests
+
 from backend import config
 from backend.graph.enrich import enriched_graph, _fetch_string_network
 from backend.predict.l3 import l3_scores, rank_of
 from backend.eval.evaluator import evaluate
 from backend.reason.hypothesis import read_edge, EDGE_TO_PACK
 from backend.druggability import service as drug_service
+from backend.structure import cofold
 
 log = logging.getLogger("cartograph.api")
 app = FastAPI(title="Cartograph API", version="1.0")
@@ -45,6 +48,9 @@ MAX_BODY = 2_000_000          # bytes; reject oversized requests before reading 
 MAX_STRING_PREY = 600         # cap identifiers sent to STRING
 MAX_ENRICH_EDGES = 8000       # cap enrichment edges added to an uploaded graph
 UPLOAD_SEED = 1234            # a SEPARATE seed; never the locked benchmark's seed
+MAX_MATRIX_PROTEINS = 400     # cap proteins in a pooled-AF3 ipTM matrix
+MAX_LENGTH_LOOKUPS = 150      # cap UniProt length lookups per screen (be polite)
+_length_cache = {}
 _upload_gate = threading.Semaphore(2)  # bound concurrent uploads (worker exhaustion)
 
 
@@ -274,6 +280,146 @@ def _do_upload(req: UploadReq):
         "note": "Topology only. No cached evidence for uploaded edges; Cartograph will not "
                 "fabricate a mechanism, structure, or citation. Not added to the locked benchmark.",
     }
+
+
+# ---------------------------------------------------------------------------
+# pooled-AlphaFold3 score matrix upload (item 3): a virtual-screen ipTM matrix
+# ---------------------------------------------------------------------------
+class ScreenReq(BaseModel):
+    matrix: str = Field(max_length=1_500_000)
+    threshold: float = 0.55
+
+
+def _parse_matrix(text):
+    """Parse a symmetric protein x protein ipTM matrix (CSV/TSV): header row of
+    protein names, each row = name + N ipTM values. Returns (proteins, pairs) where
+    pairs are the upper-triangle (a, b, iptm) with a != b."""
+    lines = [ln for ln in text.strip().splitlines() if ln.strip()]
+    if len(lines) < 2:
+        raise HTTPException(400, "matrix needs a header row of protein names and >=1 data row")
+    header = [c.strip() for c in re.split(r"[,\t]", lines[0])]
+    first_data = [c.strip() for c in re.split(r"[,\t]", lines[1])]
+    # a header with the same width as a data row has a corner cell (drop it);
+    # a header one narrower is just the protein names.
+    if len(header) == len(first_data):
+        names = header[1:]
+    elif len(header) == len(first_data) - 1:
+        names = header
+    else:
+        names = header[1:] if len(header) > 1 else header
+    for n in names:
+        if not GENE_RE.match(n):
+            raise HTTPException(400, f"invalid protein name in header: {n!r}")
+    if len(names) > MAX_MATRIX_PROTEINS:
+        raise HTTPException(400, f"too many proteins (> {MAX_MATRIX_PROTEINS})")
+    row_names, grid = [], []
+    for ln in lines[1:]:
+        cells = [c.strip() for c in re.split(r"[,\t]", ln)]
+        if len(cells) < len(names) + 1:
+            continue
+        rn = cells[0]
+        if not GENE_RE.match(rn):
+            raise HTTPException(400, f"invalid protein name in row: {rn!r}")
+        row_names.append(rn)
+        vals = []
+        for c in cells[1:len(names) + 1]:
+            try:
+                vals.append(float(c))
+            except ValueError:
+                vals.append(None)
+        grid.append(vals)
+    idx = {n: i for i, n in enumerate(names)}
+    pairs, seen = [], set()
+    for ri, rn in enumerate(row_names):
+        for ci, cn in enumerate(names):
+            if rn == cn:
+                continue
+            v = grid[ri][ci]
+            if v is None:
+                continue
+            key = tuple(sorted((rn, cn)))
+            if key in seen:
+                continue
+            seen.add(key)
+            pairs.append((key[0], key[1], v))
+    if not pairs:
+        raise HTTPException(400, "no valid off-diagonal ipTM values found")
+    return names, pairs
+
+
+def _resolve_lengths(proteins):
+    """Best-effort human-protein lengths from UniProt (for size-correction). Cached;
+    capped; failures are tolerated (that pair simply is not size-corrected)."""
+    out = {}
+    todo = [p for p in proteins if p not in _length_cache][:MAX_LENGTH_LOOKUPS]
+    for gene in todo:
+        try:
+            r = requests.get("https://rest.uniprot.org/uniprotkb/search",
+                             params={"query": f"gene_exact:{gene} AND organism_id:9606 AND reviewed:true",
+                                     "fields": "length", "format": "tsv", "size": 1}, timeout=8)
+            rows = r.text.strip().splitlines()
+            _length_cache[gene] = int(rows[1]) if len(rows) > 1 and rows[1].strip().isdigit() else None
+        except Exception:
+            _length_cache[gene] = None
+    for p in proteins:
+        if _length_cache.get(p):
+            out[p] = _length_cache[p]
+    return out
+
+
+@app.post("/api/screen")
+def screen(req: ScreenReq):
+    """Triage a pooled-AlphaFold3 virtual screen: size-correct the ipTM matrix,
+    threshold to candidate edges, band, and run the topology (L3) channel on the
+    thresholded network. Display-only; never touches the locked benchmark."""
+    if not _upload_gate.acquire(blocking=False):
+        raise HTTPException(429, "server busy; retry shortly")
+    try:
+        thr = max(0.0, min(1.0, req.threshold if req.threshold is not None else 0.55))
+        proteins, pairs = _parse_matrix(req.matrix)
+        lengths = _resolve_lengths(proteins)
+        rows = [{"a": a, "b": b, "iptm": round(v, 4),
+                 "summed_len": (lengths.get(a, 0) + lengths.get(b, 0)) or None} for a, b, v in pairs]
+        cofold.size_correct(rows)
+        any_corrected = any(r["size_corrected"] for r in rows)
+        for r in rows:
+            eff = r["iptm_size_corrected"] if r["size_corrected"] else r["iptm"]
+            r["effective"] = eff
+            r["band"] = cofold.band_iptm(eff)["band"]
+        kept = sorted([r for r in rows if (r["effective"] or 0) >= thr], key=lambda r: -(r["effective"] or 0))
+
+        # topology channel: L3 on the thresholded network -> edges the folds may have
+        # missed but topology proposes (the complementary signal).
+        g = nx.Graph()
+        for r in kept:
+            for n in (r["a"], r["b"]):
+                if n not in g:
+                    g.add_node(n, type="human", uniprot="", annotations=[])
+            g.add_edge(r["a"], r["b"], kind="known", score=r["effective"], evidence_ref="pooled_af3")
+        l3_props = []
+        for node in sorted(g.nodes)[:60]:
+            for c in l3_scores(g, node)[:3]:
+                l3_props.append({"a": node, "b": c["candidate"], "l3_score": c["l3_score"],
+                                 "path": c["paths"][0] if c["paths"] else None})
+        seen = set(); uniq = []
+        for p in sorted(l3_props, key=lambda x: -x["l3_score"]):
+            k = tuple(sorted((p["a"], p["b"])))
+            if k in seen or g.has_edge(p["a"], p["b"]):
+                continue
+            seen.add(k); uniq.append(p)
+
+        return {
+            "source": "virtual screen (pooled-AlphaFold3)",
+            "n_proteins": len(proteins), "n_pairs": len(pairs), "n_kept": len(kept),
+            "threshold": thr, "size_corrected": any_corrected,
+            "n_lengths_resolved": len(lengths),
+            "top": kept[:30], "l3_proposals": uniq[:15],
+            "note": ("ipTM is size-corrected (de-trended vs summed chain length) where lengths "
+                     "resolved, banded, and labelled predicted. No cached evidence for these edges; "
+                     "no mechanism/citation is invented. Not added to the locked benchmark."),
+        }
+    finally:
+        _upload_gate.release()
 
 
 # --- serve the static frontend from the same origin (so /api/* is same-site) --
