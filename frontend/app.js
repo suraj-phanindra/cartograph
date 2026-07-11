@@ -231,6 +231,7 @@ const BAIT_ALIAS = { nucleocapsid:'N', envelope:'E', membrane:'M', spike:'Spike'
 function buildSearch(){
   const input=document.getElementById('ask-input');
   input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ runSearch(input.value); } });
+  document.getElementById('ask-go').onclick=()=>runSearch(input.value);
   const chips=[['ORF6’s unmapped targets','orf6 unmapped targets'],
     ['Most druggable predicted','most druggable predicted'],
     ['Run locked evaluation','run locked evaluation']];
@@ -632,8 +633,18 @@ function renderNodePanel(id){
 }
 
 function renderIdle(){
-  document.getElementById('dossier-body').innerHTML=
-    `<div class="dz-empty">Select a node to see its edges, or an edge for its structural dossier.</div>`;
+  document.getElementById('dossier-body').innerHTML=`
+    <div class="dz-empty-wrap">
+      <div class="dz-panel-head">Dossier</div>
+      <div class="dz-empty-center">
+        <div class="dz-ring" aria-hidden="true"></div>
+        <div class="dz-empty-prompt">Select a <b>node</b> to see its edges, or an <b>edge</b> for its structural dossier.</div>
+        <button class="dz-cta" id="dz-predict"><span class="sp" aria-hidden="true">&#10022;</span> Predict the ORF6 gap</button>
+      </div>
+      <div class="dz-empty-foot">Every hypothesis Cartograph renders is backed by an openable paper. A claim with no citation does not render.</div>
+    </div>`;
+  const btn=document.getElementById('dz-predict');
+  if(btn) btn.onclick=()=>{ document.getElementById('ask-input').value=''; probeBait(DATA.flagship.path[0]); };
 }
 
 /* ---------- modal (worklist / eval transparency / upload) ---------- */
