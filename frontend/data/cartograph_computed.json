@@ -81,6 +81,78 @@
         ]
       ],
       "measured_on": "the remaining held-out edges (fair before/after, same target set)",
+      "rounds": [
+        {
+          "round": 1,
+          "confirmed": [
+            [
+              "N",
+              "G3BP1"
+            ],
+            [
+              "Nsp13",
+              "PCNT"
+            ],
+            [
+              "Nsp4",
+              "TIMM10"
+            ],
+            [
+              "Orf9c",
+              "ECSIT"
+            ]
+          ],
+          "cumulative_confirmed": 4,
+          "before_precision_at_20": 0.3,
+          "after_precision_at_20": 0.35,
+          "before_recoverable": 10,
+          "after_recoverable": 10,
+          "n_remaining": 53
+        },
+        {
+          "round": 2,
+          "confirmed": [
+            [
+              "N",
+              "PABPC1"
+            ],
+            [
+              "Nsp13",
+              "PDE4DIP"
+            ],
+            [
+              "Nsp4",
+              "TIMM29"
+            ],
+            [
+              "Orf9c",
+              "NDUFAF1"
+            ]
+          ],
+          "cumulative_confirmed": 8,
+          "before_precision_at_20": 0.2,
+          "after_precision_at_20": 0.2,
+          "before_recoverable": 6,
+          "after_recoverable": 7,
+          "n_remaining": 49
+        },
+        {
+          "round": 3,
+          "confirmed": [
+            [
+              "Nsp13",
+              "PRKAR2A"
+            ]
+          ],
+          "cumulative_confirmed": 9,
+          "before_precision_at_20": 0.15,
+          "after_precision_at_20": 0.15,
+          "before_recoverable": 6,
+          "after_recoverable": 6,
+          "n_remaining": 48
+        }
+      ],
+      "n_rounds": 3,
       "before_precision_at_20": 0.3,
       "after_precision_at_20": 0.35,
       "before_recoverable": 10,

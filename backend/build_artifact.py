@@ -203,6 +203,37 @@ def _build_worklist(ranked_all, held_set, structure_facts, top_n=40):
     return rows[:top_n]
 
 
+def _loop_rounds(frozen, max_rounds=3):
+    """Honest multi-round self-improving loop. Each round confirms the newly
+    #1-ranked recovered-true edges (real Gordon edges), folds them back, and
+    re-scores the still-hidden edges. Stops when a round recovers nothing new.
+    Every round's before/after is a fair same-target-set comparison."""
+    held = [tuple(e) for e in frozen["held_out"]]
+    confirmed = set()
+    rounds = []
+    for r in range(1, max_rounds + 1):
+        rec = per_heldout_recovery(fold_back=list(confirmed))
+        new_greens = [(x["bait"], x["prey"]) for x in rec
+                      if x["recovered"] and x["rank"] == 1 and (x["bait"], x["prey"]) not in confirmed]
+        if not new_greens:
+            break
+        remaining = [h for h in held if h not in confirmed and h not in set(new_greens)]
+        before = evaluate(fold_back=list(confirmed), target_override=remaining)["metrics"]
+        after = evaluate(fold_back=list(confirmed) + new_greens, target_override=remaining)["metrics"]
+        confirmed |= set(new_greens)
+        rounds.append({
+            "round": r,
+            "confirmed": [list(e) for e in new_greens],
+            "cumulative_confirmed": len(confirmed),
+            "before_precision_at_20": before["k"][20]["precision"],
+            "after_precision_at_20": after["k"][20]["precision"],
+            "before_recoverable": before["n_targets_recoverable"],
+            "after_recoverable": after["n_targets_recoverable"],
+            "n_remaining": len(remaining),
+        })
+    return rounds
+
+
 def build():
     g = enriched_graph()
     frozen = load_frozen()
@@ -220,6 +251,7 @@ def build():
     remaining = [h for h in held if h not in set(top1_greens)]
     loop_before = evaluate(target_override=remaining)["metrics"]
     loop_after = evaluate(fold_back=top1_greens, target_override=remaining)["metrics"]
+    loop_rounds = _loop_rounds(frozen)
 
     # --- demo subgraph ------------------------------------------------------
     sub, nodes, held_set = _subgraph(g, frozen)
@@ -357,6 +389,8 @@ def build():
                 "confirmed_in_view": [list(e) for e in top1_greens
                                       if e[0] in DEMO_BAITS and e[1] in {n["id"] for n in nodes}],
                 "measured_on": "the remaining held-out edges (fair before/after, same target set)",
+                "rounds": loop_rounds,          # honest multi-round trajectory (rounds-run counter)
+                "n_rounds": len(loop_rounds),
                 "before_precision_at_20": loop_before["k"][20]["precision"],
                 "after_precision_at_20": loop_after["k"][20]["precision"],
                 "before_recoverable": loop_before["n_targets_recoverable"],

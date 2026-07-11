@@ -21,7 +21,7 @@ const safeEnsembl = e => (typeof e==='string' && /^ENSG[0-9]+$/.test(e)) ? e : n
 const edgeBetween = (a,b) => cy.getElementById(KEY(a,b)).union(cy.getElementById(KEY(b,a)));
 
 let DATA=null, cy=null, molViewer=null;
-const state = { evalDone:false, loopDone:false, layers:{known:true,enrichment:true,predicted:true,confirmed:true} };
+const state = { evalDone:false, loopRound:0, layers:{known:true,enrichment:true,predicted:true,confirmed:true} };
 
 async function boot(){
   try {
@@ -364,28 +364,29 @@ function showPrecision(){
 
 /* ---------- loop round ---------- */
 function runLoop(){
-  if(state.loopDone) return; state.loopDone=true;
-  const lp=DATA.eval.loop;
-  const nInView=(lp.confirmed_in_view||[]).length;
-  // confirm the recovered-true greens -> turn confirmed, densify (in-view ones animate)
-  cy.edges('edge.hit').addClass('confirmed');
-  for(const [s,t] of lp.confirmed_edges){ const e=edgeBetween(s,t); if(e.nonempty()) e.addClass('confirmed'); }
-  // make the fold-back visible in the legend counts (P1.2)
-  const nConfirmed=cy.edges('edge.confirmed').length;
-  updateLayerCount('confirmed', nConfirmed);
+  const rounds=(DATA.eval.loop.rounds)||[];
+  if(state.loopRound>=rounds.length) return;
+  const rd=rounds[state.loopRound];
+  state.loopRound++;
+  // round 1 also confirms the eval greens on the map (the densification beat)
+  if(state.loopRound===1) cy.edges('edge.hit').addClass('confirmed');
+  for(const [s,t] of rd.confirmed){ const e=edgeBetween(s,t); if(e.nonempty()) e.addClass('confirmed'); }
+  updateLayerCount('confirmed', cy.edges('edge.confirmed').length);
   const confRow=document.querySelector('.layer-row[data-k="confirmed"]');
   if(confRow && !state.layers.confirmed){ state.layers.confirmed=true; confRow.classList.add('on'); confRow.setAttribute('aria-checked','true'); }
-  toast(`<span class="k">Loop round</span>: confirm ${esc(lp.confirmed_edges.length)} recovered-true edges (each a real Gordon edge, each L3-rank #1; ${esc(nInView)} in this view), fold them back as known, re-score the still-hidden edges.`);
-  const chip=document.getElementById('precision-chip');
-  chip.classList.remove('hidden');   // ensure visible even if the eval chip was dismissed
-  const before=Math.round(lp.before_precision_at_20*100), after=Math.round(lp.after_precision_at_20*100);
+  document.getElementById('loop-rounds').textContent=`rounds run: ${state.loopRound}`;
+  const before=Math.round(rd.before_precision_at_20*100), after=Math.round(rd.after_precision_at_20*100);
+  const chip=document.getElementById('precision-chip'); chip.classList.remove('hidden');
   chip.innerHTML=`<button class="panel-close" aria-label="Dismiss loop panel" onclick="hideChip()">✕</button>
-    <div class="lbl">Loop round · precision@20 on remaining held-out</div>
+    <div class="lbl">Loop round ${esc(rd.round)} · precision@20 on remaining held-out</div>
     <div class="big">${before}% → ${after}%</div>
-    <div class="sub">confirmed <b>${esc(lp.confirmed_edges.length)}</b> edges, folded back as known<br>
-    reachable set unchanged (${esc(lp.before_recoverable)} → ${esc(lp.after_recoverable)}); the gain is honest <b>re-ranking</b><br>
-    <span style="color:${COL.mut}">measured on the same remaining hidden edges (fair before/after)</span></div>`;
-  document.getElementById('btn-loop').disabled=true;
+    <div class="sub">confirmed <b>${esc(rd.confirmed.length)}</b> edges this round (<b>${esc(rd.cumulative_confirmed)}</b> total)<br>
+    reachable ${esc(rd.before_recoverable)} → <b>${esc(rd.after_recoverable)}</b> · ${esc(rd.n_remaining)} still hidden<br>
+    <span style="color:${COL.mut}">fair before/after on the same target set</span></div>`;
+  toast(`<span class="k">Loop round ${esc(rd.round)}</span>: confirm ${esc(rd.confirmed.length)} recovered-true edges (real Gordon edges, L3-rank #1), fold back, re-score the still-hidden edges.`);
+  const btn=document.getElementById('btn-loop');
+  if(state.loopRound>=rounds.length){ btn.disabled=true; btn.textContent='Loop complete'; }
+  else btn.textContent=`Run loop round ${state.loopRound+1}`;
 }
 
 /* ---------- dossier ---------- */
