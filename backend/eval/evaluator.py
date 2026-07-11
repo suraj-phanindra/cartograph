@@ -101,8 +101,14 @@ def predict_all(train_graph, use_prior=False):
     return proposals
 
 
-def evaluate(fold_back=(), use_prior=False, exclude_pinned=False, target_override=None):
+def evaluate(fold_back=(), use_prior=False, exclude_pinned=False, target_override=None,
+             structure_scores=None):
     """Score the predictor against the frozen held-out set.
+
+    structure_scores: optional {(bait, prey): boost} — a transparent additive
+    structural-corroboration term fused onto the topology score before ranking
+    (the L3+structure channel). None = topology only. This never edits the frozen
+    split; it only re-ranks proposals with an orthogonal real signal.
 
     Returns a dict with precision@k / recall@k / roc_auc / average_precision and
     the per-proposal outcomes (hit/miss) for the in-map green/red display.
@@ -122,6 +128,13 @@ def evaluate(fold_back=(), use_prior=False, exclude_pinned=False, target_overrid
 
     train = build_training_graph(frozen, fold_back=fold_back)
     proposals = predict_all(train, use_prior=use_prior)
+    if structure_scores:
+        for p in proposals:
+            boost = structure_scores.get((p["bait"], p["candidate"]), 0.0)
+            if boost:
+                p["score"] = p["score"] + boost
+                p["structure_boost"] = boost
+        proposals.sort(key=lambda p: (-p["score"], p["bait"], p["candidate"]))
 
     labels = []
     for p in proposals:

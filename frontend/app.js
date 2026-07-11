@@ -356,6 +356,8 @@ function showPrecision(){
     <div class="sub">precision@10 <b>${pct(pk['10'])}</b> · @20 <b>${pct(pk['20'])}</b> · @50 <b>${pct(pk['50'])}</b><br>
     ROC-AUC <b>${esc(b.roc_auc)}</b> · AP <b>${esc(b.average_precision)}</b> · recall@50 <b>${pct(b.recall_at_k['50'])}</b><br>
     on <b>${esc(b.n_targets)}</b> real held-out Gordon edges (${esc(b.n_recoverable)} reachable by L3)<br>
+    ${(()=>{ const sc=DATA.eval.structure_channel; if(!sc) return '';
+      return `<span style="color:${COL.mut}">L3 + structure (${esc(sc.n_pairs_with_structure)} pairs w/ a deposited complex): aggregate @20 <b>${pct(sc.l3_plus_structure_excl_pinned_p20)}</b> excl. pinned — unchanged; corroborates per-hypothesis</span><br>`; })()}
     <span style="color:${COL.mut}">without pinned edge: @20 ${pct(np.precision_at_k['20'])} (pinning does not inflate it)<br>
     frozen seed ${esc(DATA.eval.seed)}, committed before prediction</span></div>`;
   const r=document.getElementById('eval-readout');
@@ -445,6 +447,8 @@ function openDossier(key){
     </div>
   </div>
 
+  ${renderInSilico(d.structural_validation)}
+
   <div class="dz-sec">
     <div class="dz-sec-h">Skeptic</div>
     <div class="skeptic sk-${skClass}">
@@ -495,6 +499,29 @@ function gauge(cap,v,color,val,sub){
     <span class="val" style="color:${color}">${val}</span></div>
     <div class="cap">${cap}<br><span style="color:${COL.mut}">${sub||''}</span></div></div>`;
 }
+function renderInSilico(sv){
+  if(!sv) return '';
+  const band = sv.band==='experimental'
+    ? `<span class="wl-badge wl-exp">EXPERIMENTAL</span>`
+    : (sv.iptm!=null
+        ? `<span class="isilico-band tier${sv.tier}">${esc(sv.band)}</span>`
+        : `<span class="wl-no">${esc(sv.band||'no model')}</span>`);
+  let val='';
+  if(sv.iptm!=null){
+    val = `co-fold ipTM <b>${esc(sv.iptm)}</b>`
+      + (sv.iptm_size_corrected!=null && sv.size_corrected ? ` · size-corrected <b>${esc(sv.iptm_size_corrected)}</b>` : ` · <span style="color:${COL.mut}">size-correction needs a population</span>`)
+      + ` · <span style="color:${COL.predicted}">predicted</span>`;
+  } else if(sv.provenance==='experimental'){
+    val = `${esc(sv.label)}${sv.interface_contacts?` · <b>${esc(sv.interface_contacts)}</b> interface residues`:''}${sv.resolution_A?` · ${esc(sv.resolution_A)} Å`:''}`;
+  } else {
+    val = esc(sv.label||'');
+  }
+  return `<div class="dz-sec">
+    <div class="dz-sec-h">In-silico validation</div>
+    <div class="kv">${band} ${val}<br><span style="color:${COL.mut};font-size:11px">${esc(sv.note||'')}</span></div>
+  </div>`;
+}
+
 function renderDruggability(dr){
   const live=dr.live;
   const ens=safeEnsembl(dr.ensembl);

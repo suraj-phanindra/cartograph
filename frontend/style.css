@@ -277,6 +277,11 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .wl-no { color:var(--mut2); }
 .wl-exp { color:var(--human); background:rgba(108,159,251,.14); }
 .wl-pred { color:var(--predicted); background:rgba(34,224,221,.14); }
+.isilico-band { display:inline-block; font:600 9.5px/1 var(--mono); padding:4px 7px; border-radius:5px; text-transform:uppercase; }
+.isilico-band.tier3 { color:var(--confirmed); background:rgba(66,224,138,.14); }
+.isilico-band.tier2 { color:var(--predicted); background:rgba(34,224,221,.14); }
+.isilico-band.tier1 { color:var(--topology); background:rgba(255,209,102,.14); }
+.isilico-band.tier0 { color:var(--rejected); background:rgba(255,92,106,.14); }
 .wl-note { padding:14px 18px; font-size:12px; color:var(--mut); line-height:1.6; border-top:1px solid var(--line); }
 
 /* upload form */

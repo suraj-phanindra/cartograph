@@ -55,6 +55,34 @@
         "n_targets": 56
       }
     },
+    "structure_channel": {
+      "n_pairs_with_structure": 3,
+      "pairs": [
+        "Orf6|NUP98",
+        "Orf6|RAE1",
+        "Orf9b|TOMM70"
+      ],
+      "l3_only": {
+        "precision_at_k": {
+          "10": 0.3,
+          "20": 0.45,
+          "50": 0.26
+        },
+        "roc_auc": 0.8451
+      },
+      "l3_plus_structure": {
+        "precision_at_k": {
+          "10": 0.3,
+          "20": 0.5,
+          "50": 0.26
+        },
+        "roc_auc": 0.8635
+      },
+      "l3_only_excl_pinned_p20": 0.45,
+      "l3_plus_structure_excl_pinned_p20": 0.45,
+      "aggregate_gain_excl_pinned": 0.0,
+      "note": "Structural corroboration (an experimental complex, or a size-corrected co-fold ipTM) fused onto the topology score. On this sparse AP-MS map only 3 pairs have a deposited complex, so the aggregate precision@20 excluding the disclosed pinned edge is UNCHANGED (0.45 -> 0.45); the +0.05 with the pinned edge is the flagship being re-found via its own 7VPH structure, not a general gain. The channel's real value is per-hypothesis corroboration (the flagship IS experimentally resolved) and, at scale, on an uploaded pooled-AlphaFold3 ipTM matrix where every pair gets a structural score."
+    },
     "loop": {
       "confirmed_edges": [
         [
@@ -1427,6 +1455,18 @@
         "readout": "STAT1 nuclear import",
         "text": "Mutate the structure-verified ORF6 interface residues (E55A / M58R / D61A) and test for loss of RAE1 binding by co-immunoprecipitation in HEK293T; rescue of STAT1 nuclear import confirms the edge is functional."
       },
+      "structural_validation": {
+        "provenance": "experimental",
+        "band": "experimental",
+        "tier": 4,
+        "label": "experimental complex (PDB 7VPH)",
+        "iptm": null,
+        "method": "X-ray diffraction",
+        "resolution_A": 2.8,
+        "interface_contacts": 5,
+        "predicted": false,
+        "note": "Structurally resolved \u2014 the pair is observed in contact, stronger than a predicted co-fold."
+      },
       "druggability": {
         "target": "RAE1",
         "ensembl": "ENSG00000101146",
@@ -1600,6 +1640,18 @@
         "readout": "MAVS-driven IFN-\u03b2 reporter",
         "text": "Point-mutate the ORF9b interface (S53A phospho-null; R58E charge reversal) and confirm loss of TOM70 binding by co-immunoprecipitation; rescue of the MAVS-driven IFN-\u03b2 reporter confirms functional relief."
       },
+      "structural_validation": {
+        "provenance": "experimental",
+        "band": "experimental",
+        "tier": 4,
+        "label": "experimental complex (PDB 7DHG)",
+        "iptm": null,
+        "method": "X-ray diffraction",
+        "resolution_A": 2.2,
+        "interface_contacts": 4,
+        "predicted": false,
+        "note": "Structurally resolved \u2014 the pair is observed in contact, stronger than a predicted co-fold."
+      },
       "druggability": {
         "target": "TOMM70",
         "ensembl": "ENSG00000154174",
@@ -1749,6 +1801,15 @@
         "readout": "stress-granule assembly (immunofluorescence)",
         "text": "Mutate the N-protein ITFG G3BP1-binding motif and test for loss of G3BP1 binding by co-immunoprecipitation; score rescue of stress-granule assembly by immunofluorescence. (Specific residue numbers await a complex structure.)"
       },
+      "structural_validation": {
+        "provenance": "predicted-monomer",
+        "band": "monomer model",
+        "tier": 1,
+        "label": "AlphaFold DB (AF-Q13283, G3BP1) \u00b7 pLDDT 66.8",
+        "iptm": null,
+        "predicted": true,
+        "note": "Predicted monomer model only \u2014 no complex co-fold, so no ipTM. Roadmap: pre-compute an AlphaFold3/Boltz-2 co-fold."
+      },
       "druggability": {
         "target": "G3BP1",
         "ensembl": "ENSG00000145907",
@@ -1891,6 +1952,18 @@
         "assay": "co-immunoprecipitation (HEK293T)",
         "readout": "host mRNA nuclear export (oligo-dT FISH)",
         "text": "Point-mutate the ORF6 C-terminal anchor (M58R) and confirm loss of the Rae1\u2013Nup98 association by co-immunoprecipitation; score rescue of host mRNA export by oligo-dT FISH."
+      },
+      "structural_validation": {
+        "provenance": "experimental",
+        "band": "experimental",
+        "tier": 4,
+        "label": "experimental complex (PDB 7VPH)",
+        "iptm": null,
+        "method": "X-ray diffraction",
+        "resolution_A": 2.8,
+        "interface_contacts": 0,
+        "predicted": false,
+        "note": "Structurally resolved \u2014 the pair is observed in contact, stronger than a predicted co-fold."
       },
       "druggability": {
         "target": "NUP98",

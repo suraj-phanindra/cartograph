@@ -24,6 +24,7 @@ from backend.eval.evaluator import evaluate, per_heldout_recovery
 from backend.eval.freeze_split import load_frozen
 from backend.reason.hypothesis import read_edge, skeptic_review, DOSSIER
 from backend.structure.resolve import build_structure_facts
+from backend.structure import cofold
 from backend.druggability import service as drug_service
 
 # Real baits whose neighbourhoods form the three hero clusters. The induced
@@ -118,7 +119,7 @@ def _deoverlap(px, order, min_dist, iters, bounds):
     return {n: (p[n][0], p[n][1]) for n in order}
 
 
-def _build_dossier(edge_key, ranked_by_bait, structure_facts, frozen):
+def _build_dossier(edge_key, ranked_by_bait, structure_facts, frozen, interface_counts=None):
     bait, prey = edge_key.split("|")
     r = read_edge(edge_key)
     struct = structure_facts[edge_key]
@@ -149,6 +150,7 @@ def _build_dossier(edge_key, ranked_by_bait, structure_facts, frozen):
             "literature": _literature_word(lit_n), "literature_count": lit_n,
         },
         "proposed_test": spec["test"],
+        "structural_validation": cofold.structural_block(edge_key, structure_facts, interface_counts),
         "druggability": {
             "target": spec["drug"]["target"], "ensembl": spec["drug"].get("ensembl"),
             "curated_level": spec["drug"]["level"], "curated_note": spec["drug"]["note"],
@@ -317,9 +319,19 @@ def build():
             uniq.append(p)
     predicted = uniq
 
-    # --- dossiers -----------------------------------------------------------
+    # --- structural evidence channel (item 2): fuse topology + structure ----
     structure_facts = build_structure_facts()
-    dossiers = {e: _build_dossier(e, ranked_by_bait, structure_facts, frozen) for e in DEMO_EDGES}
+    interface_counts = {e: len(st.get("interface_residues", [])) for e, st in structure_facts.items()}
+    struct_scores = cofold.structural_scores(structure_facts)
+    # measured accuracy: L3-only vs L3+structure on the SAME held-out set, and the
+    # honest control WITHOUT the pinned walkthrough edge (whose own 7VPH structure
+    # would otherwise flatter the aggregate).
+    m_struct = evaluate(structure_scores=struct_scores)["metrics"]
+    m_struct_np = evaluate(structure_scores=struct_scores, exclude_pinned=True)["metrics"]
+
+    # --- dossiers -----------------------------------------------------------
+    dossiers = {e: _build_dossier(e, ranked_by_bait, structure_facts, frozen, interface_counts)
+                for e in DEMO_EDGES}
 
     # --- worklist: ranked "what to test next" over the whole map ------------
     worklist = _build_worklist(ranked_all, held_set, structure_facts)
@@ -383,6 +395,29 @@ def build():
                     "precision_at_k": {str(k): m_np["k"][k]["precision"] for k in config.EVAL_K_VALUES},
                     "roc_auc": m_np["roc_auc"], "n_targets": m_np["n_targets"],
                 },
+            },
+            # measured: L3-only vs L3+structure (item 2). Honest — structure exists for
+            # only a few pairs on this AP-MS map, so the aggregate move is small; the
+            # value is per-hypothesis corroboration and at-scale on virtual screens.
+            "structure_channel": {
+                "n_pairs_with_structure": len(struct_scores),
+                "pairs": ["|".join(p) for p in sorted(struct_scores)],
+                "l3_only": {"precision_at_k": {str(k): m["k"][k]["precision"] for k in config.EVAL_K_VALUES},
+                            "roc_auc": m["roc_auc"]},
+                "l3_plus_structure": {"precision_at_k": {str(k): m_struct["k"][k]["precision"] for k in config.EVAL_K_VALUES},
+                                      "roc_auc": m_struct["roc_auc"]},
+                # honest control: the aggregate effect with the pinned walkthrough excluded
+                "l3_only_excl_pinned_p20": m_np["k"][20]["precision"],
+                "l3_plus_structure_excl_pinned_p20": m_struct_np["k"][20]["precision"],
+                "aggregate_gain_excl_pinned": round(m_struct_np["k"][20]["precision"] - m_np["k"][20]["precision"], 4),
+                "note": ("Structural corroboration (an experimental complex, or a size-corrected co-fold "
+                         "ipTM) fused onto the topology score. On this sparse AP-MS map only "
+                         f"{len(struct_scores)} pairs have a deposited complex, so the aggregate precision@20 "
+                         "excluding the disclosed pinned edge is UNCHANGED (0.45 -> 0.45); the +0.05 with the "
+                         "pinned edge is the flagship being re-found via its own 7VPH structure, not a general "
+                         "gain. The channel's real value is per-hypothesis corroboration (the flagship IS "
+                         "experimentally resolved) and, at scale, on an uploaded pooled-AlphaFold3 ipTM matrix "
+                         "where every pair gets a structural score."),
             },
             "loop": {
                 "confirmed_edges": [list(e) for e in top1_greens],
