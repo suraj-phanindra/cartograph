@@ -415,3 +415,41 @@ overlaps our prey solely at SCAP), and a per-screen union cannot be reconstructe
 from full text without presenting mentions as hits. The verified hit lists are being
 sourced (via Claude Science) so the channel can be built as a real weighted union
 rather than approximated. **67 tests pass**; baseline intact; Stage 0 green.
+
+## 10. Functional-genomics (CRISPR) corroboration channel
+
+The second corroboration channel — orthogonal *functional* evidence, never claimed
+as physical validation.
+
+**10.1 Data (Claude Science).** `evidence/crispr_screen_hits.json` — **433 hits
+across 7 genome-wide SARS-CoV-2 CRISPR screens** (302 proviral / 131 antiviral),
+each traceable to a specific supplementary table or figure (never inferred from an
+abstract), HGNC-normalized. Full provenance in `docs/completeness_note.md`. The
+earlier repo state had only the ≥2-of-7 consensus (27 genes, overlapping our prey
+only at SCAP) and screen metadata — no per-screen hit lists — so the union could
+not be built without fabrication; the real hit lists were sourced to fix that.
+
+**10.2 The channel.** `backend/crispr/crispr.py` builds the union weighted by the
+number of **proviral (knockout-dependency)** screens a gene is a hit in —
+knockout-comparable across all 7. Biering's antiviral set is CRISPR-activation (GOF)
+and is deliberately **not** counted (a test asserts a GOF-only mucin returns no
+dependency evidence). Two soft-provenance screens (Wei, Baggen, which lack a
+reproducible genome-wide FDR list) are flagged, and every count is reported both
+with and without them (the source's own recommended sensitivity check).
+
+**10.3 Honest result — Option B.** Of the **332** host factors in Cartograph's map,
+**11 are independent CRISPR dependency hits** (RAB7A / SCAP / WASHC4 in two screens
+each), or **9 excluding the soft-provenance screens**. This is real corroboration
+over the whole map, surfaced from the evaluator panel. Option A (the frozen held-out
+benchmark, 0.45 / 0.8451) remains the guaranteed headline; CRISPR is never the
+headline. The overlap is deliberately sparse and honest: the top-40 L3 predictions
+target nuclear-pore / mitochondrial-import machinery, while CRISPR screens find
+entry/replication dependency factors — different biology, exactly as the manifest
+caveat states. A functional hit is **not** evidence of a physical interaction.
+
+**10.4 Product surfaces.** An Option B panel (host factors × screen count, with the
+soft-provenance sensitivity); a worklist "Functional" column + "CRISPR-supported
+only" filter (honestly blank on the top-40, with an explanatory empty state); a
+dossier line "host factor in N of 7 genome-wide CRISPR screens" with linked PMIDs
+and the not-a-physical-interaction caveat; and the counts in the CSV / hypotheses
+exports. **74 tests pass**; baseline intact; offline 0 console errors.

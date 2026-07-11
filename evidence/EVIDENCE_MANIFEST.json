@@ -56,6 +56,10 @@
       "vid": "5bae61c3-4ba0-4962-a467-a8c403856313",
       "desc": "Per-screen provenance (7 screens, verified PMID/DOI, cell line)."
     },
+    "crispr_screen_hits.json": {
+      "lookup": 8,
+      "desc": "Per-screen HIT LISTS: 433 sourced hits across the 7 genome-wide CRISPR screens (302 proviral, 131 antiviral), each traceable to a supplementary table/figure; HGNC-normalized. Curated by a Claude Science run (see docs/completeness_note.md). Wei + Baggen lack a reproducible genome-wide FDR list -> soft-provenance, counts reported both with and without them. Powers the functional-genomics (Option B) channel; NOT part of the locked benchmark."
+    },
     "cartograph_domain.json": {
       "lookup": 6,
       "vid": "cf8d0dd3-e711-410c-9c2f-ef77a5704177",
