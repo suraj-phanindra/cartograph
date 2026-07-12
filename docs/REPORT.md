@@ -453,3 +453,59 @@ only" filter (honestly blank on the top-40, with an explanatory empty state); a
 dossier line "host factor in N of 7 genome-wide CRISPR screens" with linked PMIDs
 and the not-a-physical-interaction caveat; and the counts in the CSV / hypotheses
 exports. **74 tests pass**; baseline intact; offline 0 console errors.
+
+## 11. The Evidence Agent — live verified dossiers for any uploaded edge
+
+Closes the last gap between "works on our data" and "works on yours": hand Cartograph
+a brand-new interactome and any predicted edge yields a live, cited, code-verified
+dossier with a real structure and druggability. API-mode only; the offline demo, the
+baked artifact, and the locked benchmark are untouched (the agent never imports them —
+asserted by tests; baseline stays 0.45 / 0.8451).
+
+**Core principle.** The agent may only say what a retrieved document says. Retrieval is
+deterministic tooling; Claude only reads; a **deterministic code gate (Stage 4)** — not
+a prompt — enforces that every citation is real, resolvable, and from the closed set
+actually retrieved. External API shapes were verified live before coding (UniProt REST,
+RCSB Search v2, AlphaFold DB, NCBI E-utilities) via a recon workflow.
+
+**Pipeline (`backend/agent/`, streamed over SSE):**
+- **Stage 0 Resolve** — symbol → reviewed human UniProt accession → Ensembl. Fails
+  closed on ambiguity (primary-name match + deduped ENSG); never guesses an id.
+- **Stage 1 Retrieve** — NCBI esearch co-mention (the novelty count) + efetch abstracts
+  (rate-limited, capped at 20); RCSB Search for a real deposited complex → coordinates →
+  interface residues via the **same ≤3.0 Å heavy-atom method as the demo**
+  (`interface_residues_by_accession`, verified byte-identical on 7VPH); AlphaFold monomer
+  fallback (pLDDT, **no invented residues**, the N-G3BP1 precedent); Open Targets
+  druggability. Every call logged with `{query, source, fetched_at}`.
+- **Stage 2 Read** (Claude) — corpus + a closed PMID list → cited clauses, or an honest
+  "no mechanism supported by retrieved literature".
+- **Stage 3 Skeptic** (Claude + the AP-MS FP patterns) — pass / downgrade / veto; can only
+  ratchet up. A veto blocks the dossier.
+- **Stage 4 Verify (deterministic gate — the anti-hallucination mechanism):** per clause,
+  the PMID must be in the retrieved closed set, resolve via esummary, and its esummary
+  title must match the retrieved record; any failure drops the clause. A structure is
+  accepted only if its PDB resolves AND actually contains both accessions. Resolvers are
+  injected so the gate is exhaustively unit-tested with adversarial fixtures.
+- **Stage 5 Review** (Claude) — sees the assembled dossier + verify report; may only
+  return clause-ids to drop + flags. It **cannot add text** — enforced structurally (the
+  pipeline reads only `.drop`/`.flags`).
+- **Stage 6 Emit + cache** — full provenance (queries, papers, Skeptic verdict, dropped
+  clauses); cache by (edge, version) with an export so an uploaded map can be baked into
+  its own offline artifact.
+
+**Runtime-Claude.** The three reasoning stages call the Anthropic API (httpx) when
+`ANTHROPIC_API_KEY` is set, and **degrade honestly** to topology-only when it is not — the
+deterministic backbone and every anti-fabrication guarantee still run. Conservation and
+CRISPR render **"not applicable — no reference data for this organism"** for a
+non-coronavirus edge, never a blank.
+
+**Proof it works and is honest (live).** On a real run the verify gate dropped a
+fabricated PMID (99999999) while keeping the real 1YCR p53–MDM2 interface (W23/N29,
+computed from coordinates). In the browser, `KEAP1→NFE2L2` streamed the full stage trace,
+fetched the real **PDB 3ZGC** complex, computed the true KEAP1–Nrf2 interface
+(S363/R415/R483/S508/Q530/S602), rendered it in Mol*, retrieved 19 papers / 351
+co-mentions, and — with no Claude key — honestly showed topology-only with every real
+deterministic fact. **89 tests pass** (+15 agent, incl. a live integration test that
+skips offline); the Stage-4 gate has adversarial unit tests (non-retrieved PMID dropped,
+non-resolving dropped, title mismatch dropped, structure lacking both accessions
+rejected, reviewer cannot inject text). Stage 0 green.
