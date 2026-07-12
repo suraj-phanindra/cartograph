@@ -22,14 +22,12 @@ def _norm_title(t):
 
 
 def titles_match(a, b):
+    # exact match after normalisation (which already strips punctuation / trailing
+    # periods). A prefix tolerance was a title false-accept — a generic short title
+    # would match any paper starting with it — so the independent PMID->title
+    # re-confirmation demands the SAME paper, nothing weaker.
     na, nb = _norm_title(a), _norm_title(b)
-    if not na or not nb:
-        return False
-    if na == nb:
-        return True
-    # tolerate one being a clean prefix of the other (truncated title fields)
-    shorter, longer = sorted((na, nb), key=len)
-    return len(shorter) >= 20 and longer.startswith(shorter)
+    return bool(na) and na == nb
 
 
 def verify_clauses(clauses, retrieved, esummary):
@@ -77,7 +75,10 @@ def verify_structure(structure, contains_accessions):
     if not structure:
         return None, None
     if structure.get("kind") == "predicted":
-        return structure, None
+        # a predicted model makes NO complex claim -> the gate strips any contact
+        # residues at the chokepoint, so no predicted residue can ever be shown as a
+        # real interface (do not trust the producer to have left them empty).
+        return {**structure, "interface_residues": []}, None
     pdb = structure.get("pdb")
     need = {a for a in (structure.get("accessions") or []) if a}
     if not pdb or len(need) < 2:
@@ -116,11 +117,19 @@ if __name__ == "__main__":
     s3, d3 = verify_clauses([{"id": 9, "pmid": "111"}], retrieved,
                             lambda p: {"title": "totally different paper"})
     assert not s3 and "title" in d3[0]["drop_reason"]
+    # title false-accept must be REJECTED (red-team BLOCKER): a longer title that
+    # merely starts with the record title is NOT the same paper
+    assert not titles_match("ORF6 binds RAE1 at the nuclear pore",
+                            "ORF6 binds RAE1 at the nuclear pore, then does X which is false")
+    assert not titles_match("Materials and methods", "Materials and methods in cell biology")
     # structure gate
     exp = {"kind": "experimental", "pdb": "7VPH", "accessions": ["P0DTC6", "P78406"]}
     assert verify_structure(exp, lambda pdb: (True, {"P0DTC6", "P78406", "P52948"}))[0] is exp
     assert verify_structure(exp, lambda pdb: (True, {"P0DTC6"}))[0] is None       # missing one -> reject
     assert verify_structure(exp, lambda pdb: (False, set()))[0] is None           # unresolvable -> reject
-    pred = {"kind": "predicted", "pdb": None, "accessions": ["P78406"]}
-    assert verify_structure(pred, lambda pdb: (False, set()))[0] is pred          # monomer always ok
+    # a predicted block can NEVER carry contact residues past the gate (red-team MAJOR)
+    pred = {"kind": "predicted", "pdb": None, "accessions": ["P78406"],
+            "interface_residues": ["SMUGGLED_R99"]}
+    out, _ = verify_structure(pred, lambda pdb: (False, set()))
+    assert out["interface_residues"] == []
     print("verify gate ok: all adversarial cases dropped, honest cases kept")

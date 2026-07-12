@@ -65,7 +65,26 @@ def test_verify_structure_accepts_real_complex_and_predicted_monomer():
     exp = {"kind": "experimental", "pdb": "7VPH", "accessions": ["P0DTC6", "P78406"]}
     assert verify.verify_structure(exp, lambda pdb: (True, {"P0DTC6", "P78406", "P52948"}))[0] is exp
     pred = {"kind": "predicted", "pdb": None, "accessions": ["P78406"]}
-    assert verify.verify_structure(pred, lambda pdb: (False, set()))[0] is pred  # monomer makes no complex claim
+    assert verify.verify_structure(pred, lambda pdb: (False, set()))[0]["kind"] == "predicted"
+
+
+def test_verify_rejects_title_prefix_false_accept():
+    # red-team BLOCKER: a longer title that merely STARTS WITH the record title is a
+    # different paper and must not pass the independent PMID->title re-confirmation
+    assert not verify.titles_match("A binds B at the interface",
+                                   "A binds B at the interface, a claim the paper never makes")
+    assert not verify.titles_match("Materials and methods", "Materials and methods in cell biology")
+    # a title differing only by trailing punctuation still matches (real records vary)
+    assert verify.titles_match("A binds B at the interface", "A binds B at the interface.")
+
+
+def test_verify_strips_residues_from_predicted_structure():
+    # red-team MAJOR: a predicted block can never carry contact residues past the gate,
+    # even if a producer left some in — enforced at the chokepoint, not trusted upstream
+    pred = {"kind": "predicted", "pdb": None, "accessions": ["P1"],
+            "interface_residues": ["SMUGGLED_R99", "SMUGGLED_R42"]}
+    out, _ = verify.verify_structure(pred, lambda pdb: (False, set()))
+    assert out["interface_residues"] == []
 
 
 # ---------------------------------------------------------------------------
