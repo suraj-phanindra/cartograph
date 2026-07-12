@@ -14,11 +14,16 @@ _ORDER = {"pass": 0, "downgrade": 1, "veto": 2}
 _INV = {v: k for k, v in _ORDER.items()}
 
 _SYSTEM = (
-    "You are the Skeptic in a protein-interaction pipeline. Given the retrieved "
-    "abstracts for a pair, look ONLY for reasons to DISTRUST the interaction: the "
-    "co-mention may be spurious (both proteins merely listed in one large review with "
-    "no interaction claim), or a known AP-MS contaminant / frequent flyer. You may only "
-    "make the verdict more skeptical. Respond with ONLY JSON: "
+    "You are the Skeptic in a protein-interaction pipeline. Judge the evidence for the "
+    "interaction from the retrieved abstracts, calibrated and fair — do NOT reject a "
+    "plausible interaction merely because the abstracts don't fully spell out the "
+    "mechanism. Default to 'pass'. Use 'downgrade' when the evidence is thin, indirect, "
+    "or co-complex rather than direct. Use 'veto' ONLY when there is a CONCRETE reason "
+    "the interaction is likely an artifact: a known AP-MS contaminant / frequent flyer, "
+    "or a clearly spurious co-mention (both proteins merely listed together in one large "
+    "review with no interaction claim), or abstracts that actively contradict a physical "
+    "interaction. A veto blocks the dossier, so it must be justified by positive "
+    "disconfirming evidence, never by absence of confirmation. Respond with ONLY JSON: "
     '{"verdict": "pass|downgrade|veto", "reason": str}.'
 )
 
