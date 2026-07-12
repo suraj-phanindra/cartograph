@@ -319,6 +319,8 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .agent-report .drop { color:#e0b341; }
 .agent-report .qlog { margin-top:6px; font-size:11px; color:var(--mut2); max-height:160px; overflow:auto; }
 .agent-report summary { cursor:pointer; color:var(--ink2); margin-top:6px; }
+.up-actions { display:flex; gap:10px; align-items:center; margin:2px 0 4px; }
+.pred-ev .spin { vertical-align:middle; }
 .wl-empty { padding:22px 14px; text-align:center; color:var(--mut); font:400 12.5px/1.5 var(--sans); }
 /* dossier conservation block */
 .cons-row { display:flex; align-items:center; gap:10px; padding:3px 0; }

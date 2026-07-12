@@ -355,10 +355,27 @@ def _do_upload(req: UploadReq):
         "n_enrichment": n_enrich,
         "enrich_error": g.graph.get("enrich_error"),
         "predictions": preds[:25],
+        "graph": _serialize_uploaded_graph(g, baits, preds),
         "eval": ev,
         "note": "Topology only. No cached evidence for uploaded edges; Cartograph will not "
                 "fabricate a mechanism, structure, or citation. Not added to the locked benchmark.",
     }
+
+
+def _serialize_uploaded_graph(g, baits, preds):
+    """Serialize the uploaded network for the workbench map: nodes (bait=viral,
+    prey=human), known + STRING-enrichment edges (oriented bait->prey), and the top
+    predicted edges. No positions — the client lays it out."""
+    nodes = [{"id": n, "type": d["type"], "degree": g.degree(n)} for n, d in g.nodes(data=True)]
+    edges = []
+    for u, v, d in g.edges(data=True):
+        s, t = (u, v)
+        if g.nodes[v]["type"] == "viral" and g.nodes[u]["type"] != "viral":
+            s, t = v, u
+        edges.append({"source": s, "target": t, "kind": d.get("kind", "enrichment")})
+    predicted = [{"source": p["bait"], "target": p["prey"], "l3_score": p["l3_score"],
+                  "path": p["path"]} for p in preds[:25]]
+    return {"nodes": nodes, "edges": edges, "predicted": predicted}
 
 
 # ---------------------------------------------------------------------------
