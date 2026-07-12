@@ -52,7 +52,22 @@ STRING_REQUIRED_SCORE = 700  # high-confidence (0-1000 scale)
 STRING_API = "https://version-12-0.string-db.org/api"
 
 # --- literature / NCBI -----------------------------------------------------
-NCBI_API_KEY = os.environ.get("NCBI_API_KEY", "")  # optional; raises rate limit
+NCBI_API_KEY = os.environ.get("NCBI_API_KEY", "")  # optional; raises rate limit 3->10/s
+
+# --- Evidence Agent (API-mode only; live per-edge dossiers) ----------------
+# The reasoning stages (Reader/Skeptic/Reviewer) call the Anthropic API when a key
+# is present, and degrade honestly to topology-only when it is not. The
+# deterministic backbone (resolve/retrieve/verify/emit) needs no key.
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+ANTHROPIC_MODEL = os.environ.get("CARTOGRAPH_AGENT_MODEL", "claude-sonnet-5")
+AGENT_CONTACT = os.environ.get("CARTOGRAPH_CONTACT", "cartograph-evidence-agent")  # tool/email etiquette
+UNIPROT_API = "https://rest.uniprot.org/uniprotkb"
+RCSB_SEARCH_API = "https://search.rcsb.org/rcsbsearch/v2/query"
+RCSB_FILES = "https://files.rcsb.org/download"
+ALPHAFOLD_API = "https://alphafold.ebi.ac.uk/api/prediction"
+EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+AGENT_MAX_ABSTRACTS = 20        # cap papers fetched per edge
+AGENT_EVIDENCE_VERSION = "1.0"  # cache key component
 
 # --- demo edges to pre-cache (the 3-minute path) ---------------------------
 # Edges whose dossiers must render offline during the demo.

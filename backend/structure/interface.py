@@ -33,18 +33,13 @@ def _match(desc, needle):
     return needle.lower() in (desc or "").lower()
 
 
-def interface_residues(cif_path, chain_a_desc, chain_b_desc, cutoff=CONTACT_CUTOFF):
-    """Interface residues on the polymer matching chain_a_desc that contact any
-    polymer matching chain_b_desc, matched by mmCIF entity description via the
-    label_asym (subchain) id. Returns (residue_dicts, subchain_desc_map)."""
+def _contacts(cif_path, a_subs, b_subs, cutoff):
+    """Heavy-atom contacts: residues on subchains a_subs whose atoms sit within
+    `cutoff` of any heavy atom on subchains b_subs. The one shared method used for
+    both the description- and accession-keyed entry points below."""
     st = gemmi.read_structure(str(cif_path))
     st.setup_entities()
     model = st[0]
-    sub_desc = _subchain_descriptions(cif_path)
-
-    a_subs = {s for s, d in sub_desc.items() if _match(d, chain_a_desc)}
-    b_subs = {s for s, d in sub_desc.items() if _match(d, chain_b_desc)}
-
     ns = gemmi.NeighborSearch(model, st.cell, cutoff + 1).populate()
     hits = {}
     for chain in model:
@@ -60,10 +55,51 @@ def interface_residues(cif_path, chain_a_desc, chain_b_desc, cutoff=CONTACT_CUTO
                         key = (res.name, res.seqid.num)
                         hits[key] = min(hits.get(key, 1e9), atom.pos.dist(cra.atom.pos))
     out = sorted(hits.keys(), key=lambda k: k[1])
-    return (
-        [{"resname": r, "seqid": s, "min_dist": round(hits[(r, s)], 2)} for r, s in out],
-        sub_desc,
-    )
+    return [{"resname": r, "seqid": s, "min_dist": round(hits[(r, s)], 2)} for r, s in out]
+
+
+def interface_residues(cif_path, chain_a_desc, chain_b_desc, cutoff=CONTACT_CUTOFF):
+    """Interface residues on the polymer matching chain_a_desc that contact any
+    polymer matching chain_b_desc, matched by mmCIF entity description via the
+    label_asym (subchain) id. Returns (residue_dicts, subchain_desc_map)."""
+    sub_desc = _subchain_descriptions(cif_path)
+    a_subs = {s for s, d in sub_desc.items() if _match(d, chain_a_desc)}
+    b_subs = {s for s, d in sub_desc.items() if _match(d, chain_b_desc)}
+    return _contacts(cif_path, a_subs, b_subs, cutoff), sub_desc
+
+
+def subchains_by_accession(cif_path):
+    """Map UniProt accession -> set of polymer subchains (label_asym_id), via the
+    mmCIF _struct_ref (db_name UNP -> pdbx_db_accession -> entity_id) + _struct_asym.
+    Lets a live-fetched complex be keyed by accession, not by prose description."""
+    doc = gemmi.cif.read(str(cif_path))
+    block = doc.sole_block()
+    strip = gemmi.cif.as_string
+    ref_ent = [strip(x) for x in block.find_loop("_struct_ref.entity_id")]
+    ref_db = [strip(x) for x in block.find_loop("_struct_ref.db_name")]
+    ref_acc = [strip(x) for x in block.find_loop("_struct_ref.pdbx_db_accession")]
+    ent2acc = {e: acc.upper() for e, db, acc in zip(ref_ent, ref_db, ref_acc)
+               if db.upper() in ("UNP", "UNIPROT")}
+    asym = [strip(x) for x in block.find_loop("_struct_asym.id")]
+    asym_ent = [strip(x) for x in block.find_loop("_struct_asym.entity_id")]
+    acc2subs = {}
+    for a, e in zip(asym, asym_ent):
+        acc = ent2acc.get(e)
+        if acc:
+            acc2subs.setdefault(acc, set()).add(a)
+    return acc2subs
+
+
+def interface_residues_by_accession(cif_path, acc_a, acc_b, cutoff=CONTACT_CUTOFF):
+    """Interface residues between two UniProt accessions in a deposited complex.
+    Returns (residue_dicts, acc2subs). Empty residues if either accession is not a
+    mapped polymer in the entry (honest: we then assert no contacts)."""
+    acc2subs = subchains_by_accession(cif_path)
+    a_subs = acc2subs.get((acc_a or "").upper(), set())
+    b_subs = acc2subs.get((acc_b or "").upper(), set())
+    if not a_subs or not b_subs:
+        return [], acc2subs
+    return _contacts(cif_path, a_subs, b_subs, cutoff), acc2subs
 
 
 # short (one-letter) codes for compact residue labels like "M58"

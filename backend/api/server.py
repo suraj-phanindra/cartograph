@@ -16,12 +16,14 @@ from __future__ import annotations
 
 import logging
 import json
+import queue
 import random
 import re
 import threading
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.responses import StreamingResponse, JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -36,6 +38,11 @@ from backend.eval.evaluator import evaluate
 from backend.reason.hypothesis import read_edge, EDGE_TO_PACK
 from backend.druggability import service as drug_service
 from backend.structure import cofold
+from backend.agent import pipeline as agent_pipeline, cache as agent_cache, llm as agent_llm
+
+# Evidence Agent runs (live per-edge dossiers) are heavier than uploads -> own gate.
+_agent_gate = threading.Semaphore(2)
+_CIF_RE = re.compile(r"^[A-Za-z0-9_.\-]+\.cif$")
 
 log = logging.getLogger("cartograph.api")
 app = FastAPI(title="Cartograph API", version="1.0")
@@ -121,20 +128,92 @@ def druggability(gene: str, ensembl: str = None):
 
 @app.get("/api/stream")
 def stream(edge: str):
-    """SSE: stream the cached, cited reasoning for an edge, clause by clause, so a
-    client can render 'Claude reasoning' progressively. Cited, never fabricated."""
-    if edge not in EDGE_TO_PACK:
-        raise HTTPException(404, f"no cached dossier for '{edge}'")
-    r = read_edge(edge)
+    """SSE: stream reasoning for an edge, clause by clause. A demo edge replays its
+    cached, cited pack; an UPLOADED edge runs the live Evidence Agent (Stages 0-6),
+    streaming its progress trace and the final verified dossier. Cited, never
+    fabricated — the deterministic Stage-4 gate re-checks every citation."""
+    if edge in EDGE_TO_PACK:
+        r = read_edge(edge)
 
-    def gen():
-        yield f"event: start\ndata: {json.dumps({'edge': edge})}\n\n"
-        for cl in r["mechanism"]:
-            yield f"event: clause\ndata: {json.dumps(cl)}\n\n"
-        yield f"event: citations\ndata: {json.dumps(r['citations'])}\n\n"
+        def gen_cached():
+            yield f"event: start\ndata: {json.dumps({'edge': edge})}\n\n"
+            for cl in r["mechanism"]:
+                yield f"event: clause\ndata: {json.dumps(cl)}\n\n"
+            yield f"event: citations\ndata: {json.dumps(r['citations'])}\n\n"
+            yield "event: done\ndata: {}\n\n"
+        return StreamingResponse(gen_cached(), media_type="text/event-stream")
+
+    # uploaded edge -> live agent
+    bait, sep, prey = edge.partition("|")
+    if not sep or not GENE_RE.match(bait) or not GENE_RE.match(prey):
+        raise HTTPException(400, "edge must be 'BAIT|PREY' with valid gene names")
+
+    def gen_live():
+        yield f"event: start\ndata: {json.dumps({'edge': edge, 'live': True, 'reasoning': agent_llm.available()})}\n\n"
+        if not _agent_gate.acquire(blocking=False):
+            yield f"event: error\ndata: {json.dumps({'reason': 'agent busy; retry shortly'})}\n\n"
+            return
+        q: queue.Queue = queue.Queue()
+
+        def worker():
+            try:
+                result = agent_pipeline.run(bait, prey, emit=lambda e, d: q.put((e, d)))
+                q.put(("result", result))
+            except Exception as exc:  # noqa: BLE001 - report, never crash the stream
+                log.warning("agent run failed for %s: %s", edge, exc)
+                q.put(("error", {"reason": "agent run failed"}))
+            finally:
+                _agent_gate.release()
+                q.put((None, None))
+
+        threading.Thread(target=worker, daemon=True).start()
+        while True:
+            event, data = q.get()
+            if event is None:
+                break
+            yield f"event: {event}\ndata: {json.dumps(data, default=str)}\n\n"
         yield "event: done\ndata: {}\n\n"
 
-    return StreamingResponse(gen(), media_type="text/event-stream")
+    return StreamingResponse(gen_live(), media_type="text/event-stream")
+
+
+@app.get("/api/structure")
+def structure_file(file: str):
+    """Serve a CIF the agent fetched into its cache (deposited complex or AlphaFold
+    monomer). Basename-only + regex allowlist -> no path traversal."""
+    if not _CIF_RE.match(file):
+        raise HTTPException(400, "invalid structure file name")
+    path = (Path(agent_pipeline.retrieve.CACHE_DIR) / file).resolve()
+    if path.parent != Path(agent_pipeline.retrieve.CACHE_DIR).resolve() or not path.exists():
+        raise HTTPException(404, "structure not found")
+    return FileResponse(str(path), media_type="chemical/x-cif")
+
+
+class EvidenceReq(BaseModel):
+    bait: str = Field(max_length=40)
+    prey: str = Field(max_length=40)
+    l3_score: float | None = None
+
+
+@app.post("/api/evidence")
+def evidence(req: EvidenceReq):
+    """Run the Evidence Agent for one uploaded edge (non-streaming; for background
+    pre-computation of the top-N by L3). Returns the verified dossier or topology-only."""
+    if not GENE_RE.match(req.bait) or not GENE_RE.match(req.prey):
+        raise HTTPException(400, "invalid gene name")
+    if not _agent_gate.acquire(blocking=False):
+        raise HTTPException(429, "agent busy; retry shortly")
+    try:
+        return agent_pipeline.run(req.bait, req.prey, l3_score=req.l3_score)
+    finally:
+        _agent_gate.release()
+
+
+@app.get("/api/evidence/export")
+def evidence_export():
+    """Export the agent's dossier cache so an uploaded map can be baked into its own
+    offline artifact, exactly like the demo dataset."""
+    return agent_cache.export()
 
 
 # ---------------------------------------------------------------------------

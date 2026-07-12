@@ -16,3 +16,6 @@ cache/
 frontend/*.png
 frontend/.datum/
 **/.datum/
+
+# Evidence Agent CIF cache (fetched live, not committed)
+backend/agent/_cache/
