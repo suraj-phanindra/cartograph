@@ -505,7 +505,22 @@ computed from coordinates). In the browser, `KEAP1→NFE2L2` streamed the full s
 fetched the real **PDB 3ZGC** complex, computed the true KEAP1–Nrf2 interface
 (S363/R415/R483/S508/Q530/S602), rendered it in Mol*, retrieved 19 papers / 351
 co-mentions, and — with no Claude key — honestly showed topology-only with every real
-deterministic fact. **89 tests pass** (+15 agent, incl. a live integration test that
-skips offline); the Stage-4 gate has adversarial unit tests (non-retrieved PMID dropped,
-non-resolving dropped, title mismatch dropped, structure lacking both accessions
-rejected, reviewer cannot inject text). Stage 0 green.
+deterministic fact. The Stage-4 gate has adversarial unit tests (non-retrieved PMID
+dropped, non-resolving dropped, title mismatch dropped, structure lacking both
+accessions rejected, reviewer cannot inject text). Stage 0 green.
+
+**Adversarial review — findings and resolution.** A fresh red-team (separate from the
+pipeline's own Skeptic/Reviewer) tried to force fabrication across ten routes and
+confirmed the gate holds on every one (unresolvable symbol → topology-only; fabricated
+citation dropped and absent from output; zero-literature pair → no invented papers;
+skeptic veto blocks; structure lacking both accessions rejected; reviewer injection
+structurally ignored; mid-run network failure fails safe with an honest `error` event;
+`/api/structure` traversal doubly-guarded → 400/404; agent never imports the frozen
+split; baseline 0.45/0.8451). It found **2 defects in the gate itself**, both fixed:
+a **title false-accept** (a title that was merely a prefix of another was accepted — now
+exact-match after normalisation) and a **predicted-structure residue leak** (a predicted
+block was returned verbatim — the gate now strips contact residues from any predicted
+block at the chokepoint rather than trusting the producer). One MINOR (a single thin
+co-mention does not deterministically downgrade) was left as-is: over-downgrading real
+sparse pairs would be its own dishonesty, and the LLM Skeptic handles review-only
+detection. **91 tests pass** (+2 adversarial); Stage 0 green.
