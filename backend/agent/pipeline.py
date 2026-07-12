@@ -122,9 +122,10 @@ def _assemble(edge, bait, prey, corpus, clauses, skeptic_out, struct, reader_out
     }
 
 
-def run(bait, prey, l3_score=None, l3_path=None, stages=None, emit=None, use_cache=True):
-    """Run the full pipeline for one edge. `stages` may inject deterministic
-    read_fn / skeptic_fn / review_fn / esummary / rcsb_contains for tests."""
+def run(bait, prey, l3_score=None, l3_path=None, taxid="9606", stages=None, emit=None, use_cache=True):
+    """Run the full pipeline for one edge in the given organism (default 9606 = human).
+    `stages` may inject deterministic read_fn / skeptic_fn / review_fn / esummary /
+    rcsb_contains / resolve_fn / retrieve_fn for tests."""
     stages = stages or {}
     edge = f"{bait}|{prey}"
     if use_cache:
@@ -134,14 +135,16 @@ def run(bait, prey, l3_score=None, l3_path=None, stages=None, emit=None, use_cac
             return cached
 
     _emit(emit, "resolving", {"bait": bait, "prey": prey})
-    resolved = (stages.get("resolve_fn") or resolve_edge)(bait, prey)
+    rf = stages.get("resolve_fn")
+    resolved = rf(bait, prey) if rf else resolve_edge(bait, prey, taxid)
     if not resolved["ok"]:
         result = _topology_only(edge, bait, prey, resolved["reason"], l3_score, l3_path)
         _emit(emit, "topology_only", {"reason": resolved["reason"]})
         return result
 
     _emit(emit, "retrieving", {})
-    corpus = (stages.get("retrieve_fn") or retrieve.retrieve)(bait, prey, resolved)
+    rtf = stages.get("retrieve_fn")
+    corpus = rtf(bait, prey, resolved) if rtf else retrieve.retrieve(bait, prey, resolved, taxid=taxid)
     _emit(emit, "retrieved", {"papers": len(corpus["records"]),
                               "comention_count": corpus["comention_count"],
                               "structure": (corpus["structure"] or {}).get("source", "none")})

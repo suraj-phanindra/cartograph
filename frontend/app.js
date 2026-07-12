@@ -794,7 +794,8 @@ function openLiveDossier(bait, prey, l3_score){
   const step=(html,cls='')=>{ const el=document.createElement('div'); el.className='trace-step '+cls; el.innerHTML=html; trace.appendChild(el); return el; };
   let last=null, finished=false;
   const spin=(html)=>{ if(last) last.classList.remove('run'); last=step('<span class="spin"></span> '+html,'run'); };
-  const es=new EventSource(`/api/stream?edge=${encodeURIComponent(edge)}`);
+  const taxid=(state.uploaded&&state.uploaded.taxid)||'9606';
+  const es=new EventSource(`/api/stream?edge=${encodeURIComponent(edge)}&taxid=${encodeURIComponent(taxid)}`);
   es.addEventListener('start', e=>{ const d=JSON.parse(e.data);
     step(`resolving <b>${esc(bait)} → ${esc(prey)}</b>${d.reasoning?'':' · <span style="color:var(--mut2)">reasoning layer not configured — deterministic facts only</span>'}`); });
   es.addEventListener('cached', ()=>step('loaded from cache (already computed this session)','ok'));
@@ -857,12 +858,24 @@ function renderLiveDossier(d){
       <div>${esc((d.skeptic||{}).reason||'')}${(d.skeptic||{}).caveat?`<br><span style="color:${COL.mut}">${esc(d.skeptic.caveat)}</span>`:''}</div></div></div>
     ${(d.proposed_test&&(d.proposed_test.text||d.proposed_test.residues.length))?`<div class="dz-sec"><div class="dz-sec-h">Proposed wet-lab test</div>
       <div class="test-box"><div class="muts">${d.proposed_test.residues.map(r=>`<span class="mut">${esc(r)}</span>`).join('')}</div>${esc(d.proposed_test.text)}</div></div>`:''}
+    <div class="dz-sec">
+      <div class="dz-sec-h">Your verdict <span class="dz-sec-note">local · exportable · confirmed edges fold into the map</span></div>
+      <div class="fb-box">
+        <div class="fb-btns" id="fb-btns">
+          <button class="fb-btn" data-v="confirmed">✓ Confirmed</button>
+          <button class="fb-btn" data-v="to-test">◔ To test</button>
+          <button class="fb-btn" data-v="refuted">✕ Refuted</button>
+        </div>
+        <textarea class="fb-note" id="fb-note" placeholder="Lab note (optional): assay, result, caveat…"></textarea>
+      </div>
+    </div>
     ${renderDruggability(d.druggability)}
     ${cites?`<div class="dz-sec"><div class="dz-sec-h">Citations <span class="dz-sec-note">every one re-verified by code</span></div><div class="cites">${cites}</div></div>`:''}
     ${_agentReport(d.agent_report, d.queries)}
     <div class="integrity-foot"><b>proposed by</b> ${esc(d.provenance.proposed_by)}<br>
       <b>evidence by</b> ${esc(d.provenance.evidence_by)}<br>
       <b>structure</b> ${esc(d.provenance.structure_by)} · <b>${esc(d.provenance.evaluator)}</b></div>`;
+  wireFeedback(`${d.source}|${d.target}`);
   if(st && st.url) mountStructure(st);
 }
 
@@ -1432,9 +1445,13 @@ function uploadEdgesForm(){
   return `<div class="up-form">
     <div class="up-msg info">Your edges → STRING enrichment → L3. Not added to the locked benchmark; edges with no cached evidence show topology only, never a fabricated mechanism or citation.</div>
     <label>Edge list (one <span class="mono">bait,prey</span> per line; a header row is optional)</label>
-    <textarea id="up-edges" placeholder="ORF6,NUP98&#10;ORF6,RAE1&#10;N,G3BP1&#10;N,G3BP2"></textarea>
-    <label>Held-out fraction for your own eval (0 to skip)</label>
-    <input type="number" id="up-frac" min="0" max="0.5" step="0.05" value="0.2">
+    <textarea id="up-edges" placeholder="MDM2,TP53&#10;CDK2,CCNA2&#10;RB1,E2F1&#10;BCL2,BAX"></textarea>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:150px"><label>Held-out fraction for your own eval (0 to skip)</label>
+        <input type="number" id="up-frac" min="0" max="0.5" step="0.05" value="0.2" style="width:100%"></div>
+      <div style="flex:1;min-width:150px"><label>Organism (UniProt taxid) <span style="color:var(--mut2)">— the Evidence Agent resolves genes here</span></label>
+        <input type="text" id="up-taxid" value="9606" placeholder="9606 = human" style="width:100%"></div>
+    </div>
     <div style="display:flex;gap:10px;align-items:center">
       <button class="fs-btn" id="up-run" style="background:var(--panel2)">Enrich + run L3</button>
       <span id="up-status" style="font:500 12px/1 var(--mono);color:var(--mut)"></span>
@@ -1493,6 +1510,7 @@ async function runUpload(){
   const result=document.getElementById('up-result');
   const edges=document.getElementById('up-edges').value.trim();
   const frac=parseFloat(document.getElementById('up-frac').value)||0;
+  const taxid=(document.getElementById('up-taxid').value||'9606').trim().replace(/[^0-9]/g,'')||'9606';
   result.innerHTML='';
   if(!edges){ status.textContent='paste an edge list first.'; return; }
   status.innerHTML='<span class="spin"></span> validating + enriching (STRING)…';
@@ -1502,6 +1520,7 @@ async function runUpload(){
     if(!resp.ok){ const e=await resp.json().catch(()=>({detail:`HTTP ${resp.status}`}));
       throw new Error(e.detail||`HTTP ${resp.status}`); }
     const d=await resp.json();
+    d.taxid=taxid;                      // the Evidence Agent resolves genes in this organism
     status.textContent='';
     renderUploadResult(d);
   }catch(err){
@@ -1557,7 +1576,8 @@ async function runAllEvidence(root){
     cell.innerHTML='<span class="spin"></span> running…';
     try{
       const r=await fetch('/api/evidence',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({bait:tr.dataset.b, prey:tr.dataset.p, l3_score:parseFloat(tr.dataset.l)})});
+        body:JSON.stringify({bait:tr.dataset.b, prey:tr.dataset.p, l3_score:parseFloat(tr.dataset.l),
+          taxid:(state.uploaded&&state.uploaded.taxid)||'9606'})});
       const d=await r.json();
       const nmech=(d.mechanism||[]).length, st=d.structure?(d.structure.pdb||'model'):'';
       cell.innerHTML=`<button class="ev-run">view →</button> <span style="font-size:10px;color:var(--mut2)">${nmech?nmech+' clauses':'no mechanism'}${st?' · '+esc(st):''}</span>`;

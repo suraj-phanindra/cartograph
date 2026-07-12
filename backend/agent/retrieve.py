@@ -216,7 +216,7 @@ def structure_for_pair(acc_bait, acc_prey, bait, prey):
 
 
 # --- top-level retrieval ---------------------------------------------------
-def retrieve(bait, prey, resolved, max_abstracts=None):
+def retrieve(bait, prey, resolved, max_abstracts=None, taxid="9606"):
     """Fetch the full evidence corpus for one edge. Returns a dict with the closed
     PMID set, per-paper records, the co-mention (novelty) count, the structure
     block, druggability, and a provenance log of every query."""
@@ -252,8 +252,13 @@ def retrieve(bait, prey, resolved, max_abstracts=None):
                     "fetched_at": _now(),
                     "result": (structure or {}).get("source", "none")})
 
-    drug = drug_service.get(prey, ensembl=resolved["prey"].get("ensembl"), live=True,
-                            fetched=datetime.now().date().isoformat())
+    # druggability (Open Targets) is human-target-specific — skip honestly for other organisms
+    if str(taxid) == "9606":
+        drug = drug_service.get(prey, ensembl=resolved["prey"].get("ensembl"), live=True,
+                                fetched=datetime.now().date().isoformat())
+    else:
+        drug = {"gene": prey, "unavailable": True,
+                "reason": "druggability is human-target-specific (Open Targets); not shown for this organism"}
     queries.append({"query": f"OpenTargets {prey}", "source": "opentargets",
                     "fetched_at": _now(), "result": "unavailable" if drug.get("unavailable") else "ok"})
 

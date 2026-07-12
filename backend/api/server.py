@@ -127,11 +127,12 @@ def druggability(gene: str, ensembl: str = None):
 
 
 @app.get("/api/stream")
-def stream(edge: str):
+def stream(edge: str, taxid: str = "9606"):
     """SSE: stream reasoning for an edge, clause by clause. A demo edge replays its
     cached, cited pack; an UPLOADED edge runs the live Evidence Agent (Stages 0-6),
     streaming its progress trace and the final verified dossier. Cited, never
     fabricated — the deterministic Stage-4 gate re-checks every citation."""
+    taxid = taxid if _TAXID_RE.match(taxid or "") else "9606"
     if edge in EDGE_TO_PACK:
         r = read_edge(edge)
 
@@ -157,7 +158,7 @@ def stream(edge: str):
 
         def worker():
             try:
-                result = agent_pipeline.run(bait, prey, emit=lambda e, d: q.put((e, d)))
+                result = agent_pipeline.run(bait, prey, taxid=taxid, emit=lambda e, d: q.put((e, d)))
                 q.put(("result", result))
             except Exception as exc:  # noqa: BLE001 - report, never crash the stream
                 log.warning("agent run failed for %s: %s", edge, exc)
@@ -189,10 +190,14 @@ def structure_file(file: str):
     return FileResponse(str(path), media_type="chemical/x-cif")
 
 
+_TAXID_RE = re.compile(r"^[0-9]{1,7}$")
+
+
 class EvidenceReq(BaseModel):
     bait: str = Field(max_length=40)
     prey: str = Field(max_length=40)
     l3_score: float | None = None
+    taxid: str = "9606"
 
 
 @app.post("/api/evidence")
@@ -201,10 +206,11 @@ def evidence(req: EvidenceReq):
     pre-computation of the top-N by L3). Returns the verified dossier or topology-only."""
     if not GENE_RE.match(req.bait) or not GENE_RE.match(req.prey):
         raise HTTPException(400, "invalid gene name")
+    taxid = req.taxid if _TAXID_RE.match(req.taxid or "") else "9606"
     if not _agent_gate.acquire(blocking=False):
         raise HTTPException(429, "agent busy; retry shortly")
     try:
-        return agent_pipeline.run(req.bait, req.prey, l3_score=req.l3_score)
+        return agent_pipeline.run(req.bait, req.prey, l3_score=req.l3_score, taxid=taxid)
     finally:
         _agent_gate.release()
 

@@ -25,17 +25,18 @@ def _get_json(url, params=None, timeout=20):
 
 
 @functools.lru_cache(maxsize=512)
-def resolve_symbol(symbol):
+def resolve_symbol(symbol, taxid="9606"):
     """gene symbol -> {'symbol','accession','ensembl'} or {'symbol','unresolved':reason}.
 
-    Reviewed + human + exact gene name. `gene_exact` also matches synonyms, so we keep
-    ONLY entries whose primary gene name equals the symbol; exactly one -> resolve,
-    else fail closed (0 = unknown, >=2 = genuinely ambiguous)."""
+    Reviewed + exact gene name in the given organism (default 9606 = human). `gene_exact`
+    also matches synonyms, so we keep ONLY entries whose primary gene name equals the
+    symbol; exactly one -> resolve, else fail closed (0 = unknown, >=2 = ambiguous)."""
     sym = (symbol or "").strip()
+    taxid = str(taxid or "9606").strip()
     if not sym:
         return {"symbol": symbol, "unresolved": "empty symbol"}
     try:
-        q = f"gene_exact:{sym} AND organism_id:9606 AND reviewed:true"
+        q = f"gene_exact:{sym} AND organism_id:{taxid} AND reviewed:true"
         data = _get_json(f"{config.UNIPROT_API}/search",
                          params={"query": q, "fields": "accession,gene_names,xref_ensembl",
                                  "format": "json", "size": 25})
@@ -45,7 +46,8 @@ def resolve_symbol(symbol):
     results = data.get("results", [])
     primary = [r for r in results if _primary_name_matches(r, sym)]
     if not primary:
-        return {"symbol": sym, "unresolved": "no reviewed human entry with this primary gene name"}
+        who = "human" if taxid == "9606" else f"taxid {taxid}"
+        return {"symbol": sym, "unresolved": f"no reviewed {who} entry with this primary gene name"}
     if len(primary) > 1:
         accs = ", ".join(r.get("primaryAccession", "?") for r in primary)
         return {"symbol": sym, "unresolved": f"ambiguous: {len(primary)} reviewed entries ({accs})"}
@@ -92,9 +94,9 @@ def _ensembl_from_entry(acc):
     return _ensembl_of(entry)
 
 
-def resolve_edge(bait, prey):
-    """Resolve both ends. Returns {'bait':..., 'prey':..., 'ok':bool, 'reason':...}."""
-    rb, rp = resolve_symbol(bait), resolve_symbol(prey)
+def resolve_edge(bait, prey, taxid="9606"):
+    """Resolve both ends in the given organism. Returns {'bait','prey','ok','reason'}."""
+    rb, rp = resolve_symbol(bait, taxid), resolve_symbol(prey, taxid)
     unresolved = [r for r in (rb, rp) if "unresolved" in r]
     if unresolved:
         why = "; ".join(f"{r['symbol']}: {r['unresolved']}" for r in unresolved)
