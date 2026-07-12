@@ -78,7 +78,7 @@ NCBI_API_KEY = os.environ.get("NCBI_API_KEY", "")  # optional; raises rate limit
 # is present, and degrade honestly to topology-only when it is not. The
 # deterministic backbone (resolve/retrieve/verify/emit) needs no key.
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-ANTHROPIC_MODEL = os.environ.get("CARTOGRAPH_AGENT_MODEL", "claude-sonnet-5")
+ANTHROPIC_MODEL = os.environ.get("CARTOGRAPH_AGENT_MODEL", "claude-opus-4-8")
 AGENT_CONTACT = os.environ.get("CARTOGRAPH_CONTACT", "cartograph-evidence-agent")  # tool/email etiquette
 UNIPROT_API = "https://rest.uniprot.org/uniprotkb"
 RCSB_SEARCH_API = "https://search.rcsb.org/rcsbsearch/v2/query"
