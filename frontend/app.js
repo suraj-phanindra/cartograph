@@ -69,7 +69,7 @@ function wireTopActions(){
   document.getElementById('act-upload').onclick=()=>{ if(MODE!=='online') return;
     state.uploaded ? openUploadedPredictions() : openUpload(); };
   document.getElementById('act-export').onclick=exportCurrent;
-  document.getElementById('act-compare').onclick=openCompareStrains;   // works offline (data in artifact)
+  document.getElementById('act-compare').onclick=()=> isUploaded()?compareUploaded():openCompareStrains();
 }
 
 // Export: whatever you're looking at. A live agent dossier -> HTML report; a demo
@@ -276,7 +276,7 @@ function buildGraph(){
   });
   cy.fit(undefined, 60);
   state.demoEls = cy.elements().jsons();   // snapshot so we can switch back from an uploaded map
-  cy.on('tap','node', evt=>{ if(state.uploaded) return; selectNode(evt.target.id()); });
+  cy.on('tap','node', evt=>{ if(isUploaded()){ renderUploadedNodePanel(evt.target.id()); return; } selectNode(evt.target.id()); });
   cy.on('tap','edge', evt=>{ const e=evt.target;
     if(e.data('uploadedPred')){ openLiveDossier(e.data('source'), e.data('target'), e.data('l3')); return; }
     if(DATA.dossiers[e.id()]) openDossier(e.id()); });
@@ -373,11 +373,11 @@ function buildControls(){
     row.onkeydown=(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleLayer(k,row); } };
     wrap.appendChild(row);
   }
-  document.getElementById('btn-eval').onclick=runEval;
-  document.getElementById('btn-loop').onclick=runLoop;
-  document.getElementById('btn-reset').onclick=()=>location.reload();
-  document.getElementById('btn-worklist').onclick=openWorklist;
-  document.getElementById('btn-evaltrans').onclick=openEvalTransparency;
+  document.getElementById('btn-eval').onclick=()=> isUploaded()?showUploadedEval():runEval();
+  document.getElementById('btn-loop').onclick=()=>{ if(!isUploaded()) runLoop(); };
+  document.getElementById('btn-reset').onclick=()=> isUploaded()?cy.fit(undefined,55):location.reload();
+  document.getElementById('btn-worklist').onclick=()=> isUploaded()?openUploadedPredictions():openWorklist();
+  document.getElementById('btn-evaltrans').onclick=()=>{ if(!isUploaded()) openEvalTransparency(); };
 }
 
 function toggleLayer(k,row){
@@ -416,13 +416,24 @@ function buildLegend(){
 let queryToken=0;
 const BAIT_ALIAS = { nucleocapsid:'N', envelope:'E', membrane:'M', spike:'Spike' };
 
+function isUploaded(){ return !!(state.viewingUploaded && state.uploaded); }
+
 function buildSearch(){
   const input=document.getElementById('ask-input');
   input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ runSearch(input.value); } });
   document.getElementById('ask-go').onclick=()=>runSearch(input.value);
-  const chips=[['ORF6’s unmapped targets','orf6 unmapped targets'],
-    ['Most druggable predicted','most druggable predicted'],
-    ['Run locked evaluation','run locked evaluation']];
+  buildChips();
+}
+function buildChips(){
+  const input=document.getElementById('ask-input');
+  const up=isUploaded();
+  const chips = up
+    ? [[`What is ${uploadedBaits()[0]||'CDK2'} hitting?`, `what is ${uploadedBaits()[0]||'CDK2'} hitting`],
+       ['My predictions','my predictions'],
+       ['Run my eval','run my eval']]
+    : [['ORF6’s unmapped targets','orf6 unmapped targets'],
+       ['Most druggable predicted','most druggable predicted'],
+       ['Run locked evaluation','run locked evaluation']];
   const wrap=document.getElementById('ask-chips'); wrap.innerHTML='';
   for(const [label,q] of chips){
     const b=document.createElement('button'); b.type='button'; b.className='ask-chip'; b.textContent=label;
@@ -431,12 +442,37 @@ function buildSearch(){
   }
 }
 
+// Reconfigure every demo-bound surface for the active map (demo vs uploaded).
+function applyMode(){
+  const up=isUploaded();
+  const input=document.getElementById('ask-input');
+  if(input) input.placeholder = up ? 'Ask your map — e.g. what is CDK2 hitting, or run my eval'
+                                   : 'Ask the map — what is ORF6 hitting that we haven’t mapped?';
+  buildChips();
+  // demo-only signal layers hidden on an uploaded map (no loop/conservation there)
+  ['confirmed','conserved'].forEach(k=>{ const r=document.querySelector(`.layer-row[data-k="${k}"]`); if(r) r.style.display=up?'none':''; });
+  const setBtn=(id,txt,dis,tip)=>{ const b=document.getElementById(id); if(!b)return;
+    if(txt!=null) b.textContent=txt; b.disabled=!!dis; b.title=tip||''; };
+  setBtn('btn-eval', up?'Run my eval':'Run evaluator', false);
+  setBtn('btn-loop', up?'Loop round':null, up, up?'The fold-back loop runs on the SARS-CoV-2 locked benchmark':'');
+  setBtn('btn-evaltrans', up?'Held-out (SARS-CoV-2)':null, up, up?'Held-out transparency is for the SARS-CoV-2 benchmark; your map has its own upload eval':'');
+  setBtn('btn-worklist', up?'Your predictions':'What to test next', false);
+}
+
+function uploadedBaits(){ return state.uploaded ? [...new Set((state.uploaded.predictions||[]).map(p=>p.bait))] : []; }
 function graphBaits(){ return DATA.graph.nodes.filter(n=>n.type==='viral').map(n=>n.id); }
 function allBaits(){ return [...new Set(DATA.worklist.map(r=>r.bait))]; }
 
 function parseIntent(text){
   const t=(text||'').toLowerCase().trim();
   if(!t) return {type:'none'};
+  const rxq=s=>String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  if(isUploaded()){
+    if(/(prediction|what to test|worklist|to test)/.test(t)) return {type:'my_preds'};
+    if(/(eval|precision|benchmark|held.?out|accuracy)/.test(t)) return {type:'my_eval'};
+    for(const n of uploadedNodeIds()){ if(new RegExp(`\\b${rxq(n.toLowerCase())}\\b`).test(t)) return {type:'probe_uploaded', node:n}; }
+    return {type:'unknown_uploaded'};
+  }
   if(/\b(loop)\b/.test(t)) return {type:'loop'};
   if(/(evaluat|precision|\brun\b.*\beval|benchmark|held.?out)/.test(t)) return {type:'eval'};
   if(/(druggab|repurpos|approved drug|most.drugg)/.test(t)) return {type:'druggable'};
@@ -448,10 +484,18 @@ function parseIntent(text){
   return {type:'unknown'};
 }
 
+function uploadedNodeIds(){ return state.uploaded ? state.uploaded.graph.nodes.map(n=>n.id) : []; }
+
 function runSearch(text){
   const it=parseIntent(text);
   switch(it.type){
     case 'none': return;
+    case 'my_preds': openUploadedPredictions(); return;
+    case 'my_eval': showUploadedEval(); return;
+    case 'probe_uploaded': probeUploaded(it.node); return;
+    case 'unknown_uploaded':
+      toast(`Try a protein in your map (e.g. <span class="k">${esc(uploadedBaits()[0]||'a bait')}</span>), <span class="k">my predictions</span>, or <span class="k">run my eval</span>.`);
+      return;
     case 'eval': runEval(); return;
     case 'loop':
       if(!state.evalDone){ runEval(); toast('Ran the locked evaluator — <span class="k">run loop</span> again for the fold-back round.'); }
@@ -472,6 +516,27 @@ function runSearch(text){
   }
 }
 
+function probeUploaded(node){
+  const n=cy.getElementById(node); if(!n.length) return;
+  cy.elements().removeClass('pathlit');
+  n.addClass('pathlit');
+  const preds=cy.edges().filter(e=>e.data('uploadedPred') && (e.data('source')===node||e.data('target')===node));
+  preds.addClass('pathlit');
+  cy.animate({center:{eles:n}, zoom: Math.max(cy.zoom(),0.8)},{duration:350});
+  const np=preds.length;
+  toast(np ? `<span class="k">${esc(node)}</span> — ${np} predicted edge${np===1?'':'s'} (dashed). Click one to run the Evidence Agent.`
+           : `<span class="k">${esc(node)}</span> has no L3 predictions in your map.`);
+}
+function showUploadedEval(){
+  const ev=state.uploaded && state.uploaded.eval;
+  if(!ev){ toast('No held-out eval for this upload. Re-open <span class="k">Bring your own map</span> → <span class="k">＋ new edge list</span> and set a held-out fraction > 0 to benchmark your own network.'); return; }
+  const chip=document.getElementById('precision-chip'); chip.classList.remove('hidden');
+  chip.innerHTML=`<button class="panel-close" aria-label="Dismiss" onclick="hideChip()">✕</button>
+    <div class="lbl">Your map · precision@${esc(ev.k)}</div>
+    <div class="big">${Math.round(ev.precision*100)}%</div>
+    <div class="sub">on <b>${esc(ev.n_heldout)}</b> of your own edges held out (seed ${esc(ev.seed)})<br>
+    <span style="color:${COL.mut}">computed on YOUR network — never the locked Gordon benchmark. L3 topology only.</span></div>`;
+}
 function probeBait(bait){
   if(bait===DATA.flagship.path[0]){ flagshipOrf6(); return; }   // flagship walkthrough
   const dz=Object.keys(DATA.dossiers).find(k=>k.split('|')[0]===bait);
@@ -1023,19 +1088,47 @@ function renderNodePanel(id){
     <div class="kv">${partners.map(e=>`${esc(e.source)} → ${esc(e.target)} <span style="color:${COL.mut}">(${esc(e.kind)})</span>`).join('<br>')||'—'}</div></div>`;
 }
 
+function renderUploadedNodePanel(id){
+  _currentDossierKey=null; state.liveDossier=null;
+  const n=cy.getElementById(id); if(!n.length) return;
+  cy.nodes().removeClass('dossier-target'); n.addClass('dossier-target');
+  const inc=n.connectedEdges().map(e=>({s:e.data('source'),t:e.data('target'),k:e.data('kind'),
+    l3:e.data('l3'), pred:!!e.data('uploadedPred')}));
+  const known=inc.filter(e=>!e.pred);
+  const preds=inc.filter(e=>e.pred);
+  const rows=preds.map(e=>`<div class="up-node-pred" data-b="${esc(e.s)}" data-p="${esc(e.t)}" data-l="${e.l3||0}">
+    <span>${esc(e.s)} → ${esc(e.t)} <span style="color:var(--mut2);font-size:11px">L3 ${(e.l3||0).toFixed(2)}</span></span>
+    <button class="ev-run">▶ agent</button></div>`).join('');
+  document.getElementById('dossier-body').innerHTML=`
+    <div class="dz-head"><button class="panel-close" aria-label="Close panel" onclick="closeDossier()">✕</button>
+      <div class="dz-title">${esc(id)}</div>
+      <div class="dz-sub">${esc(n.data('type')==='viral'?'bait (column 1)':'prey (column 2)')} · degree ${esc(n.degree())} · your uploaded map</div></div>
+    <div class="dz-sec"><div class="dz-sec-h">Known / enrichment edges</div>
+      <div class="kv">${known.map(e=>`${esc(e.s)} → ${esc(e.t)} <span style="color:${COL.mut}">(${esc(e.k)})</span>`).join('<br>')||'—'}</div></div>
+    ${preds.length?`<div class="dz-sec"><div class="dz-sec-h">Predicted edges · run the Evidence Agent</div>
+      <div class="up-node-preds">${rows}</div></div>`:''}`;
+  document.querySelectorAll('.up-node-pred').forEach(el=> el.querySelector('.ev-run').onclick=()=>
+    openLiveDossier(el.dataset.b, el.dataset.p, parseFloat(el.dataset.l)));
+}
 function renderIdle(){
+  const up=isUploaded();
+  const prompt = up ? 'Select a <b>node</b> for its edges, or a dashed <b>predicted edge</b> to run the live Evidence Agent.'
+                    : 'Select a <b>node</b> to see its edges, or an <b>edge</b> for its structural dossier.';
+  const cta = up ? '<span class="sp" aria-hidden="true">&#10022;</span> Your predictions'
+                 : '<span class="sp" aria-hidden="true">&#10022;</span> Predict the ORF6 gap';
   document.getElementById('dossier-body').innerHTML=`
     <div class="dz-empty-wrap">
       <div class="dz-panel-head">Dossier</div>
       <div class="dz-empty-center">
         <div class="dz-ring" aria-hidden="true"></div>
-        <div class="dz-empty-prompt">Select a <b>node</b> to see its edges, or an <b>edge</b> for its structural dossier.</div>
-        <button class="dz-cta" id="dz-predict"><span class="sp" aria-hidden="true">&#10022;</span> Predict the ORF6 gap</button>
+        <div class="dz-empty-prompt">${prompt}</div>
+        <button class="dz-cta" id="dz-predict">${cta}</button>
       </div>
       <div class="dz-empty-foot">Every hypothesis Cartograph renders is backed by an openable paper. A claim with no citation does not render.</div>
     </div>`;
   const btn=document.getElementById('dz-predict');
-  if(btn) btn.onclick=()=>{ document.getElementById('ask-input').value=''; probeBait(DATA.flagship.path[0]); };
+  if(btn) btn.onclick=()=>{ if(isUploaded()){ openUploadedPredictions(); return; }
+    document.getElementById('ask-input').value=''; probeBait(DATA.flagship.path[0]); };
 }
 
 /* ---------- modal (worklist / eval transparency / upload) ---------- */
@@ -1423,6 +1516,7 @@ function renderUploadResult(d){
   state.viewingUploaded = true;
   renderUploadedMap(d);               // the central map now shows YOUR interactome
   setStrainDropdown();                // the selector reflects what you're viewing
+  applyMode();                        // reconfigure search/layers/eval/worklist for your map
   const ev=d.eval;
   document.getElementById('up-result').innerHTML=`
     <div class="up-msg ok">Loaded ${esc(d.n_baits)} baits, ${esc(d.n_prey)} prey, ${esc(d.n_edges)} edges; added ${esc(d.n_enrichment)} STRING enrichment edges.
@@ -1501,7 +1595,7 @@ function setStrainDropdown(){
 }
 function switchToUploaded(){
   if(!state.uploaded) return;
-  state.viewingUploaded=true; renderUploadedMap(state.uploaded); setStrainDropdown();
+  state.viewingUploaded=true; renderUploadedMap(state.uploaded); setStrainDropdown(); applyMode();
   toast('Viewing <span class="k">your uploaded map</span>. Click a predicted edge to run the Evidence Agent, or reopen the list from “Bring your own map”.');
 }
 function switchToDemo(){
@@ -1509,7 +1603,15 @@ function switchToDemo(){
   cy.stop(); cy.elements().remove(); cy.add(state.demoEls); cy.fit(undefined,60);
   ['known','enrichment','predicted','confirmed'].forEach(k=>{ const on=state.layers[k]!==false;
     const row=document.querySelector(`.layer-row[data-k="${k}"]`); if(row) row.classList.toggle('on',on); });
-  buildLegend(); setStrainDropdown();
+  buildLegend(); setStrainDropdown(); applyMode();
+}
+function compareUploaded(){
+  openModal(`Compare strains <small>cross-species conservation</small>`, '', '');
+  document.getElementById('modal-body').innerHTML=`
+    <div class="wl-note" style="margin:20px;line-height:1.7">
+      <b>Not applicable to your uploaded map.</b> Cross-species conservation needs a reference interactome for the orthologous species. Cartograph ships SARS-CoV-1 + MERS as the reference for the SARS-CoV-2 demo (Gordon 2020 <i>Science</i>); there is no built-in reference for your organism(s).<br><br>
+      To compare across species, upload a second interactome for the orthologous species (open <b>Bring your own map → ＋ new edge list</b>) — automatic alignment is on the roadmap. Until then, each live dossier honestly shows conservation as <b>“not applicable”</b>, never a blank implying the interaction is absent elsewhere.
+    </div>`;
 }
 // reopen the persisted predictions list (so running the agent never loses your data)
 function openUploadedPredictions(){

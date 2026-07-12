@@ -321,6 +321,9 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .agent-report summary { cursor:pointer; color:var(--ink2); margin-top:6px; }
 .up-actions { display:flex; gap:10px; align-items:center; margin:2px 0 4px; }
 .pred-ev .spin { vertical-align:middle; }
+.up-node-preds { display:flex; flex-direction:column; gap:6px; }
+.up-node-pred { display:flex; justify-content:space-between; align-items:center; gap:8px;
+  font:500 12px/1.3 var(--sans); color:var(--ink2); }
 .wl-empty { padding:22px 14px; text-align:center; color:var(--mut); font:400 12.5px/1.5 var(--sans); }
 /* dossier conservation block */
 .cons-row { display:flex; align-items:center; gap:10px; padding:3px 0; }
