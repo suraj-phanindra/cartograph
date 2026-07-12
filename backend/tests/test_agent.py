@@ -227,10 +227,15 @@ def test_live_dossier_has_resolvable_citation():
     if not corpus["records"]:
         pytest.skip("no literature retrieved")
     top = next(iter(corpus["records"]))
+    # inject deterministic Reader/Skeptic/Reviewer so this tests the DETERMINISTIC
+    # path (live resolve+retrieve+verify+assemble) regardless of whether a Claude
+    # key is configured; the real LLM stages are exercised separately.
     d = pipeline.run("TP53", "MDM2", stages={
         "read_fn": lambda c, r: {"no_mechanism": False, "confidence": "moderate",
                                  "experiment": "co-IP", "clauses": [{"id": 0,
                                  "text": "TP53 and MDM2 interact.", "pmid": top}]},
+        "skeptic_fn": lambda c, r, f=None: {"verdict": "pass", "reason": "test", "caveat": None},
+        "review_fn": lambda cl, c, vr, f=None: {"drop": [], "flags": []},
     }, use_cache=False)
     assert d["citations"], "a real retrieved citation should survive the gate"
     assert d["citations"][0]["url"].startswith("https://pubmed.ncbi.nlm.nih.gov/")

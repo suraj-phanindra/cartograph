@@ -18,7 +18,8 @@ _SYSTEM = (
     "say so. Respond with ONLY a JSON object: "
     '{"no_mechanism": bool, "clauses": [{"text": str, "pmid": str}], '
     '"confidence": "low|moderate|high", "experiment": str}. Every clause.pmid MUST be '
-    "one of the closed PMIDs. Keep clauses factual and free of causal overclaim."
+    "one of the closed PMIDs. Keep clauses factual and free of causal overclaim. "
+    "Provide at most 6 clauses; keep each under 40 words."
 )
 
 

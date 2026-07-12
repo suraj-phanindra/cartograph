@@ -16,6 +16,25 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 EVIDENCE_DIR = REPO_ROOT / "evidence"
 FRONTEND_DATA_DIR = REPO_ROOT / "frontend" / "data"
 
+
+def _load_dotenv(path=REPO_ROOT / ".env"):
+    """Minimal .env loader (no dependency): KEY=VALUE lines -> os.environ, without
+    overriding a variable already set in the real environment. Secrets stay in .env
+    (gitignored), never in code."""
+    if not path.exists():
+        return
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, val = line.partition("=")
+        key, val = key.strip(), val.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = val
+
+
+_load_dotenv()
+
 EDGES_CSV = EVIDENCE_DIR / "gordon2020_edges.csv"
 COV1_MERS_CSV = EVIDENCE_DIR / "gordon2020_science_cov1_mers_edges.csv"  # conservation (CoV-1 + MERS only)
 CRISPR_HITS = EVIDENCE_DIR / "crispr_screen_hits.json"                   # 7 genome-wide CRISPR screens

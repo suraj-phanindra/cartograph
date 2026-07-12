@@ -22,7 +22,7 @@ def available():
     return bool(config.ANTHROPIC_API_KEY)
 
 
-def call(system, user, max_tokens=1600, timeout=60):
+def call(system, user, max_tokens=3000, timeout=90):
     if not available():
         raise RuntimeError("ANTHROPIC_API_KEY not configured")
     headers = {"x-api-key": config.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01",
@@ -35,8 +35,13 @@ def call(system, user, max_tokens=1600, timeout=60):
 
 
 def call_json(system, user, **kw):
-    """Call and parse the first JSON value in the reply, or None."""
-    txt = call(system, user, **kw)
+    """Call and parse the first JSON value in the reply, or None. Tolerates markdown
+    fences and surrounding prose; a truncated/invalid reply returns None (an honest
+    failure -> topology-only), never a fabricated dossier."""
+    txt = call(system, user, **kw).strip()
+    if txt.startswith("```"):
+        txt = re.sub(r"^```[a-zA-Z]*\s*", "", txt)
+        txt = re.sub(r"\s*```$", "", txt).strip()
     m = re.search(r"(\{.*\}|\[.*\])", txt, re.S)
     if not m:
         return None
