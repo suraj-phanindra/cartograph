@@ -674,6 +674,108 @@ function wireFeedback(key){
   if(note) note.onchange=()=> fbSet(key, fbGet(key)?.verdict||null, note.value);
 }
 
+/* ---------- live Evidence Agent: on-demand dossier for an uploaded edge ---------- */
+function openLiveDossier(bait, prey, l3_score){
+  const edge = bait+'|'+prey;
+  _currentDossierKey = null;                 // not a cached dossier
+  if(cy){ cy.nodes().removeClass('dossier-target'); }
+  document.getElementById('dossier-body').innerHTML = `
+    <div class="dz-head">
+      <button class="panel-close" aria-label="Close dossier" onclick="closeDossier()">✕</button>
+      <span class="dz-badge" style="background:${hex2(COL.predicted,.16)};color:${COL.predicted}">LIVE · EVIDENCE AGENT</span>
+      <div class="dz-title">${esc(bait)}<span class="arrow">→</span>${esc(prey)}</div>
+      <div class="dz-sub">deterministic retrieval · Claude reads · code-verified citations</div>
+    </div>
+    <div class="dz-sec"><div class="dz-sec-h">Agent trace</div><div id="agent-trace" class="agent-trace"></div></div>
+    <div id="live-dossier"></div>`;
+  const trace=document.getElementById('agent-trace');
+  const step=(html,cls='')=>{ const el=document.createElement('div'); el.className='trace-step '+cls; el.innerHTML=html; trace.appendChild(el); return el; };
+  let last=null, finished=false;
+  const spin=(html)=>{ if(last) last.classList.remove('run'); last=step('<span class="spin"></span> '+html,'run'); };
+  const es=new EventSource(`/api/stream?edge=${encodeURIComponent(edge)}`);
+  es.addEventListener('start', e=>{ const d=JSON.parse(e.data);
+    step(`resolving <b>${esc(bait)} → ${esc(prey)}</b>${d.reasoning?'':' · <span style="color:var(--mut2)">reasoning layer not configured — deterministic facts only</span>'}`); });
+  es.addEventListener('cached', ()=>step('loaded from cache (already computed this session)','ok'));
+  es.addEventListener('resolving', ()=>spin('resolving identifiers (UniProt)'));
+  es.addEventListener('retrieving', ()=>spin('retrieving literature, structure, druggability'));
+  es.addEventListener('retrieved', e=>{ const d=JSON.parse(e.data); if(last)last.classList.remove('run');
+    step(`retrieved <b>${esc(d.papers)}</b> papers · ${esc(d.comention_count)} co-mentions · structure: ${esc(d.structure)}`,'ok'); });
+  es.addEventListener('reading', ()=>spin('Reader drafting a cited mechanism'));
+  es.addEventListener('skeptic', ()=>spin('Skeptic: adversarial check'));
+  es.addEventListener('vetoed', e=>{ if(last)last.classList.remove('run'); step('Skeptic <b>veto</b> — '+esc(JSON.parse(e.data).reason),'veto'); });
+  es.addEventListener('verifying', ()=>spin('Verify gate: re-checking every citation'));
+  es.addEventListener('verified', e=>{ const d=JSON.parse(e.data); if(last)last.classList.remove('run');
+    step(`verify gate: kept <b>${esc(d.kept)}</b>, dropped <b>${esc(d.dropped)}</b> · structure ${d.structure_ok?'confirmed':'not used'}`,'ok'); });
+  es.addEventListener('reviewing', ()=>spin('final adversarial review (drop-only)'));
+  es.addEventListener('topology_only', e=>{ if(last)last.classList.remove('run'); step('topology-only — '+esc(JSON.parse(e.data).reason),'warn'); });
+  es.addEventListener('result', e=>{ finished=true; if(last)last.classList.remove('run'); es.close(); renderLiveDossier(JSON.parse(e.data)); });
+  es.addEventListener('error', e=>{ if(e.data){ if(last)last.classList.remove('run'); step('agent error — '+esc(JSON.parse(e.data).reason||'failed'),'veto'); } });
+  es.addEventListener('done', ()=>{ es.close(); });
+  es.onerror=()=>{ if(!finished){ if(last)last.classList.remove('run'); } es.close(); };
+}
+
+function _structureBlock(st){
+  if(!st) return `<div class="dz-sec"><div class="dz-sec-h">Structure</div>
+    <div class="struct-note">No deposited complex found for this pair and no confident model — no structure is shown (none is invented).</div></div>`;
+  const rcsb=safeUrl(st.rcsb_url);
+  const c=st.confidence||{};
+  return `<div class="dz-sec"><div class="dz-sec-h">Structure ${st.kind==='predicted'?'<span class="wl-badge wl-pred">PREDICTED</span>':'<span class="wl-badge wl-exp">EXPERIMENTAL</span>'}</div>
+    <div id="molstar-wrap"></div>
+    <div class="struct-meta"><span class="lbl">method</span> ${esc(st.method)} &nbsp;·&nbsp;
+      <span class="lbl">${esc(c.type||'')}</span> ${esc(c.value)} ${esc(c.unit||'')}
+      ${rcsb?`&nbsp;·&nbsp; <a href="${esc(rcsb)}" target="_blank" rel="noopener noreferrer" style="color:${COL.predicted};font-family:var(--mono);font-size:11px">${esc(st.pdb)} on RCSB →</a>`:''}<br>
+      <span class="lbl">chains</span> ${esc(st.chains)}</div>
+    ${(st.interface_residues&&st.interface_residues.length)?`<div class="struct-resid">${st.interface_residues.map(r=>`<span class="r">${esc(r)}</span>`).join('')}</div>
+      <div class="struct-note">interface residues ${esc(st.interface_source)}</div>`
+      :`<div class="struct-note">${esc(st.interface_source||'')}</div>`}</div>`;
+}
+
+function renderLiveDossier(d){
+  const st=d.structure, cf=d.confidence||{};
+  const skClass=['pass','downgrade','veto'].includes((d.skeptic||{}).verdict)?d.skeptic.verdict:'pass';
+  const mech = d.mechanism&&d.mechanism.length
+    ? `<div class="mech">${renderMechanism(d.mechanism)}</div>`
+    : `<div class="struct-note"><b>No cited mechanism.</b> ${esc(d.mechanism_status||'no mechanism supported by retrieved literature')} — the deterministic facts below are still real.</div>`;
+  const cites = (d.citations||[]).map(c=>{ const u=safeUrl(c.url);
+    return `<div class="cite-item"><span class="n">${esc(c.n)}</span><div>${u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(c.title)}</a>`:esc(c.title)}<br>
+      <span class="id">PMID ${esc(c.pmid)}${c.journal?` · ${esc(c.journal)} ${esc(c.year)}`:''}</span></div></div>`;}).join('');
+  document.getElementById('live-dossier').innerHTML=`
+    ${_structureBlock(st)}
+    <div class="dz-sec"><div class="dz-sec-h">Mechanism</div>${mech}</div>
+    <div class="dz-sec"><div class="dz-sec-h">Confidence</div><div class="conf-row">
+      ${gauge('Topology', null, COL.topology, '—', cf.topology_note||'L3')}
+      ${st?gauge('Structure', st.kind==='experimental'?0.95:0.6, COL.predicted, esc((st.confidence||{}).value), esc((st.confidence||{}).type)):''}
+      ${gauge('Literature', cf.literature_count>=2?0.9:(cf.literature_count===1?0.5:0.15), COL.confirmed, esc(cf.literature), `${esc(cf.literature_count)} cited`)}
+    </div></div>
+    ${renderConservation(d.conservation)}
+    ${renderCrispr(d.crispr)}
+    <div class="dz-sec"><div class="dz-sec-h">Skeptic</div>
+      <div class="skeptic sk-${skClass}"><span class="badge">${esc((d.skeptic||{}).verdict)}</span>
+      <div>${esc((d.skeptic||{}).reason||'')}${(d.skeptic||{}).caveat?`<br><span style="color:${COL.mut}">${esc(d.skeptic.caveat)}</span>`:''}</div></div></div>
+    ${(d.proposed_test&&(d.proposed_test.text||d.proposed_test.residues.length))?`<div class="dz-sec"><div class="dz-sec-h">Proposed wet-lab test</div>
+      <div class="test-box"><div class="muts">${d.proposed_test.residues.map(r=>`<span class="mut">${esc(r)}</span>`).join('')}</div>${esc(d.proposed_test.text)}</div></div>`:''}
+    ${renderDruggability(d.druggability)}
+    ${cites?`<div class="dz-sec"><div class="dz-sec-h">Citations <span class="dz-sec-note">every one re-verified by code</span></div><div class="cites">${cites}</div></div>`:''}
+    ${_agentReport(d.agent_report, d.queries)}
+    <div class="integrity-foot"><b>proposed by</b> ${esc(d.provenance.proposed_by)}<br>
+      <b>evidence by</b> ${esc(d.provenance.evidence_by)}<br>
+      <b>structure</b> ${esc(d.provenance.structure_by)} · <b>${esc(d.provenance.evaluator)}</b></div>`;
+  if(st && st.url) mountStructure(st);
+}
+
+function _agentReport(rep, queries){
+  const q = (rep&&rep.queries)||queries||[];
+  if(!rep && !q.length) return '';
+  const dropped=(rep&&rep.clauses_dropped_by_verify)||[];
+  return `<div class="dz-sec"><div class="dz-sec-h">Agent provenance <span class="dz-sec-note">what was queried, retrieved, dropped</span></div>
+    <div class="agent-report">
+      ${rep?`<div>papers retrieved <b>${esc(rep.papers_retrieved)}</b> · co-mentions <b>${esc(rep.comention_count)}</b> · Skeptic <b>${esc(rep.skeptic_verdict)}</b></div>`:''}
+      ${dropped.length?`<div class="drop">verify gate dropped ${dropped.length}: ${dropped.map(x=>`<span title="${esc(x.reason)}">PMID ${esc(x.pmid)}</span>`).join(', ')}</div>`:''}
+      ${(rep&&rep.reviewer_flags&&rep.reviewer_flags.length)?`<div class="drop">reviewer flags: ${rep.reviewer_flags.map(f=>esc(f)).join('; ')}</div>`:''}
+      <details><summary>${q.length} queries run</summary><div class="qlog">${q.map(x=>`<div>${esc(x.source)}: ${esc(x.query)} <span style="color:var(--mut2)">${esc(x.fetched_at||'')}</span></div>`).join('')}</div></details>
+    </div></div>`;
+}
+
 function renderMechanism(mech){
   return mech.map(cl=>{
     const cites=cl.cites.map(n=>`<sup class="cite">${esc(n)}</sup>`).join('');
@@ -689,6 +791,9 @@ function gauge(cap,v,color,val,sub){
 }
 function renderConservation(c){
   if(!c) return '';
+  if(c.not_applicable) return `<div class="dz-sec">
+    <div class="dz-sec-h">Cross-species conservation <span class="dz-sec-note">reference data</span></div>
+    <div class="cons-verdict"><b>Not applicable</b> — ${esc(c.reason||'no reference data for this organism')}. The SARS-CoV-1/MERS comparison is coronavirus-specific; this is a distinct state, not an absence of conservation.</div></div>`;
   const strainRow=(name,st)=>`<div class="cons-row"><span class="cons-strain">${name}</span>${consStateChip(st)}</div>`;
   const verdict = c.is_conserved
     ? `<b style="color:${COL.conserved}">Corroborated across coronaviruses.</b> The orthologous viral protein binds the same human prey in ${esc(c.conserved_in.map(s=>s.replace('MERS-CoV','MERS')).join(' and '))}. A pan-coronavirus interaction is a stronger candidate to test.`
@@ -707,6 +812,9 @@ function renderConservation(c){
 }
 function renderCrispr(c){
   if(!c) return '';
+  if(c.not_applicable) return `<div class="dz-sec">
+    <div class="dz-sec-h">Independent functional evidence <span class="dz-sec-note">CRISPR</span></div>
+    <div class="cons-verdict"><b>Not applicable</b> — ${esc(c.reason||'CRISPR reference data is SARS-CoV-2-specific')}. No dependency-screen reference set for this organism (never a blank implying absence).</div></div>`;
   const screens=c.screens.map(s=>{ const u=`https://pubmed.ncbi.nlm.nih.gov/${esc(s.pmid)}/`;
     return `<a href="${u}" target="_blank" rel="noopener noreferrer">${esc(s.name)}${s.soft?' *':''}</a>`; }).join(', ');
   const soft=c.n_screens>c.n_screens_excl_soft?` (${esc(c.n_screens_excl_soft)} excluding the soft-provenance screens *)`:'';
@@ -1275,17 +1383,18 @@ async function runUpload(){
 function renderUploadResult(d){
   const preds=(d.predictions||[]);
   const ev=d.eval;
-  const rows=preds.slice(0,25).map(p=>`<tr>
+  const rows=preds.slice(0,25).map((p,i)=>`<tr>
     <td class="wl-edge">${esc(p.bait)} → ${esc(p.prey)}</td>
     <td class="wl-num">${(p.l3_score||0).toFixed(3)}</td>
     <td class="mono" style="font-size:11px;color:var(--mut)">${p.path?esc(p.path.join(' → ')):'—'}</td>
-    <td><span class="wl-no">no cached evidence — topology only</span></td></tr>`).join('');
+    <td><button class="ev-run" data-b="${esc(p.bait)}" data-p="${esc(p.prey)}" data-l="${p.l3_score||0}">▶ run Evidence Agent</button></td></tr>`).join('');
   document.getElementById('up-result').innerHTML=`
     <div class="up-msg ok">Loaded ${esc(d.n_baits)} baits, ${esc(d.n_prey)} prey, ${esc(d.n_edges)} edges; added ${esc(d.n_enrichment)} STRING enrichment edges.
     ${ev?` Your own held-out eval: precision@${esc(ev.k)} <b>${Math.round(ev.precision*100)}%</b> on ${esc(ev.n_heldout)} held-out edges (seed ${esc(ev.seed)}).`:''}</div>
     <table class="wl-table" style="margin-top:12px"><thead><tr><th>Predicted edge</th><th>L3</th><th>Length-3 path</th><th>Evidence</th></tr></thead>
     <tbody>${rows||'<tr><td colspan=4 class="wl-no">no length-3 predictions</td></tr>'}</tbody></table>
-    <div class="wl-note">These predictions are pure topology on your network. Cartograph shows no mechanism, structure, or citation here because none is cached for your edges — it will not fabricate one. Your data was not added to the locked Gordon benchmark.</div>`;
+    <div class="wl-note">L3 is pure topology on your network. Click <b>run Evidence Agent</b> to fetch a live, verified dossier for any predicted edge: identifiers resolved (UniProt), literature + structure + druggability retrieved (NCBI/RCSB/AlphaFold/Open Targets), Claude reads, and a deterministic gate re-checks every citation — no mechanism, structure, or citation is ever fabricated. Your data is not added to the locked Gordon benchmark.</div>`;
+  document.querySelectorAll('.ev-run').forEach(b=> b.onclick=()=>{ closeModal(); openLiveDossier(b.dataset.b, b.dataset.p, parseFloat(b.dataset.l)); });
 }
 
 /* ---------- panel lifecycle: one system for every transient panel ---------- */

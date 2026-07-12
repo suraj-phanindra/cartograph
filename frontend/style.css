@@ -304,6 +304,21 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
 .cmp-fbtn.on { color:var(--conserved); border-color:rgba(185,139,255,.5); background:#141026; }
 /* CRISPR functional-evidence chip */
 .cr-yes { color:var(--topology); background:rgba(255,209,102,.14); }
+/* live Evidence Agent: trace + provenance */
+.ev-run { font:600 11px/1 var(--sans); color:var(--predicted); background:#0e1526; border:1px solid rgba(34,224,221,.4);
+  border-radius:7px; padding:6px 10px; cursor:pointer; }
+.ev-run:hover { background:#12203a; }
+.agent-trace { display:flex; flex-direction:column; gap:5px; }
+.trace-step { font:500 12px/1.4 var(--mono); color:var(--ink2); padding:5px 9px; border-radius:6px; background:var(--panel2);
+  border-left:2px solid var(--line2); }
+.trace-step.run { border-left-color:var(--predicted); color:var(--predicted); }
+.trace-step.ok { border-left-color:var(--confirmed); }
+.trace-step.warn { border-left-color:var(--topology); }
+.trace-step.veto { border-left-color:#f2686b; color:#f2b0b1; }
+.agent-report { font:500 12px/1.6 var(--mono); color:var(--mut); }
+.agent-report .drop { color:#e0b341; }
+.agent-report .qlog { margin-top:6px; font-size:11px; color:var(--mut2); max-height:160px; overflow:auto; }
+.agent-report summary { cursor:pointer; color:var(--ink2); margin-top:6px; }
 .wl-empty { padding:22px 14px; text-align:center; color:var(--mut); font:400 12.5px/1.5 var(--sans); }
 /* dossier conservation block */
 .cons-row { display:flex; align-items:center; gap:10px; padding:3px 0; }
