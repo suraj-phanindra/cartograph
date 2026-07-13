@@ -30,11 +30,17 @@ adds the live upload + Evidence Agent).
 | **Evidence Agent** (live per-edge dossier) | "run Evidence Agent" on an uploaded prediction | **API only** | **UniProt + NCBI + RCSB + AlphaFold + Open Targets + Anthropic** | ❌ |
 | Uploaded map becomes the workbench (mode-aware chrome, dropdown, "Run all") | after upload | **API only** | as above | ❌ |
 
-**Offline flag:** on port 8791 the mode pill reads "offline", **Bring your own map is
-disabled** with a tooltip, and I instrumented `fetch` across the full demo path —
-**zero network calls**. Everything demo-critical is baked into the artifact. The only
-network-dependent features are the three API-only ones above, which are correctly gated
-off on 8791.
+**Network truth (verified with the full browser network log, both 8791 and 8792):** the
+demo path makes **zero external calls to any scientific data/compute source** — STRING,
+NCBI, RCSB, UniProt, Open Targets, and Anthropic are never touched; the artifact, the
+CIFs, and `/api/health` are all served from `127.0.0.1`. **One external dependency
+remains in BOTH modes: Google Fonts** (`fonts.googleapis.com` + `fonts.gstatic.com`,
+Hanken Grotesk + JetBrains Mono, 3 requests at page load only, browser-cached after,
+with system-font fallbacks via `display=swap`). It is typography, not data — if the
+network drops, the UI falls back to system fonts (cosmetic, not broken). *My earlier
+"zero network calls" measurement used `fetch` instrumentation, which does not see the
+webfont `<link>`; the full network log does. Correction logged here.* The three API-only
+features (upload / screen / agent) are correctly gated off on 8791.
 
 ---
 
@@ -100,7 +106,7 @@ off on 8791.
 
 **The Evidence Agent — YES, it landed and it is live.** On a **brand-new uploaded edge** (API mode) it runs a 6-stage pipeline, streamed over SSE: resolve identifiers (UniProt) → retrieve literature + a real deposited structure + druggability (NCBI / RCSB / AlphaFold / Open Targets) → Claude Reader drafts cited clauses → Claude Skeptic → **deterministic Stage-4 verify gate re-checks every citation** (closed-set + esummary-resolve + title-match; a PDB must contain both accessions) → Claude final reviewer (drop-only) → renders. No citation, structure, residue, or drug is ever fabricated; failures degrade to topology-only.
 
-- **End-to-end time for one cold dossier: ~33 seconds** (measured, Opus 4.8 model). **Cached: ~13 ms.**
+- **End-to-end time for one cold dossier: ~34–38 seconds** (measured, Opus 4.8). Three back-to-back cold FOS→JUN runs: **35.1 s / 38.2 s / 33.9 s** (all succeeded identically: 3 cited clauses, PDB 1A02, Skeptic pass). **Cached: ~13 ms.** Budget ~40 s if you run it live.
 - **Non-coronavirus upload: works.** Measured live on **FOS → JUN** (human): returned the real **PDB 1A02** complex (interface Q166/K176/E182), a verified cited mechanism (PMID 42420224), Skeptic pass.
 - **On a non-coronavirus edge, conservation and CRISPR display "not applicable — no reference data for this organism"** (never a blank implying absence). Verified in the returned dossier.
 - Model is **Opus 4.8** (`claude-opus-4-8`), configured via `.env` (gitignored). Opus is a rigorous Reader — it returns "no cited mechanism" and shows only the real structure when the retrieved abstracts describe regulation rather than direct binding (e.g. CDK2→TP53 shows PDB 1H26 but no mechanism, because CDK2 and p53 don't directly contact there).
