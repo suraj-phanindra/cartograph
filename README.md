@@ -26,25 +26,50 @@ The 3-minute path:
 1. **Ask the map** — "what interaction is Orf6 missing?"
 2. **Deterministic L3** walks a genuine length-3 path `Orf6 → NUP98 → NUP214 → RAE1` and proposes the missing edge `Orf6 → RAE1`.
 3. **Structural dossier** opens: the real experimental structure (PDB **7VPH**) in Mol\*, structure-derived interface residues (E55 / M58 / D61), a mechanism where **every clause opens to a real PubMed paper**, and a proposed wet-lab test.
-4. **Locked evaluator** runs in-map: real held-out Gordon edges snap green, misses flash red, and the honest precision shows — **precision@20 = 45%, ROC-AUC = 0.845** on 57 real held-out edges.
+4. **Locked evaluator** runs in-map: real held-out Gordon edges snap green, misses flash red, and the honest precision shows — **precision@20 = 45%** against a prevalence of 0.68% on 8,357 untested pairs, a 66x enrichment.
 5. **One loop round**: confirm the recovered-true edges, fold them back, re-score the still-hidden edges — **precision@20 0.30 → 0.35** on the remainder.
 
-![the locked evaluator running in-map: real held-out Gordon edges snap green, precision computed live](docs/demo_evaluator.png)
+![the locked evaluator running in-map: held-out Gordon edges snap green, misses flash red, and every metric opens to its own arithmetic: value, maximum attainable, and the prevalence floor it is measured against](docs/demo_evaluator.png)
 
 ## The honest headline numbers (computed, not illustrative)
 
-| metric | value | on |
-|---|---|---|
-| precision@20 (baseline, topology only) | **0.45** | 57 real held-out Gordon edges |
-| precision@10 | 0.30 | " |
-| recall@50 | 0.93 | " |
-| ROC-AUC | **0.845** | all candidate edges |
-| loop round (precision@20 on remaining) | 0.30 → **0.35** | after folding back 4 confirmed edges |
-| flagship `Orf6–RAE1` | recovered, L3 rank 7/8 | via genuine length-3 path |
+Every metric is computed over one stated candidate universe: the **8,357** untested
+viral-bait to human-prey pairs, containing **57** held-out positives. Prevalence is
+therefore **0.68%**, and that is the floor each number below is measured against.
 
-Only 14 of 57 held-out edges are reachable by a length-3 path at all — that is
-the honest topology ceiling on this sparse bipartite AP-MS graph. When L3 can
+| metric | value | max attainable | vs the floor |
+|---|---|---|---|
+| precision@20 (topology only) | **0.45** | 1.00 | **66x** prevalence |
+| precision@10 | 0.30 | 1.00 | 44x prevalence |
+| precision@50 | 0.26 | 1.00 | 38x prevalence |
+| recall@50 | 0.23 | 0.88 | 13 of 57 |
+| ROC-AUC (tie-aware) | 0.62 | 1.00 | 0.50 null ranker |
+| average precision | 0.10 | 1.00 | 0.007 null ranker |
+| loop round (precision@20 on remaining) | 0.30 → **0.35** | | after folding back 4 confirmed edges |
+| flagship `Orf6–RAE1` | recovered, L3 rank 7/8 | | via genuine length-3 path |
+
+Against an open-world background of the reviewed human proteome (UniProt release
+2026_03, 20,431 proteins) the universe is 531,206 pairs and prevalence falls to
+0.011%, so the enrichment is far larger again. Precision@k is unchanged by that
+widening; prevalence and enrichment are not.
+
+**Two earlier figures were wrong and are corrected above.** A previously published
+recall@50 of 0.93 used a denominator of the 14 reachable edges rather than all 57;
+the global value is 0.23, and 57 positives into 50 slots caps recall@50 at 0.88 in
+any case. A previously published ROC-AUC of 0.845 was computed over the 115 pairs L3
+reaches, which is 1.4% of the untested universe, and is a restricted-negative
+setting. Both restricted figures are still published in the artifact under
+`eval.baseline` so the correction can be audited rather than taken on trust.
+
+Only 14 of 57 held-out edges are reachable by a length-3 path at all. Every
+common-neighbour variant reaches 20, and the union of all local-topology scorers is
+also 20, so 37 of 57 are unrecoverable by any such method on this split. When L3 can
 reach a held-out edge, its median rank among its bait's candidates is **2**.
+
+All 57 held-out pairs are class **C2** in the sense of Park and Marcotte 2012: the
+bait is seen in training, the prey is not. Typical random cross-validation is over
+99% C1, the easy class, so this split is harder than the norm. C3, where neither
+protein is seen, is unmeasured and no generalisation to it is claimed.
 
 ## Integrity rules (non-negotiable, and enforced by tests)
 
@@ -67,8 +92,10 @@ backend/
                     evaluator.py (precision@k / recall / ROC-AUC / AP)
   reason/           hypothesis.py — Reader / Skeptic / Curator, no-citation-no-render
   structure/        interface.py (contacts from coords), resolve.py (dossier blocks)
+  bench/            candidate universe, tie-aware metrics, and metric records that
+                    always carry their denominator (predictor- and dataset-agnostic)
   build_artifact.py runs the whole engine -> frontend/data/cartograph_computed.json
-  tests/            24 tests: counts, determinism, L3, eval, boundary, honesty
+  tests/            123 tests: counts, determinism, L3, eval, boundary, honesty
 frontend/           index.html + app.js + style.css (Cytoscape + Mol*), vendored libs
 evidence/           (provided) ground truth + cited packs + domain priors
 ```

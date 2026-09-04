@@ -598,19 +598,54 @@ function runEval(){
   document.getElementById('btn-loop').disabled=false;
 }
 
+function evalArithmeticRows(fu){
+  const order=['precision_at_10','precision_at_20','precision_at_50',
+               'recall_at_10','recall_at_20','recall_at_50','roc_auc','average_precision'];
+  const pretty={precision_at_10:'precision@10',precision_at_20:'precision@20',
+                precision_at_50:'precision@50',recall_at_10:'recall@10',
+                recall_at_20:'recall@20',recall_at_50:'recall@50',
+                roc_auc:'ROC-AUC',average_precision:'avg precision'};
+  return order.filter(k=>fu.metrics[k]).map(k=>{
+    const m=fu.metrics[k];
+    const floor = m.enrichment!=null ? esc(m.enrichment.toFixed(0))+'x'
+                : (m.null_value!=null ? esc(m.null_value) : '—');
+    return `<tr><td>${esc(pretty[k]||k)}</td><td class="num">${esc(m.value)}</td>`
+         + `<td class="num">${esc(m.max_attainable)}</td><td class="num">${floor}</td></tr>`;
+  }).join('');
+}
+
+function toggleEvalDetail(){
+  const d=document.getElementById('eval-detail');
+  const b=document.getElementById('eval-detail-btn');
+  if(!d) return;
+  const on=d.classList.toggle('on');
+  d.setAttribute('aria-hidden', on?'false':'true');
+  if(b){ b.textContent = on ? 'hide arithmetic ▲' : 'show arithmetic ▼';
+         b.setAttribute('aria-expanded', on?'true':'false'); }
+}
+
 function showPrecision(){
   const b=DATA.eval.baseline;
+  const fu=DATA.eval.full_universe;
   const pk=b.precision_at_k, np=b.without_pinned;
   const pct=v=>Math.round(v*100)+'%';
+  // Every number below is quoted against the full candidate universe. The restricted
+  // figures stay in the artifact under eval.baseline so the correction is auditable.
+  const head = fu ? fu.metrics['precision_at_'+b.headline_k] : null;
   const chip=document.getElementById('precision-chip'); chip.classList.remove('hidden');
   chip.innerHTML=`<button class="panel-close" aria-label="Dismiss evaluator panel" onclick="hideChip()">✕</button>
     <div class="lbl">Locked evaluator · precision@${esc(b.headline_k)}</div>
     <div class="big">${pct(b.headline_precision_at_k)}</div>
-    <div class="sub">precision@10 <b>${pct(pk['10'])}</b> · @20 <b>${pct(pk['20'])}</b> · @50 <b>${pct(pk['50'])}</b><br>
-    ROC-AUC <b>${esc(b.roc_auc)}</b> · AP <b>${esc(b.average_precision)}</b> · recall@50 <b>${pct(b.recall_at_k['50'])}</b><br>
-    on <b>${esc(b.n_targets)}</b> real held-out Gordon edges (${esc(b.n_recoverable)} reachable by L3)<br>
-    ${(()=>{ const rr=b.reachable_recall; if(!rr) return '';
-      return `<b style="color:${COL.confirmed}">recall on the reachable set: ${esc(rr.recovered)}/${esc(rr.reachable)}</b> <span style="color:${COL.mut}">— L3 recovers every held-out edge a length-3 path can reach</span><br>`; })()}
+    ${fu?`<div class="sub"><span style="color:${COL.mut}">prevalence <b>${esc((fu.prevalence*100).toFixed(2))}%</b> on <b>${esc(fu.universe_size.toLocaleString())}</b> untested pairs</span>${head&&head.enrichment?` · <b style="color:${COL.confirmed}">${esc(head.enrichment.toFixed(0))}x</b> the floor`:''}<br>
+    <button id="eval-detail-btn" class="fs-btn eval-detail-btn" aria-expanded="false"
+            aria-controls="eval-detail" onclick="toggleEvalDetail()">show arithmetic ▼</button></div>
+    <div id="eval-detail" class="eval-detail" aria-hidden="true">
+      <table class="eval-table"><thead><tr><th>metric</th><th class="num">value</th><th class="num">max</th><th class="num">floor</th></tr></thead>
+      <tbody>${evalArithmeticRows(fu)}</tbody></table>
+      <div class="eval-note">universe <b>${esc(fu.candidate_set)}</b>, ${esc(fu.universe_size.toLocaleString())} pairs, ${esc(fu.n_targets)} held out · ties ${esc(fu.tie_handling)}${fu.open_world?`<br>open world: ${esc(fu.open_world.universe_size.toLocaleString())} pairs, prevalence ${esc((fu.open_world.prevalence*100).toFixed(3))}%`:''}</div>
+    </div>`:''}
+    <div class="sub">${(()=>{ const rr=b.reachable_recall; if(!rr||!fu) return '';
+      return `<b style="color:${COL.confirmed}">on the reachable subset: ${esc(rr.recovered)}/${esc(rr.reachable)}</b> <span style="color:${COL.mut}">— L3 recovers every held-out edge a length-3 path can reach. Across all ${esc(fu.n_targets)}, recall@50 is ${esc(fu.metrics.recall_at_50.value)}.</span><br>`; })()}
     ${(()=>{ const cc=DATA.eval.conservation_channel; if(!cc) return '';
       const a=cc.l3_only_excl_pinned, x=cc.l3_plus_conservation_excl_pinned;
       return `<span style="color:${COL.conserved}">L3 + conservation (SARS-CoV-1/MERS): precision@10 ${pct(a.p10)}→<b>${pct(x.p10)}</b>, @20 ${pct(a.p20)}→<b>${pct(x.p20)}</b> excl. pinned — a real orthogonal gain</span><br>`; })()}
@@ -621,7 +656,9 @@ function showPrecision(){
     <span style="color:${COL.mut}">without pinned edge: @20 ${pct(np.precision_at_k['20'])} (pinning does not inflate it)<br>
     frozen seed ${esc(DATA.eval.seed)}, committed before prediction</span></div>`;
   const r=document.getElementById('eval-readout');
-  r.innerHTML=`held-out <b>${esc(b.n_targets)}</b> · P@10/20/50 <b>${pct(pk['10'])}/${pct(pk['20'])}/${pct(pk['50'])}</b><br>ROC-AUC <b>${esc(b.roc_auc)}</b> · AP <b>${esc(b.average_precision)}</b>`;
+  r.innerHTML = fu
+    ? `held-out <b>${esc(fu.n_targets)}</b> · P@10/20/50 <b>${pct(pk['10'])}/${pct(pk['20'])}/${pct(pk['50'])}</b><br>prevalence <b>${esc((fu.prevalence*100).toFixed(2))}%</b> · ROC-AUC <b>${esc(fu.metrics.roc_auc.value)}</b> · AP <b>${esc(fu.metrics.average_precision.value)}</b>`
+    : `held-out <b>${esc(b.n_targets)}</b> · P@10/20/50 <b>${pct(pk['10'])}/${pct(pk['20'])}/${pct(pk['50'])}</b>`;
 }
 
 /* ---------- loop round ---------- */

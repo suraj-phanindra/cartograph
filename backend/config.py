@@ -63,6 +63,15 @@ PINNED_HELDOUT = [("Orf6", "RAE1")]
 EVAL_K_VALUES = [10, 20, 50]
 HEADLINE_K = 20
 
+# --- open-world background (backend/bench) ---------------------------------
+# The closed-world universe is the 332 preys already in the map, which is not the
+# population the tool addresses at deployment. The open-world prevalence uses the
+# reviewed human proteome. Fetched from the UniProt REST API on 2026-09-03, not
+# estimated. Re-pin deliberately; a drifting background silently invalidates every
+# enrichment figure.
+OPEN_WORLD_BACKGROUND = 20431
+OPEN_WORLD_SOURCE = ("UniProt reviewed (Swiss-Prot) human proteome, "
+                     "release 2026_03 (02-September-2026)")
 
 # --- STRING enrichment (pinned for reproducibility) ------------------------
 STRING_VERSION = "12.0"
