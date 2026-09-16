@@ -20,7 +20,11 @@ import networkx as nx
 from backend import config
 from backend.graph.enrich import enriched_graph
 from backend.predict.l3 import l3_scores, rank_of, pick_display_path
-from backend.eval.evaluator import evaluate, per_heldout_recovery
+from backend.eval.evaluator import evaluate, per_heldout_recovery, build_training_graph, predict_all
+from backend.bench import report as bench_report
+from backend.bench import sharing as bench_sharing
+from backend.bench import universe as bench_universe
+from backend.predict.gba import predict_all as gba_predict_all
 from backend.eval.freeze_split import load_frozen
 from backend.reason.hypothesis import read_edge, skeptic_review, DOSSIER
 from backend.reason import novelty
@@ -365,10 +369,38 @@ def build():
 
     # --- cross-species conservation channel (SARS-CoV-1 / MERS) -------------
     # a SEPARATE orthogonal prior. Unlike structure, this one measurably helps.
-    all_pairs = [(b, c["candidate"]) for b, ranked in ranked_all.items() for c in ranked]
+    # Score every untested pair, not just the ones L3 reaches. Scoping this to
+    # ranked_all silently left conserved pairs outside L3's reach unscored.
+    all_pairs = sorted(bench_universe.candidate_universe(build_training_graph(frozen)))
     cons_scores = conserve.scores(all_pairs)
     m_cons = evaluate(conservation_scores=cons_scores)["metrics"]
     m_cons_np = evaluate(conservation_scores=cons_scores, exclude_pinned=True)["metrics"]
+
+    # --- full-universe report (backend/bench) -------------------------------
+    # The locked evaluator scores only the pairs L3 reaches, which is a restricted
+    # negative set. Pad the universe and re-derive every metric with tie-aware ranks.
+    _train = build_training_graph(frozen)
+    _uni = bench_universe.candidate_universe(_train)
+    _reached = {(p["bait"], p["candidate"]): p["score"] for p in predict_all(_train)}
+    full_universe = bench_report.full_universe_report(
+        {pair: _reached.get(pair, 0.0) for pair in _uni},
+        {tuple(e) for e in frozen["held_out"]},
+        open_world_background=config.OPEN_WORLD_BACKGROUND,
+        open_world_source=config.OPEN_WORLD_SOURCE,
+    )
+
+    # --- which channel is worth running on this map (backend/bench/sharing) --
+    # Measured across four interactomes: L3 only beats a one-line STRING lookup where
+    # preys are shared between baits. Gordon has none, so the honest default here is
+    # the lookup, and the L3 numbers above are published alongside it rather than
+    # instead of it. See docs/Cartograph_multimap_bakeoff.md.
+    _gba_scores = {(p["bait"], p["candidate"]): p["score"]
+                   for p in gba_predict_all(_train)}
+    channel = bench_sharing.recommended_channel(enriched_graph())
+    channel["gba_baseline"] = bench_report.full_universe_report(
+        {pair: _gba_scores.get(pair, 0.0) for pair in _uni},
+        {tuple(e) for e in frozen["held_out"]},
+    )
 
     # --- dossiers -----------------------------------------------------------
     dossiers = {e: _build_dossier(e, ranked_by_bait, structure_facts, frozen, interface_counts)
@@ -454,6 +486,13 @@ def build():
                                 "code, in a module the reasoning layer cannot import.",
             "headline_is_honest": "Precision is computed on real held-out Gordon edges, not the "
                                   "prototype's illustrative 80%.",
+            "split_class": ("All 57 held-out pairs are class C2 in the sense of Park and Marcotte "
+                            "2012: the bait is seen in training, the prey is not. Because every "
+                            "prey has AP-MS degree 1, holding out a pair removes that prey's only "
+                            "assay edge. Typical random cross-validation is over 99% C1, the easy "
+                            "class, so this split is harder than the norm and matches the "
+                            "deployment population. C3, where neither protein is seen, is "
+                            "unmeasured and no generalisation to it is claimed."),
         },
         "eval": {
             "seed": frozen["seed"], "fraction": frozen["fraction"],
@@ -462,6 +501,11 @@ def build():
             "pinned_walkthrough": frozen["pinned_walkthrough"],
             "protocol": frozen["protocol"],
             "baseline": {
+                # The pairs L3 reaches, about 1.4% of the untested universe. Kept
+                # intact so the locked evaluator stays reproducible. Quote
+                # full_universe below instead.
+                "candidate_set": "restricted",
+                "n_proposals": m["n_proposals"],
                 "precision_at_k": {str(k): m["k"][k]["precision"] for k in config.EVAL_K_VALUES},
                 "recall_at_k": {str(k): m["k"][k]["recall"] for k in config.EVAL_K_VALUES},
                 "roc_auc": m["roc_auc"], "average_precision": m["average_precision"],
@@ -476,6 +520,10 @@ def build():
                     "roc_auc": m_np["roc_auc"], "n_targets": m_np["n_targets"],
                 },
             },
+            # Every metric with its denominator attached. This is the block to quote.
+            "full_universe": full_universe,
+            # which scorer this map's topology actually warrants, with its evidence
+            "channel": channel,
             # measured: L3-only vs L3+structure (item 2). Honest — structure exists for
             # only a few pairs on this AP-MS map, so the aggregate move is small; the
             # value is per-hypothesis corroboration and at-scale on virtual screens.
@@ -593,8 +641,17 @@ if __name__ == "__main__":
     print(f"nodes={len(art['graph']['nodes'])} edges={len(art['graph']['edges'])} "
           f"predicted={len(art['graph']['predicted'])} dossiers={len(art['dossiers'])}")
     b = e["baseline"]
-    print(f"BASELINE precision@{b['headline_k']}={b['headline_precision_at_k']} "
-          f"ROC-AUC={b['roc_auc']} (on {b['n_targets']} held-out, {b['n_recoverable']} recoverable)")
+    print(f"RESTRICTED (kept for audit) precision@{b['headline_k']}={b['headline_precision_at_k']} "
+          f"ROC-AUC={b['roc_auc']} on {b['n_proposals']} reached pairs")
+    _fu = e["full_universe"]
+    _m = _fu["metrics"]
+    print(f"FULL UNIVERSE {_fu['universe_size']} pairs, {_fu['n_targets']} held out "
+          f"({_fu['n_targets_reachable']} reachable), prevalence {_fu['prevalence']:.4%}")
+    print(f"  precision@{b['headline_k']}={_m['precision_at_' + str(b['headline_k'])]['value']} "
+          f"({_m['precision_at_' + str(b['headline_k'])]['enrichment']:.0f}x floor) "
+          f"ROC-AUC={_m['roc_auc']['value']} (null 0.5) "
+          f"recall@50={_m['recall_at_50']['value']} (max {_m['recall_at_50']['max_attainable']}) "
+          f"AP={_m['average_precision']['value']}")
     lp = e["loop"]
     print(f"LOOP confirm {len(lp['confirmed_edges'])} edges -> P@20 "
           f"{lp['before_precision_at_20']} -> {lp['after_precision_at_20']}, "

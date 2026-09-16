@@ -1,0 +1,89 @@
+pmid,year,journal,first_author,n_authors,title,doi,url
+42615564,2026,Protein Sci,Badonyi M,2,A simple probabilistic AlphaFold interaction score.,10.1002/pro.70760,https://doi.org/10.1002/pro.70760
+42134328,2026,Cell Host Microbe,Batra J,64,Coronavirus protein interaction mapping in bat and human cells reveals network rewiring governing immune evasion and zoonotic potential.,10.1016/j.chom.2026.04.015,https://doi.org/10.1016/j.chom.2026.04.015
+42642434,2026,Nat Commun,Claussen ER,4,DirectContacts2: a wiring diagram of human physical protein interactions.,10.1038/s41467-026-75863-3,https://doi.org/10.1038/s41467-026-75863-3
+42156546,2026,Nature,Ghareeb AE,14,A multi-agent system for automating scientific discovery.,10.1038/s41586-026-10652-y,https://doi.org/10.1038/s41586-026-10652-y
+41296544,2026,Nucleic Acids Res,Kotlyar M,8,"IID 2025: Physical protein interaction data with detection types, co-purified protein sets, molecular docking, and immune cell networks.",10.1093/nar/gkaf1259,https://doi.org/10.1093/nar/gkaf1259
+41935050,2026,Nat Commun,Lambourne L,45,Experimental assessment of AI-based interactome mapping.,10.1038/s41467-026-70942-x,https://doi.org/10.1038/s41467-026-70942-x
+41807423,2026,Nat Commun,Liu J,3,A paired sequence language model for protein-protein interaction modeling.,10.1038/s41467-026-70457-5,https://doi.org/10.1038/s41467-026-70457-5
+42012336,2026,Elife,Mischley V,4,PPIscreenML is a method for structure-based screening of protein-protein interactions using AlphaFold.,10.7554/eLife.98179,https://doi.org/10.7554/eLife.98179
+41559189,2026,Mol Syst Biol,Todor H,7,Predicting the protein interaction landscape of a free-living bacterium with pooled-AlphaFold3.,10.1038/s44320-026-00189-7,https://doi.org/10.1038/s44320-026-00189-7
+42523388,2026,bioRxiv,Todor H,15,Predicting the protein interaction landscape of a mycobacterial pathogen.,10.64898/2026.07.15.738315,https://doi.org/10.64898/2026.07.15.738315
+41501061,2026,Nat Commun,Ullanat V,4,Learning the language of protein-protein interactions.,10.1038/s41467-025-67971-3,https://doi.org/10.1038/s41467-025-67971-3
+39530220,2025,Nucleic Acids Res,Buzzao D,4,FunCoup 6: advancing functional association networks across species with directed links and improved user experience.,10.1093/nar/gkae1021,https://doi.org/10.1093/nar/gkae1021
+40193392,2025,Bioinformatics,Chatterjee A,11,Topology-driven negative sampling enhances generalizability in protein-protein interaction prediction.,10.1093/bioinformatics/btaf148,https://doi.org/10.1093/bioinformatics/btaf148
+41279532,2025,bioRxiv,Hallee L,4,Protein Language Models are Accidental Taxonomists.,10.1101/2025.10.07.681002,https://doi.org/10.1101/2025.10.07.681002
+40199913,2025,Nat Commun,Joeres R,3,Data splitting to avoid information leakage with DataSAIL.,10.1038/s41467-025-58606-8,https://doi.org/10.1038/s41467-025-58606-8
+40346567,2025,BMC Biol,Li P,4,Negative sampling strategies impact the prediction of scale-free biomolecular network interactions with machine learning.,10.1186/s12915-025-02231-w,https://doi.org/10.1186/s12915-025-02231-w
+40662806,2025,Bioinformatics,Reim T,5,Deep learning models for unbiased sequence-based PPI prediction plateau at an accuracy of 0.65.,10.1093/bioinformatics/btaf192,https://doi.org/10.1093/bioinformatics/btaf192
+40015271,2025,Mol Cell,Schmid EW,2,"Predictomes, a classifier-curated database of AlphaFold-modeled protein-protein interactions.",10.1016/j.molcel.2025.01.034,https://doi.org/10.1016/j.molcel.2025.01.034
+40025722,2025,J Proteome Res,Serrano LR,21,Affinity Purification Mass Spectrometry on the Orbitrap-Astral Mass Spectrometer Enables High-Throughput Protein-Protein Interaction Mapping.,10.1021/acs.jproteome.4c01040,https://doi.org/10.1021/acs.jproteome.4c01040
+39526397,2025,Nucleic Acids Res,Steinkamp R,9,CORUM in 2024: protein complexes as drug targets.,10.1093/nar/gkae1033,https://doi.org/10.1093/nar/gkae1033
+40730228,2025,Nature,Swanson K,5,The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies.,10.1038/s41586-025-09442-9,https://doi.org/10.1038/s41586-025-09442-9
+39558183,2025,Nucleic Acids Res,Szklarczyk D,15,The STRING database in 2025: protein networks with directionality of regulation.,10.1093/nar/gkae1113,https://doi.org/10.1093/nar/gkae1113
+40493194,2025,Proc Natl Acad Sci U S A,Yılmaz S,3,Bias-aware training and evaluation of link prediction algorithms in network biology.,10.1073/pnas.2416646122,https://doi.org/10.1073/pnas.2416646122
+40997207,2025,Science,Zhang J,12,Predicting protein-protein interactions in the human proteome.,10.1126/science.adt1630,https://doi.org/10.1126/science.adt1630
+39122953,2024,Nat Methods,Bernett J,7,Guiding questions to avoid data leakage in biological machine learning applications.,10.1038/s41592-024-02362-y,https://doi.org/10.1038/s41592-024-02362-y
+38446741,2024,Brief Bioinform,Bernett J,3,Cracking the black box of deep sequence-based protein-protein interaction prediction.,10.1093/bib/bbae076,https://doi.org/10.1093/bib/bbae076
+39564572,2024,PNAS Nexus,Bi Y,4,Inconsistency among evaluation metrics in link prediction.,10.1093/pnasnexus/pgae498,https://doi.org/10.1093/pnasnexus/pgae498
+39486399,2024,Cell,Gao S,9,Empowering biomedical discovery with AI agents.,10.1016/j.cell.2024.09.022,https://doi.org/10.1016/j.cell.2024.09.022
+39547210,2024,Cell,Greenblatt JF,3,Discovery and significance of protein-protein interactions in health and disease.,10.1016/j.cell.2024.10.038,https://doi.org/10.1016/j.cell.2024.10.038
+39294458,2024,Nat Microbiol,Humphreys IR,15,Protein interactions in human pathogens revealed through deep learning.,10.1038/s41564-024-01791-x,https://doi.org/10.1038/s41564-024-01791-x
+38200587,2024,Bioinformatics,Lannelongue L,2,Pitfalls of machine learning models for protein-protein interaction networks.,10.1093/bioinformatics/btae012,https://doi.org/10.1093/bioinformatics/btae012
+38363864,2024,Proc Natl Acad Sci U S A,Menand N,2,Link prediction using low-dimensional node embeddings: The measurement problem.,10.1073/pnas.2312527121,https://doi.org/10.1073/pnas.2312527121
+38528954,2024,PNAS Nexus,Ran Y,3,The maximum capability of a topological feature in link prediction.,10.1093/pnasnexus/pgae113,https://doi.org/10.1093/pnasnexus/pgae113
+38467836,2024,Mol Syst Biol,Trepte P,27,AI-guided pipeline for protein-protein interaction drug discovery identifies a SARS-CoV-2 inhibitor.,10.1038/s44320-024-00019-8,https://doi.org/10.1038/s44320-024-00019-8
+39055916,2024,iScience,Volzhenin K,3,"SENSE-PPI reconstructs interactomes within, across, and between species at the genome scale.",10.1016/j.isci.2024.110371,https://doi.org/10.1016/j.isci.2024.110371
+38743624,2024,Proc Natl Acad Sci U S A,Zhao H,4,ZEPPI: Proteome-scale sequence-based evaluation of protein-protein interaction models.,10.1073/pnas.2400260121,https://doi.org/10.1073/pnas.2400260121
+36690744,2023,Nat Struct Mol Biol,Burke DF,16,Towards a structurally resolved human protein interaction network.,10.1038/s41594-022-00910-8,https://doi.org/10.1038/s41594-022-00910-8
+37061423,2023,Trends Biochem Sci,Durham J,5,Recent advances in predicting and modeling protein-protein interactions.,10.1016/j.tibs.2023.03.003,https://doi.org/10.1016/j.tibs.2023.03.003
+37758692,2023,Nat Commun,Haas KM,55,Proteomic and genetic analyses of influenza A viruses identify pan-viral host targets.,10.1038/s41467-023-41442-z,https://doi.org/10.1038/s41467-023-41442-z
+36570772,2023,iScience,Muscoloni A,2,"""Stealing fire or stacking knowledge"" by machine intelligence to model link prediction in complex networks.",10.1016/j.isci.2022.105697,https://doi.org/10.1016/j.isci.2022.105697
+36933822,2023,J Mol Biol,Petrey D,5,PrePPI: A Structure Informed Proteome-wide Database of Protein-Protein Interactions.,10.1016/j.jmb.2023.168052,https://doi.org/10.1016/j.jmb.2023.168052
+37897686,2023,Bioinformatics,Sledzieski S,5,TT3D: Leveraging precomputed protein 3D sequence models to predict protein-protein interactions.,10.1093/bioinformatics/btad663,https://doi.org/10.1093/bioinformatics/btad663
+36370105,2023,Nucleic Acids Res,Szklarczyk D,13,The STRING database in 2023: protein-protein association networks and functional enrichment analyses for any sequenced genome of interest.,10.1093/nar/gkac1000,https://doi.org/10.1093/nar/gkac1000
+36949045,2023,Nat Commun,Wang XW,31,Assessment of community efforts to advance network-based prediction of protein-protein interactions.,10.1038/s41467-023-37079-7,https://doi.org/10.1038/s41467-023-37079-7
+36814208,2023,BMC Bioinformatics,Yuen HY,2,Normalized L3-based link prediction in protein-protein interaction networks.,10.1186/s12859-023-05178-3,https://doi.org/10.1186/s12859-023-05178-3
+35273146,2022,Nat Commun,Bryant P,3,Improved prediction of protein-protein interactions using AlphaFold2.,10.1038/s41467-022-28865-w,https://doi.org/10.1038/s41467-022-28865-w
+35271311,2022,Science,Cho NH,27,OpenCell: Endogenous tagging for the cartography of human cellular organization.,10.1126/science.abi6983,https://doi.org/10.1126/science.abi6983
+34747468,2022,Nucleic Acids Res,Kim CY,8,HumanNet v3: an improved database of human gene networks for disease research.,10.1093/nar/gkab1048,https://doi.org/10.1093/nar/gkab1048
+36591335,2022,Front Bioinform,Neumann D,4,On the choice of negative examples for prediction of host-pathogen protein interactions.,10.3389/fbinf.2022.1083292,https://doi.org/10.3389/fbinf.2022.1083292
+35758793,2022,Bioinformatics,Singh R,5,Topsy-Turvy: integrating a global view into sequence-based PPI prediction.,10.1093/bioinformatics/btac258,https://doi.org/10.1093/bioinformatics/btac258
+33973408,2021,Mol Syst Biol,Drew K,3,"hu.MAP 2.0: integration of over 15,000 proteomic experiments builds a global compendium of human multiprotein assemblies.",10.15252/msb.202010016,https://doi.org/10.15252/msb.202010016
+35011283,2021,Molecules,Dunham B,2,Benchmark Evaluation of Protein-Protein Interaction Prediction Algorithms.,10.3390/molecules27010041,https://doi.org/10.3390/molecules27010041
+34762488,2021,Science,Humphreys IR,30,Computed structures of core eukaryotic protein complexes.,10.1126/science.abm4805,https://doi.org/10.1126/science.abm4805
+33961781,2021,Cell,Huttlin EL,28,Dual proteome-scale networks reveal cell-specific remodeling of the human interactome.,10.1016/j.cell.2021.04.011,https://doi.org/10.1016/j.cell.2021.04.011
+33070389,2021,Protein Sci,Oughtred R,15,"The BioGRID database: A comprehensive biomedical resource of curated protein, genetic, and chemical interactions.",10.1002/pro.3978,https://doi.org/10.1002/pro.3978
+33434350,2021,Mol Syst Biol,Richards AL,3,Mass spectrometry-based protein-protein interaction networks for the study of human diseases.,10.15252/msb.20188792,https://doi.org/10.15252/msb.20188792
+32657369,2020,Bioinformatics,Devkota K,3,GLIDE: combining local methods and diffusion state embeddings to predict missing interactions in biological networks.,10.1093/bioinformatics/btaa459,https://doi.org/10.1093/bioinformatics/btaa459
+32353859,2020,Nature,Gordon DE,125,A SARS-CoV-2 protein interaction map reveals targets for drug repurposing.,10.1038/s41586-020-2286-9,https://doi.org/10.1038/s41586-020-2286-9
+33060197,2020,Science,Gordon DE,200,Comparative host-coronavirus protein interaction networks reveal pan-viral disease mechanisms.,10.1126/science.abe9403,https://doi.org/10.1126/science.abe9403
+32296183,2020,Nature,Luck K,88,A reference map of the human binary protein interactome.,10.1038/s41586-020-2188-x,https://doi.org/10.1038/s41586-020-2188-x
+31471613,2019,Nat Methods,Choobdar S,23,Assessment of network module identification across complex diseases.,10.1038/s41592-019-0509-5,https://doi.org/10.1038/s41592-019-0509-5
+30886144,2019,Nat Commun,Kovács IA,13,Network-based prediction of protein interactions.,10.1038/s41467-019-09177-y,https://doi.org/10.1038/s41467-019-09177-y
+31474372,2019,Cell,Lasso G,10,A Structure-Informed Atlas of Human-Virus Interactions.,10.1016/j.cell.2019.08.005,https://doi.org/10.1016/j.cell.2019.08.005
+29028906,2019,Brief Bioinform,Yang S,5,Critical assessment and performance improvement of plant-pathogen protein-protein interaction prediction methods.,10.1093/bib/bbx123,https://doi.org/10.1093/bib/bbx123
+29355848,2018,Nat Methods,Meyer MJ,8,Interactome INSIDER: a structural interactome browser for genomic studies.,10.1038/nmeth.4540,https://doi.org/10.1038/nmeth.4540
+30118682,2018,Mol Cell,Penn BH,25,An Mtb-Human Protein-Protein Interaction Map Identifies a Switch between Host Antiviral and Antibacterial Responses.,10.1016/j.molcel.2018.07.010,https://doi.org/10.1016/j.molcel.2018.07.010
+30550790,2018,Cell,Shah PS,36,Comparative Flavivirus-Host Protein Interaction Mapping Reveals Mechanisms of Dengue and Zika Virus Pathogenesis.,10.1016/j.cell.2018.11.028,https://doi.org/10.1016/j.cell.2018.11.028
+27794551,2017,Nucleic Acids Res,Alanis-Lobato G,3,HIPPIE v2.0: enhancing meaningfulness and reliability of protein-protein interaction networks.,10.1093/nar/gkw985,https://doi.org/10.1093/nar/gkw985
+25544563,2015,Mol Cell,Davis ZH,16,Global mapping of herpesvirus-host protein complexes reveals a transcription strategy for late genes.,10.1016/j.molcel.2014.11.026,https://doi.org/10.1016/j.molcel.2014.11.026
+24723570,2015,Brief Bioinform,Pahikkala T,7,Toward more realistic drug-target interaction predictions.,10.1093/bib/bbu010,https://doi.org/10.1093/bib/bbu010
+23921808,2013,Nat Methods,Mellacheruvu D,38,The CRAPome: a contaminant repository for affinity purification-mass spectrometry data.,10.1038/nmeth.2557,https://doi.org/10.1038/nmeth.2557
+23223166,2012,Nat Methods,Park Y,2,Flaws in evaluation schemes for pair-input computational predictions.,10.1038/nmeth.2259,https://doi.org/10.1038/nmeth.2259
+22190034,2011,Nature,Jäger S,37,Global landscape of HIV-human protein complexes.,10.1038/nature10719,https://doi.org/10.1038/nature10719
+,2025,arXiv (preprint),Gottweis J,30,Towards an AI co-scientist / Accelerating scientific discovery with Co-Scientist,10.48550/arXiv.2502.18864,https://doi.org/10.48550/arXiv.2502.18864
+,2025,J Phys Complex,Vlaskin A,2,Synthetic graphs for link prediction benchmarking,10.1088/2632-072X/ada07f,https://doi.org/10.1088/2632-072X/ada07f
+,2025,arXiv (preprint),Zheng X,8,PRING: Rethinking Protein-Protein Interaction Prediction from Pairs to Graphs,10.48550/arXiv.2507.05101,https://doi.org/10.48550/arXiv.2507.05101
+,2024,Procedia Comput Sci,Ozer SDI,3,Link Prediction in Bipartite Networks,10.1016/j.procs.2024.09.567,https://doi.org/10.1016/j.procs.2024.09.567
+,2023,arXiv (ICLR 2023),Chamberlain BP,7,Graph Neural Networks for Link Prediction with Subgraph Sketching (BUDDY/ELPH),10.48550/arXiv.2209.15486,https://doi.org/10.48550/arXiv.2209.15486
+,2023,arXiv (preprint),Hibshman JI,2,Inherent Limits on Topology-Based Link Prediction,10.48550/arXiv.2301.08792,https://doi.org/10.48550/arXiv.2301.08792
+,2023,arXiv (NeurIPS 2023 D&B),Li J,7,Evaluating Graph Neural Networks for Link Prediction: Current Pitfalls and New Benchmarking (HeaRT),10.48550/arXiv.2306.10453,https://doi.org/10.48550/arXiv.2306.10453
+,2021,Preprints.org (preprint),Muscoloni A,2,Short Note on Comparing Stacking Modelling Versus Cannistraci-Hebb Adaptive Network Automata for Link Prediction,10.20944/preprints202105.0689.v1,https://doi.org/10.20944/preprints202105.0689.v1
+,2021,arXiv (NeurIPS 2021),Yun S,5,Neo-GNNs: Neighborhood Overlap-aware Graph Neural Networks for Link Prediction,10.48550/arXiv.2206.04216,https://doi.org/10.48550/arXiv.2206.04216
+,2021,Physica A,Zhou T,3,Experimental analyses on 2-hop-based and 3-hop-based link prediction algorithms,10.1016/j.physa.2020.125532,https://doi.org/10.1016/j.physa.2020.125532
+,2020,Proc Natl Acad Sci U S A,Ghasemian A,5,Stacking models for nearly optimal link prediction in complex networks,10.1073/pnas.1914950117,https://doi.org/10.1073/pnas.1914950117
+,2020,arXiv (NeurIPS 2020),Hu W,8,Open Graph Benchmark: Datasets for Machine Learning on Graphs,10.48550/arXiv.2005.00687,https://doi.org/10.48550/arXiv.2005.00687
+,2018,arXiv (NeurIPS 2018),Zhang M,2,Link Prediction Based on Graph Neural Networks (SEAL),10.48550/arXiv.1802.09691,https://doi.org/10.48550/arXiv.1802.09691
+,2015,New J Phys,Daminelli S,4,Common neighbours and the local-community-paradigm for topological link prediction in bipartite networks,10.1088/1367-2630/17/11/113037,https://doi.org/10.1088/1367-2630/17/11/113037
+,2011,Physica A,Lu L,2,Link prediction in complex networks: A survey,10.1016/j.physa.2010.11.027,https://doi.org/10.1016/j.physa.2010.11.027

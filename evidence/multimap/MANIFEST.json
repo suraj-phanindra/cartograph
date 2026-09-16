@@ -1,0 +1,55 @@
+{
+  "purpose": "Derived AP-MS edge lists and STRING caches for the four-map bakeoff (docs/Cartograph_multimap_bakeoff.md).",
+  "string": "STRING v12.0 physical subnetwork, species 9606, fetched at required_score>=150 and filtered locally so thresholds are sweepable. Unlike evidence/string_enrichment.cached.json, which is pre-filtered at >=700 and CANNOT be re-thresholded downward.",
+  "datasets": {
+    "jager2011_hiv": {
+      "paper": "Jager et al., Nature 481:365-370 (2012)",
+      "pmid": "22190034",
+      "source": "IntAct/IMEx IM-17346 via PSICQUIC, format tab27",
+      "retrieved": "2026-09-14",
+      "organism_pair": "HIV-1 (taxids 11676/11678/11698/11706) x human 9606",
+      "bait_granularity": "construct: processed chains kept separate (env-38427 etc.)",
+      "edges": 511,
+      "baits": 16,
+      "preys": 444,
+      "shared_preys": 66,
+      "shared_prey_pct": 14.86,
+      "mean_prey_degree": 1.1509,
+      "string_edges_at_150": 3825,
+      "string_edges_at_700": 602
+    },
+    "haas2023_iav": {
+      "paper": "Haas et al., Nat Commun 14:5885 (2023)",
+      "pmid": "37758692",
+      "source": "IntAct via PSICQUIC, format tab27",
+      "retrieved": "2026-09-15",
+      "organism_pair": "influenza A (taxids 284218/480024/641501) x human 9606",
+      "bait_granularity": "construct: virus strains kept separate (NS1@641501 etc.)",
+      "edges": 265,
+      "baits": 21,
+      "preys": 210,
+      "shared_preys": 50,
+      "shared_prey_pct": 23.81,
+      "mean_prey_degree": 1.2619,
+      "string_edges_at_150": 1345,
+      "string_edges_at_700": 300
+    },
+    "penn2018_mtb": {
+      "paper": "Penn et al., Mol Cell 71:637-648 (2018)",
+      "pmid": "30118682",
+      "source": "NDEx network 50b4abbf-392d-11e9-9f06-0ac135e8bacf ('TB-Human [MisT_TB_scoring_V5_interactions_0.75.csv]')",
+      "retrieved": "2026-09-15",
+      "organism_pair": "M. tuberculosis x human macrophage",
+      "bait_granularity": "baits identified by the TBBAIT node attribute",
+      "note": "NOT available in IntAct: pubid:30118682 returns zero records. UniProt columns empty; NDEx carries gene symbols only.",
+      "edges": 176,
+      "baits": 33,
+      "preys": 176,
+      "shared_preys": 0,
+      "shared_prey_pct": 0.0,
+      "mean_prey_degree": 1.0,
+      "string_edges_at_150": 823,
+      "string_edges_at_700": 160
+    }
+  }
+}

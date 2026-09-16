@@ -400,3 +400,19 @@ html,body { margin:0; height:100%; background:var(--void); color:var(--ink); fon
   .legend{ display:none; }
 }
 @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; } }
+
+
+/* --- evaluator arithmetic, collapsed by default ---------------------------
+   The chip is absolutely positioned over the graph stage, so the full table is
+   opt-in rather than always-on. Nothing is hidden from the reader, it is one
+   click away and it scrolls inside the chip instead of covering the map. */
+.eval-detail-btn{ margin-top:6px; font-size:10px; padding:2px 7px; cursor:pointer; }
+.eval-detail{ display:none; }
+.eval-detail.on{ display:block; margin-top:8px; max-height:38vh; overflow-y:auto; }
+.eval-table{ width:100%; border-collapse:collapse; font-size:10.5px;
+             font-variant-numeric:tabular-nums; }
+.eval-table th{ text-align:left; font-weight:600; opacity:.6; padding:2px 4px;
+                border-bottom:1px solid rgba(255,255,255,.14); }
+.eval-table td{ padding:2px 4px; border-bottom:1px solid rgba(255,255,255,.05); }
+.eval-table .num{ text-align:right; }
+.eval-note{ margin-top:6px; font-size:10px; opacity:.6; line-height:1.5; }

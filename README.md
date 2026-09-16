@@ -26,25 +26,83 @@ The 3-minute path:
 1. **Ask the map** — "what interaction is Orf6 missing?"
 2. **Deterministic L3** walks a genuine length-3 path `Orf6 → NUP98 → NUP214 → RAE1` and proposes the missing edge `Orf6 → RAE1`.
 3. **Structural dossier** opens: the real experimental structure (PDB **7VPH**) in Mol\*, structure-derived interface residues (E55 / M58 / D61), a mechanism where **every clause opens to a real PubMed paper**, and a proposed wet-lab test.
-4. **Locked evaluator** runs in-map: real held-out Gordon edges snap green, misses flash red, and the honest precision shows — **precision@20 = 45%, ROC-AUC = 0.845** on 57 real held-out edges.
+4. **Locked evaluator** runs in-map: real held-out Gordon edges snap green, misses flash red, and the honest precision shows — **precision@20 = 45%** against a prevalence of 0.68% on 8,357 untested pairs, a 66x enrichment. (That is one split. Over 20 seeds the mean is 0.32; and on this map a one-line STRING lookup beats it. Both facts are below.)
 5. **One loop round**: confirm the recovered-true edges, fold them back, re-score the still-hidden edges — **precision@20 0.30 → 0.35** on the remainder.
 
-![the locked evaluator running in-map: real held-out Gordon edges snap green, precision computed live](docs/demo_evaluator.png)
+![the locked evaluator running in-map: held-out Gordon edges snap green, misses flash red, and every metric opens to its own arithmetic: value, maximum attainable, and the prevalence floor it is measured against](docs/demo_evaluator.png)
 
 ## The honest headline numbers (computed, not illustrative)
 
-| metric | value | on |
-|---|---|---|
-| precision@20 (baseline, topology only) | **0.45** | 57 real held-out Gordon edges |
-| precision@10 | 0.30 | " |
-| recall@50 | 0.93 | " |
-| ROC-AUC | **0.845** | all candidate edges |
-| loop round (precision@20 on remaining) | 0.30 → **0.35** | after folding back 4 confirmed edges |
-| flagship `Orf6–RAE1` | recovered, L3 rank 7/8 | via genuine length-3 path |
+Every metric is computed over one stated candidate universe: the **8,357** untested
+viral-bait to human-prey pairs, containing **57** held-out positives. Prevalence is
+therefore **0.68%**, and that is the floor each number below is measured against.
 
-Only 14 of 57 held-out edges are reachable by a length-3 path at all — that is
-the honest topology ceiling on this sparse bipartite AP-MS graph. When L3 can
+| metric | L3 | STRING-GBA | max attainable | vs the floor |
+|---|---|---|---|---|
+| precision@10 | 0.30 | **0.80** | 1.00 | 44x / **117x** prevalence |
+| precision@20 | 0.45 | **0.60** | 1.00 | 66x / **88x** prevalence |
+| precision@50 | 0.26 | **0.36** | 1.00 | 38x / **53x** prevalence |
+| recall@50 | 0.23 | **0.32** | 0.88 | 13 / 18 of 57 |
+| ROC-AUC (tie-aware) | 0.62 | **0.67** | 1.00 | 0.50 null ranker |
+| average precision | 0.10 | **0.25** | 1.00 | 0.007 null ranker |
+| held-out edges reached | 14 | **20** | 57 | of 57 |
+| flagship `Orf6–RAE1` | recovered, L3 rank 7/8 | | | via genuine length-3 path |
+
+**Read that table again: on this map the deterministic L3 predictor loses to a one-line
+STRING lookup on every single metric.** STRING-GBA scores a candidate by the best STRING
+score linking it to a prey the bait already binds. No path machinery at all
+(`backend/predict/gba.py`). That result is published here rather than buried because the
+benchmark exists to surface it.
+
+**And the single number is a favourable draw.** `precision@20 = 0.45` is one split. Resampling
+the same 17% held-out protocol over 20 seeds gives **mean 0.32, sd 0.10, range 0.15 to 0.55**,
+with only 2 of 20 draws reaching 0.45. Quote the distribution, not the draw.
+
+### When is L3 worth running at all?
+
+Measured across four pathogen-host interactomes, six map variants
+(`docs/Cartograph_multimap_bakeoff.md`, reproduce with `python -m backend.bench.bakeoff`):
+
+| map | shared preys | L3 reach | STRING-GBA reach | advantage | 40 paired seeds |
+|---|---|---|---|---|---|
+| Penn 2018 Mtb | 0.0% | 17.9% | 27.6% | **-9.7pp** | L3 wins 0/39 |
+| Gordon 2020 SARS-CoV-2 | 0.0% | 19.2% | 26.7% | **-7.4pp** | L3 wins 1/39 |
+| Jager 2011 HIV-1 | 14.9% | 47.5% | 37.8% | **+9.7pp** | L3 wins 40/0 |
+| Haas 2023 influenza A | 23.8% | 55.7% | 42.3% | **+13.4pp** | L3 wins 39/1 |
+
+Strictly monotonic in prey sharing, Pearson r = 0.91. The mechanism is direct: shared preys
+open a `bait → prey → bait' → prey` route that is length-3 and therefore invisible to any
+length-2 method. Of the held-out edges L3 reaches that STRING-GBA cannot on Jager, **85%
+travel exactly that route**. On Gordon the same count is **zero**.
+
+So the deployment rule is a one-line pre-flight check (`backend/bench/sharing.py`): compute
+**mean prey degree** before scoring anything. At 1.000 the route does not exist and the
+STRING lookup wins. Above about 1.05, L3 becomes the best recall channel in the panel. Gordon
+sits at exactly 1.000, which is why this repo's flagship map is the one topology helps least
+on, and the built artifact says so in `eval.channel`.
+
+Against an open-world background of the reviewed human proteome (UniProt release
+2026_03, 20,431 proteins) the universe is 531,206 pairs and prevalence falls to
+0.011%, so the enrichment is far larger again. Precision@k is unchanged by that
+widening; prevalence and enrichment are not.
+
+**Two earlier figures were wrong and are corrected above.** A previously published
+recall@50 of 0.93 used a denominator of the 14 reachable edges rather than all 57;
+the global value is 0.23, and 57 positives into 50 slots caps recall@50 at 0.88 in
+any case. A previously published ROC-AUC of 0.845 was computed over the 115 pairs L3
+reaches, which is 1.4% of the untested universe, and is a restricted-negative
+setting. Both restricted figures are still published in the artifact under
+`eval.baseline` so the correction can be audited rather than taken on trust.
+
+Only 14 of 57 held-out edges are reachable by a length-3 path at all. Every
+common-neighbour variant reaches 20, and the union of all local-topology scorers is
+also 20, so 37 of 57 are unrecoverable by any such method on this split. When L3 can
 reach a held-out edge, its median rank among its bait's candidates is **2**.
+
+All 57 held-out pairs are class **C2** in the sense of Park and Marcotte 2012: the
+bait is seen in training, the prey is not. Typical random cross-validation is over
+99% C1, the easy class, so this split is harder than the norm. C3, where neither
+protein is seen, is unmeasured and no generalisation to it is claimed.
 
 ## Integrity rules (non-negotiable, and enforced by tests)
 
@@ -67,8 +125,12 @@ backend/
                     evaluator.py (precision@k / recall / ROC-AUC / AP)
   reason/           hypothesis.py — Reader / Skeptic / Curator, no-citation-no-render
   structure/        interface.py (contacts from coords), resolve.py (dossier blocks)
+  bench/            candidate universe, tie-aware metrics, metric records that always
+                    carry their denominator, sharing.py (the pre-flight statistic) and
+                    bakeoff.py (the four-map comparison). Predictor- and dataset-agnostic.
+  predict/gba.py    STRING best-score guilt-by-association: the control that wins here
   build_artifact.py runs the whole engine -> frontend/data/cartograph_computed.json
-  tests/            24 tests: counts, determinism, L3, eval, boundary, honesty
+  tests/            153 tests: counts, determinism, L3, eval, boundary, honesty
 frontend/           index.html + app.js + style.css (Cytoscape + Mol*), vendored libs
 evidence/           (provided) ground truth + cited packs + domain priors
 ```
@@ -122,7 +184,7 @@ Each stays behind the same non-negotiable: the graph proposes, Claude explains w
 ./run.sh            # build + serve the OFFLINE static demo (no API)
 ./run.sh api        # build + serve the demo WITH the live API (adds upload)
 ./run.sh build      # just rebuild frontend/data/cartograph_computed.json
-./run.sh test       # run the test suite (59 tests)
+./run.sh test       # run the test suite (153 tests)
 ```
 
 Reproducibility: the STRING enrichment is pinned to v12.0 (physical channel,

@@ -63,6 +63,16 @@ PINNED_HELDOUT = [("Orf6", "RAE1")]
 EVAL_K_VALUES = [10, 20, 50]
 HEADLINE_K = 20
 
+# --- open-world background (backend/bench) ---------------------------------
+# The closed-world universe is the 332 preys already in the map, which is not the
+# population the tool addresses at deployment. The open-world prevalence uses the
+# reviewed human proteome. Fetched from the UniProt REST API on 2026-09-03, not
+# estimated. Re-pin deliberately; a drifting background silently invalidates every
+# enrichment figure.
+OPEN_WORLD_BACKGROUND = 20431
+OPEN_WORLD_SOURCE = ("UniProt reviewed (Swiss-Prot) human proteome, "
+                     "release 2026_03 (02-September-2026)")
+
 # --- STRING enrichment (pinned for reproducibility) ------------------------
 STRING_VERSION = "12.0"
 STRING_SPECIES = 9606  # Homo sapiens
@@ -79,6 +89,9 @@ NCBI_API_KEY = os.environ.get("NCBI_API_KEY", "")  # optional; raises rate limit
 # deterministic backbone (resolve/retrieve/verify/emit) needs no key.
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 ANTHROPIC_MODEL = os.environ.get("CARTOGRAPH_AGENT_MODEL", "claude-opus-4-8")
+# Identity-linked API keys must name the workspace the request acts in. Console
+# keys do not need this, so it stays optional and the header is only sent when set.
+ANTHROPIC_WORKSPACE_ID = os.environ.get("ANTHROPIC_WORKSPACE_ID", "")
 AGENT_CONTACT = os.environ.get("CARTOGRAPH_CONTACT", "cartograph-evidence-agent")  # tool/email etiquette
 UNIPROT_API = "https://rest.uniprot.org/uniprotkb"
 RCSB_SEARCH_API = "https://search.rcsb.org/rcsbsearch/v2/query"

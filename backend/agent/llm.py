@@ -27,6 +27,8 @@ def call(system, user, max_tokens=3000, timeout=90):
         raise RuntimeError("ANTHROPIC_API_KEY not configured")
     headers = {"x-api-key": config.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01",
                "content-type": "application/json"}
+    if config.ANTHROPIC_WORKSPACE_ID:
+        headers["anthropic-workspace-id"] = config.ANTHROPIC_WORKSPACE_ID
     body = {"model": config.ANTHROPIC_MODEL, "max_tokens": max_tokens,
             "system": system, "messages": [{"role": "user", "content": user}]}
     r = httpx.post(ANTHROPIC_URL, headers=headers, json=body, timeout=timeout)
