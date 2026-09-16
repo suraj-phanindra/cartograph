@@ -20,13 +20,15 @@ that adds product surface without adding evidence is the wrong change.
 
 ## Current state, 2026-09-16
 
-- Branch `bench/candidate-universe`, PR #1 open against `main`, 6 commits. `main` unprotected.
-- 153 tests, about 24 seconds.
+- PR #1 merged to `main` (8 commits). `main` is unprotected, so nothing gates a red merge.
+- 153 tests, about 23 seconds.
 - Shipped: the explicit candidate universe with every metric carrying its denominator
   (`backend/bench/`), the STRING guilt-by-association control (`backend/predict/gba.py`),
-  and the four-map bake-off (`backend/bench/bakeoff.py`).
-- Four interactomes loaded: Gordon 2020 SARS-CoV-2, Penn 2018 Mtb, Jager 2011 HIV-1,
-  Haas 2023 influenza A. See `evidence/multimap/MANIFEST.json` for provenance.
+  the pre-flight statistic (`backend/bench/sharing.py`), and the bake-off
+  (`backend/bench/bakeoff.py`).
+- Five interactomes loaded: Gordon 2020 SARS-CoV-2, Penn 2018 Mtb, Jager 2011 HIV-1,
+  Haas 2023 influenza A, and BioPlex 3.0 293T (human-human, the out-of-regime test).
+  See `evidence/multimap/MANIFEST.json` for provenance on each.
 
 ## Non-negotiable integrity rules. These are the product, not preferences.
 
@@ -61,9 +63,12 @@ that adds product surface without adding evidence is the wrong change.
   vs 20. An older version of this file claimed L3 is "proven to beat common neighbors." On
   this map that is false, and it was measured here.
 - **L3 earns its place only where preys are shared between baits.** Advantage over
-  guilt-by-association is monotonic in prey sharing across six map variants, r = 0.91, because
-  sharing opens a `bait -> prey -> bait' -> prey` route that no length-2 method can see. Check
-  `backend/bench/sharing.py` (mean prey degree) BEFORE choosing a scorer. Gordon is 1.000.
+  guilt-by-association rises with prey sharing across ten map variants from five datasets,
+  r = 0.90, because sharing opens a `bait -> prey -> bait' -> prey` route that no length-2
+  method can see. Holds out of regime too: human-human BioPlex 3.0 gives +10.3pp at 22.2%
+  sharing, with 72% of L3's unique reach routed through a second bait. Strict monotonicity
+  does NOT survive the regime change, so the statistic predicts sign and trend, not
+  magnitude. Check `backend/bench/sharing.py` BEFORE choosing a scorer. Gordon is 1.000.
 - **`precision@20 = 0.45` is a favourable draw.** Over 20 seeds: mean 0.32, sd 0.10,
   range 0.15 to 0.55. Quote the distribution.
 - **The ceiling is in the data.** 37 of 57 Gordon held-out edges are unrecoverable by any
@@ -115,7 +120,7 @@ asserts the real path under `__main__`.
 
 - `docs/Cartograph_context_package.md` - what this is, the customer, the USP, what the
   evidence does not support. Start here.
-- `docs/Cartograph_multimap_bakeoff.md` - the four-map result and why it should be believed.
+- `docs/Cartograph_multimap_bakeoff.md` - the five-map result and why it should be believed.
 - `docs/Cartograph_research_findings.md` - state of the art, prior art, ordered next steps.
 - `docs/Cartograph_gap_audit.md` - demo-vs-product gaps with a measured appendix.
 

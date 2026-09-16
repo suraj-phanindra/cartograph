@@ -1,4 +1,4 @@
-"""The four-map bake-off. Reproduces docs/Cartograph_multimap_bakeoff.md.
+"""The five-map bake-off. Reproduces docs/Cartograph_multimap_bakeoff.md.
 
 Runs one scorer panel, one split protocol and one set of tie-aware metrics across
 every AP-MS map in evidence/multimap/ plus the committed Gordon map, and reports the
@@ -185,7 +185,10 @@ def compare(key, seeds=40, threshold=0.700):
     }
 
 
-MAPS = ("penn2018_mtb", "gordon", "jager2011_hiv", "haas2023_iav")
+# Ordered by prey sharing, which is the variable the result turns on. BioPlex is the
+# out-of-regime entry: human-human, no pathogen, subsampled to K=200 baits because
+# STRING's API rejects more than 2000 identifiers. See evidence/multimap/MANIFEST.json.
+MAPS = ("penn2018_mtb", "gordon", "jager2011_hiv", "haas2023_iav", "bioplex3_293t_k200")
 
 
 def main(seeds=40, threshold=0.700):

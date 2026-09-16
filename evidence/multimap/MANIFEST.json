@@ -50,6 +50,23 @@
       "mean_prey_degree": 1.0,
       "string_edges_at_150": 823,
       "string_edges_at_700": 160
+    },
+    "bioplex3_293t_k200": {
+      "paper": "Huttlin et al., Cell 184:3022-3040 (2021), BioPlex 3.0",
+      "pmid": "33961781",
+      "source": "https://bioplex.hms.harvard.edu/data/BioPlex_293T_Network_10K_Dec_2019.tsv",
+      "retrieved": "2026-09-16",
+      "organism_pair": "human x human (293T). NOT pathogen-host: the out-of-regime test.",
+      "subsample": "Full network is 118,162 edges / 8,995 baits / 10,419 preys, a ~93M-pair universe. A nested random sample of 400 baits (seed 0, bait_order.json) was drawn; this file is the K=200 prefix. Preys that are themselves sampled baits are dropped to keep the map bipartite. K=25/50/100 are nested prefixes of the same ordering, so one STRING cache serves all four.",
+      "note": "STRING's API rejects >2000 identifiers (400 -> 3233 preys -> HTTP 400), which is why K caps at 200.",
+      "edges": 2474,
+      "baits": 199,
+      "preys": 1929,
+      "shared_preys": 429,
+      "shared_prey_pct": 22.24,
+      "mean_prey_degree": 1.2825,
+      "string_edges_at_150": 23983,
+      "string_edges_at_700": 3494
     }
   }
 }

@@ -41,6 +41,7 @@ def test_on_a_shared_prey_map_l3_reaches_more_than_the_lookup():
     ("penn2018_mtb", "STRING-GBA"),
     ("jager2011_hiv", "L3"),
     ("haas2023_iav", "L3"),
+    ("bioplex3_293t_k200", "L3"),   # out of regime: human-human, no pathogen
 ])
 def test_preflight_statistic_agrees_with_the_measured_winner(key, expected):
     """The whole point of mean prey degree is that it is computable before scoring.
