@@ -4,10 +4,11 @@ Standing context for any coding agent working in this repo. Read it before writi
 anything. It is auto-loaded, so it stays short and points at the docs for depth.
 
 **Keep it current.** If a measured number or a priority changes, update this file in the
-same commit as the change. This is not a formality: the "Current state" block below went
-stale within a day of being written, because a merged PR and a new dataset both changed it.
-If you are touching a number anywhere in this repo, check whether it also appears here.
-Last updated 2026-09-16.
+same commit as the change. This is not a formality: the block below went stale three times
+in two days, once per merged PR. It has since been rewritten to state only facts that do not
+change on every commit, which is the real fix. Resist putting a test count, a PR number or a
+branch name back into it. If you are touching a measured number anywhere in this repo, check
+whether it also appears here. Last updated 2026-09-16.
 
 ## What this is
 
@@ -21,20 +22,23 @@ being developed at AI Fund as a possible venture. **The audience for results is 
 diligence, not end users.** Credibility of the numbers matters more than features. A change
 that adds product surface without adding evidence is the wrong change.
 
-## Current state, 2026-09-16
+## Current state
 
-- PR #1 and PR #2 both merged to `main`. `main` is unprotected, so nothing gates a red merge.
-- 154 tests, about 23 seconds.
+- `main` is unprotected, so nothing gates a red merge. Run `./run.sh test` before you push;
+  that command is the source of truth for the suite, not a count written down here.
 - Shipped: the explicit candidate universe with every metric carrying its denominator
   (`backend/bench/`), the STRING guilt-by-association control (`backend/predict/gba.py`),
   the pre-flight statistic (`backend/bench/sharing.py`), and the bake-off
   (`backend/bench/bakeoff.py`).
 - Six interactomes loaded: Gordon 2020 SARS-CoV-2, Penn 2018 Mtb, Jager 2011 HIV-1,
   Haas 2023 influenza A, BioPlex 3.0 293T (human-human) and HuRI (two-hybrid, symmetric,
-  synthetic bait/prey split).
-  See `evidence/multimap/MANIFEST.json` for provenance on each.
-- Reproduce the whole comparison with `python -m backend.bench.bakeoff` (about 100 seconds
-  at the default 40 seeds).
+  with a synthetic bait/prey split). `evidence/multimap/MANIFEST.json` is the authority on
+  what each one is, where it came from, and how it was subsampled.
+- Reproduce the whole comparison with `python -m backend.bench.bakeoff`. It takes a few
+  minutes, because the two subsampled human maps carry ~380,000-pair candidate universes
+  against Gordon's 8,357. Pass a smaller seed count while iterating.
+- Not done: no second predictor has ever been scored through the shipped evaluator, no
+  prospective test exists, and no named group has run its own map through any of this.
 
 ## Non-negotiable integrity rules. These are the product, not preferences.
 
