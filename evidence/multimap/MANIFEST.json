@@ -67,6 +67,23 @@
       "mean_prey_degree": 1.2825,
       "string_edges_at_150": 23983,
       "string_edges_at_700": 3494
+    },
+    "huri2020_k200_synthbaits": {
+      "paper": "Luck et al., Nature 580:402-408 (2020), HuRI",
+      "pmid": "32296183",
+      "source": "IntAct via PSICQUIC, pubid:32296183, paged at 8000/request (162,719 records)",
+      "retrieved": "2026-09-16",
+      "organism_pair": "human x human, yeast two-hybrid. SYMMETRIC: no real baits exist.",
+      "bait_granularity": "SYNTHETIC BIPARTITION. HuRI is symmetric, so 300 proteins were drawn at random (seed 0) and declared baits; preys are their neighbours minus the drawn set. This file is the K=200 prefix. The split is an artefact of this analysis, NOT of the assay, and exists to test whether the prey-sharing rule is about graph topology or about real AP-MS bait/prey structure.",
+      "note": "Parsed 49,271 unique undirected human gene pairs over 7,986 proteins against HuRI's published ~53,000 / ~8,275. interactome-atlas.org was unreachable from the build host (HTTP 000), hence the IntAct route. STRING coverage of these preys is unusually thin: mean prey STRING degree 1.073 and 1298/1895 preys have zero partners, because HuRI is enriched for previously unreported interactions. That starves the STRING-GBA baseline and inflates L3's measured advantage here.",
+      "edges": 3069,
+      "baits": 198,
+      "preys": 1895,
+      "shared_preys": 632,
+      "shared_prey_pct": 33.35,
+      "mean_prey_degree": 1.6195,
+      "string_edges_at_150": 11376,
+      "string_edges_at_700": 1022
     }
   }
 }

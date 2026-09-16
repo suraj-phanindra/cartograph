@@ -1,6 +1,6 @@
-# Five-map baseline bake-off: when does L3 earn its place?
+# Six-map baseline bake-off: when does L3 earn its place?
 
-Run 2026-09-15, extended out of regime 2026-09-16.
+Run 2026-09-15, extended out of regime 2026-09-16, extended to a symmetric network the same day.
 
 **Result in one line:** L3 beats a one-line STRING lookup if and only if the AP-MS map has
 shared preys, the advantage scales monotonically with how much sharing there is
@@ -139,6 +139,71 @@ prey sharing decides WHETHER L3 beats guilt-by-association, monotonically within
 dataset, with a crossover in the 5 to 12 percent band. It does not by itself decide by how
 much, and the gap between regimes is unexplained.
 
+
+## HuRI: does the rule survive when the bait/prey split is synthetic?
+
+BioPlex answered "does this hold outside pathogen-host maps". HuRI asks something harder.
+It is yeast two-hybrid and SYMMETRIC: there are no baits and no preys, so the
+`bait -> prey -> bait' -> prey` route is not defined by the assay at all. Imposing a split
+therefore separates two things the other five maps confound: whether the rule is about
+GRAPH TOPOLOGY, or about real AP-MS bait/prey structure.
+
+Construction: 49,271 unique undirected human gene pairs over 7,986 proteins (HuRI publishes
+about 53,000 over 8,275), parsed from IntAct because interactome-atlas.org was unreachable
+from the build host. 300 proteins were drawn at random and declared baits; preys are their
+neighbours minus the drawn set; K is a nested prefix. **The split is an artefact of this
+analysis, not of the experiment.**
+
+| K baits | shared preys | positives | L3 reach | GBA reach | advantage | sign p | L3 AUC | GBA AUC |
+|---|---|---|---|---|---|---|---|---|
+| 25 | 8.1% | 56 | 7.9% | 5.7% | **+2.1pp** | 0.031 | 0.474 | 0.528 |
+| 50 | 20.3% | 153 | 27.6% | 5.5% | **+22.2pp** | 1.9e-06 | 0.556 | 0.525 |
+| 100 | 24.8% | 275 | 35.0% | 7.4% | **+27.6pp** | 1.9e-06 | 0.607 | 0.534 |
+| 150 | 28.3% | 376 | 40.9% | 5.8% | **+35.1pp** | 6.1e-05 | 0.647 | 0.527 |
+| 200 | 33.4% | 522 | 48.2% | 7.6% | **+40.6pp** | 2.0e-03 | 0.683 | 0.536 |
+
+Strictly monotonic, and the largest advantages measured anywhere. The mechanism is also at
+its clearest: **94% of L3's unique reach routes through a second bait**, against 85% on
+Jager, 72% on BioPlex and 0% on Gordon. So the rule is topological. It does not need the
+bait/prey roles to be real, only the sharing structure.
+
+### Read the GBA column before believing the magnitudes
+
+Guilt-by-association sits at AUC 0.525 to 0.536 at every K, barely above the 0.500 null, and
+its reach never exceeds 7.6%. That is not L3 winning a fair fight. HuRI is enriched for
+previously unreported interactions, so its preys are STRING-starved: mean prey STRING degree
+1.073, with 1,298 of 1,895 preys having no STRING partner at all. GBA depends entirely on
+STRING and therefore has almost nothing to work with, while L3's bait route needs no STRING.
+
+**The honest statement is that HuRI confirms the DIRECTION emphatically and inflates the
+MAGNITUDE.** Quote it as evidence that the mechanism is topological, not as evidence that
+L3 beats guilt-by-association by 40 points on a typical map.
+
+### Does STRING density explain the regime gap?
+
+That starvation suggests a two-variable model, since prey sharing feeds L3 and STRING density
+feeds GBA. Across all 15 map variants from 6 datasets:
+
+    r(prey sharing, advantage)          = +0.939
+    r(prey STRING degree, advantage)    = -0.371
+    r(sharing, STRING degree)           = -0.226   (near-independent predictors)
+
+    advantage = -1.89 + 1.255 * sharing% - 2.512 * preySTRINGdegree
+    R^2 two-variable = 0.909     r^2 sharing alone = 0.882
+
+The sign on STRING density is the predicted one, and it does shrink the Haas and BioPlex
+residuals. But **a whole extra parameter buys 0.027 of R-squared, which is not a result.**
+Prey sharing remains the dominant predictor; STRING density is a plausible secondary factor
+that this evidence does not establish. The regime gap flagged in the BioPlex section stays
+only partly explained.
+
+### A caveat that applies to every correlation above
+
+The 15 variants are not 15 independent observations. Five are nested HuRI prefixes, four are
+nested BioPlex prefixes, and two each are Jager and Haas re-granulations. The effective
+sample is **6 datasets**, so every r quoted here is inflated by the within-dataset
+correlation and should be read as descriptive, not inferential.
+
 ## The deployment rule
 
 > L3 contributes over guilt-by-association exactly when the AP-MS map has shared preys.
@@ -177,8 +242,7 @@ One line of code, computable on any new map in advance, and it decides which sco
 - BioPlex is subsampled, not whole: STRING's API rejects more than 2000 identifiers, so K
   caps at 200 of a 400-bait draw. A full-network run needs the bulk STRING download and ENSP
   identifier mapping.
-- HuRI is still untested. It is Y2H and symmetric, with no bait/prey asymmetry, so the
-  bait-intermediate route is not even defined there. That is a different question, not a
-  bigger version of this one.
+- HuRI is now tested, but with a SYNTHETIC bipartition and a starved GBA baseline. It
+  establishes that the mechanism is topological; it does not give a usable effect size.
 - The magnitude gap between the pathogen-host and human-human curves at matched sharing is
   unexplained. Prey sharing predicts sign and trend, not size.

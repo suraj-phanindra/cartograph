@@ -34,8 +34,9 @@ on PPI networks." **On this repo's own flagship map that is false, and it was me
 On Gordon 2020, L3 loses to a one-line STRING lookup on every metric (p@10 0.30 vs 0.80,
 reach 14 vs 20) and loses to common neighbours on reach.
 
-L3 earns its place only where preys are shared between baits, monotonically, across five interactomes
-in two regimes including human-human BioPlex. Check `backend/bench/sharing.py` before choosing a scorer. See
+L3 earns its place only where preys are shared between baits, monotonically, across six
+interactomes in three regimes. The effect is topological: it survives on HuRI even with a
+synthetic bait/prey split. The magnitudes do not transfer between regimes. Check `backend/bench/sharing.py` before choosing a scorer. See
 `docs/Cartograph_multimap_bakeoff.md`.
 
 Also: `precision@20 = 0.45` is one favourable draw. Over 20 seeds the mean is 0.32, sd 0.10.
