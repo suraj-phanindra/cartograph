@@ -22,7 +22,9 @@ from backend.graph.enrich import enriched_graph
 from backend.predict.l3 import l3_scores, rank_of, pick_display_path
 from backend.eval.evaluator import evaluate, per_heldout_recovery, build_training_graph, predict_all
 from backend.bench import report as bench_report
+from backend.bench import sharing as bench_sharing
 from backend.bench import universe as bench_universe
+from backend.predict.gba import predict_all as gba_predict_all
 from backend.eval.freeze_split import load_frozen
 from backend.reason.hypothesis import read_edge, skeptic_review, DOSSIER
 from backend.reason import novelty
@@ -387,6 +389,19 @@ def build():
         open_world_source=config.OPEN_WORLD_SOURCE,
     )
 
+    # --- which channel is worth running on this map (backend/bench/sharing) --
+    # Measured across four interactomes: L3 only beats a one-line STRING lookup where
+    # preys are shared between baits. Gordon has none, so the honest default here is
+    # the lookup, and the L3 numbers above are published alongside it rather than
+    # instead of it. See docs/Cartograph_multimap_bakeoff.md.
+    _gba_scores = {(p["bait"], p["candidate"]): p["score"]
+                   for p in gba_predict_all(_train)}
+    channel = bench_sharing.recommended_channel(enriched_graph())
+    channel["gba_baseline"] = bench_report.full_universe_report(
+        {pair: _gba_scores.get(pair, 0.0) for pair in _uni},
+        {tuple(e) for e in frozen["held_out"]},
+    )
+
     # --- dossiers -----------------------------------------------------------
     dossiers = {e: _build_dossier(e, ranked_by_bait, structure_facts, frozen, interface_counts)
                 for e in DEMO_EDGES}
@@ -507,6 +522,8 @@ def build():
             },
             # Every metric with its denominator attached. This is the block to quote.
             "full_universe": full_universe,
+            # which scorer this map's topology actually warrants, with its evidence
+            "channel": channel,
             # measured: L3-only vs L3+structure (item 2). Honest — structure exists for
             # only a few pairs on this AP-MS map, so the aggregate move is small; the
             # value is per-hypothesis corroboration and at-scale on virtual screens.

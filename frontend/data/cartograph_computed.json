@@ -123,6 +123,66 @@
         "note": "Precision@k is unchanged by the wider background. Prevalence and therefore enrichment are not."
       }
     },
+    "channel": {
+      "channel": "STRING-GBA",
+      "l3_applicable": false,
+      "mean_prey_degree": 1.0,
+      "crossover": 1.05,
+      "basis": "Four-map bakeoff, 2026-09-15: L3 beats STRING guilt-by-association only where preys are shared between baits, monotonically in the amount of sharing (r = 0.91, 6 variants). See docs/Cartograph_multimap_bakeoff.md.",
+      "gba_baseline": {
+        "candidate_set": "closed_world",
+        "universe_size": 8357,
+        "n_targets": 57,
+        "n_targets_reachable": 20,
+        "reachable_definition": "the scorer assigns a nonzero score",
+        "prevalence": 0.00682062941246859,
+        "tie_handling": "midrank",
+        "metrics": {
+          "precision_at_10": {
+            "value": 0.8,
+            "max_attainable": 1.0,
+            "enrichment": 117.29
+          },
+          "recall_at_10": {
+            "value": 0.1404,
+            "max_attainable": 0.1754,
+            "enrichment": null
+          },
+          "precision_at_20": {
+            "value": 0.6,
+            "max_attainable": 1.0,
+            "enrichment": 87.97
+          },
+          "recall_at_20": {
+            "value": 0.2105,
+            "max_attainable": 0.3509,
+            "enrichment": null
+          },
+          "precision_at_50": {
+            "value": 0.36,
+            "max_attainable": 1.0,
+            "enrichment": 52.78
+          },
+          "recall_at_50": {
+            "value": 0.3158,
+            "max_attainable": 0.8772,
+            "enrichment": null
+          },
+          "roc_auc": {
+            "value": 0.6721,
+            "max_attainable": 1.0,
+            "null_value": 0.5,
+            "enrichment": null
+          },
+          "average_precision": {
+            "value": 0.2516,
+            "max_attainable": 1.0,
+            "null_value": 0.006821,
+            "enrichment": null
+          }
+        }
+      }
+    },
     "structure_channel": {
       "n_pairs_with_structure": 3,
       "pairs": [
