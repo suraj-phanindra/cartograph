@@ -72,15 +72,21 @@ that adds product surface without adding evidence is the wrong change.
   every metric.** Gordon: p@10 0.30 vs 0.80, p@20 0.45 vs 0.60, AUC 0.618 vs 0.672, reach 14
   vs 20. An older version of this file claimed L3 is "proven to beat common neighbors." On
   this map that is false, and it was measured here.
-- **L3 earns its place only where preys are shared between baits.** Advantage over
-  guilt-by-association rises with prey sharing across fifteen map variants from six datasets,
-  r = 0.94, because sharing opens a `bait -> prey -> bait' -> prey` route that no length-2
-  method can see. It is TOPOLOGICAL: it holds on HuRI, where the bait/prey split is synthetic
-  because two-hybrid data is symmetric, with 94% of L3's unique reach routed through a second
-  bait. What does NOT hold is magnitude: strict monotonicity fails across regimes, HuRI's
-  +40.6pp is inflated by a STRING-starved baseline, and the fifteen variants are only six
-  independent datasets. Check `backend/bench/sharing.py` BEFORE choosing a scorer. Gordon
-  is 1.000.
+- **RETRACTED 2026-09-16: the prey-sharing rule.** This file previously said L3 earns its
+  place where preys are shared, monotonically, r = 0.94. That was measured on `reach`
+  (positives given any non-zero score), which is support-set size, not retrieval: a uniform
+  random scorer reaches 100% of positives on every map. Re-derived on average precision,
+  **L3 is best on 1 of 6 maps** and that one has a starved STRING layer. It places 5th of 8
+  on Gordon, Penn and Jager. Adamic-Adar, a length-2 index, is best on two maps.
+  `backend/bench/sharing.py` no longer exports a scorer recommendation and must not regain
+  one; there is no rule in this evidence worth shipping.
+- **What survives is a negative result.** On maps with NO shared preys, L3 loses to simpler
+  methods on every metric. It is a degeneracy, not a measurement: with no shared prey the
+  middle hop of `source -> a -> b -> v` can never be a bait, so L3 IS a two-hop STRING walk
+  while guilt-by-association is a one-hop lookup.
+- **Never headline a coverage metric.** `reach` is reported as a diagnostic only. On the
+  pathogen maps CN, RA, AA and STRING-GBA have identical reach to the digit while their AP
+  spans 2.9x, so coverage is blind to everything that separates them.
 - **`precision@20 = 0.45` is a favourable draw.** Over 20 seeds: mean 0.32, sd 0.10,
   range 0.15 to 0.55. Quote the distribution.
 - **The ceiling is in the data.** 37 of 57 Gordon held-out edges are unrecoverable by any

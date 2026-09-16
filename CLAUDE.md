@@ -34,9 +34,12 @@ on PPI networks." **On this repo's own flagship map that is false, and it was me
 On Gordon 2020, L3 loses to a one-line STRING lookup on every metric (p@10 0.30 vs 0.80,
 reach 14 vs 20) and loses to common neighbours on reach.
 
-L3 earns its place only where preys are shared between baits, monotonically, across six
-interactomes in three regimes. The effect is topological: it survives on HuRI even with a
-synthetic bait/prey split. The magnitudes do not transfer between regimes. Check `backend/bench/sharing.py` before choosing a scorer. See
+A SECOND correction, 2026-09-16: this file then said L3 earns its place where preys are
+shared. That too was wrong, and wrong the same way -- it was measured on `reach`, which a
+random scorer maxes at 100%. On average precision, **L3 is best on 1 of 6 maps** and places
+5th of 8 on Gordon. What survives is the negative result: on maps with no shared preys L3
+loses to simpler methods on every metric, because its middle hop can never be a bait and it
+degenerates into a two-hop STRING walk. Never headline a coverage metric. Check `backend/bench/sharing.py` before choosing a scorer. See
 `docs/Cartograph_multimap_bakeoff.md`.
 
 Also: `precision@20 = 0.45` is one favourable draw. Over 20 seeds the mean is 0.32, sd 0.10.
