@@ -94,3 +94,38 @@ def max_recall_at_k(k: int, n_positives: int) -> float:
     if n_positives <= 0:
         raise ValueError("no positives")
     return min(1.0, k / n_positives)
+
+
+def expected_precision_at_k(scores: dict[tuple[str, str], float], positives: set,
+                            universe: set, k: int) -> float:
+    """E[precision@k] under uniformly random tie-breaking, computed exactly.
+
+    `rank` breaks ties alphabetically, which hands the top-k of a coarse scorer to the
+    alphabet. Measured on Gordon: common neighbours has four distinct scores over 92
+    pairs, and its published precision@10 of 0.600 sat at the 97.9th percentile of
+    tie-break outcomes against an expectation of 0.464. Any comparison BETWEEN scorers
+    must use this function, because the artifact scales with how coarse a scorer is.
+
+    Pairs absent from `scores` are treated as 0 and fall in the last tie group, so the
+    metric is always computed over the whole universe rather than the subset a
+    predictor chose to reach.
+    """
+    if k <= 0:
+        raise ValueError("k must be positive")
+    groups: dict[float, list] = {}
+    for pair in universe:
+        groups.setdefault(scores.get(pair, 0.0), []).append(pair)
+
+    hits, slots = 0.0, k
+    for score in sorted(groups, reverse=True):
+        if slots <= 0:
+            break
+        group = groups[score]
+        n_pos = sum(1 for p in group if p in positives)
+        if len(group) <= slots:
+            hits += n_pos
+            slots -= len(group)
+        else:
+            hits += n_pos * slots / len(group)
+            slots = 0
+    return hits / k
