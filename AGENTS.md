@@ -22,6 +22,36 @@ being developed at AI Fund as a possible venture. **The audience for results is 
 diligence, not end users.** Credibility of the numbers matters more than features. A change
 that adds product surface without adding evidence is the wrong change.
 
+## Status: TABLED, 2026-09-16
+
+Cartograph was prototyped and triaged as an AI Fund pipeline candidate. **It did not clear
+the bar and is parked**, not killed. The repo is left correct and self-consistent rather than
+mid-repair. Nothing here needs finishing; if you are here to build, ask what changed first.
+
+Why it was parked, in the order the evidence arrived:
+
+1. **No customer.** Five candidate profiles were stress-tested and all five came back weak,
+   each for a different measured reason. The field's own stated bottleneck is
+   irreproducibility, not candidate triage: asked what limits interaction mapping, eleven
+   leading network-biology groups named noise, context-specificity and resolution, and none
+   named triage. Revealed behaviour agrees -- 267 of 332 Gordon edges have never been
+   revisited in six years. See `docs/Cartograph_context_package.md`.
+2. **The predictor does not win.** Re-derived on average precision across six interactomes,
+   degree-normalized L3 is best on 1 of 6 maps and places 5th of 8 on this repo's own
+   flagship. A one-hop STRING lookup and the plain length-2 indices beat it.
+   See `docs/Cartograph_multimap_bakeoff.md`.
+3. **The differentiator was the harness, and a harness is not a business.** No one in
+   computational biology has monetized one; the closest analogues are all grant- or
+   consortium-funded.
+
+What would reopen it: a named group running their own map through it and saying the output
+changed what they tested. That artifact does not exist and was never sought.
+
+What is worth taking elsewhere: `backend/bench` (metrics that carry their denominators,
+tie-aware ranking, an explicit candidate universe), the panel-with-trivial-baselines habit
+in `backend/bench/bakeoff.py`, and the deterministic no-citation-no-render gate in
+`backend/agent/verify.py`.
+
 ## Current state
 
 - `main` is unprotected, so nothing gates a red merge. Run `./run.sh test` before you push;

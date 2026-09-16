@@ -8,6 +8,12 @@ benchmark of real edges**.
 
 Built with Claude: Life Sciences (Anthropic x Gladstone). Build track, solo. Open source (MIT).
 
+> **Status: tabled, 2026-09-16.** Prototyped and triaged as a venture candidate; it did not
+> clear the bar. No customer was found for the triage framing, and on re-derivation the
+> shipped predictor is beaten by simpler baselines on five of six interactomes. The repo is
+> left correct rather than mid-repair, and the numbers below include the corrections.
+> `AGENTS.md` has the full reasoning.
+
 ![the flagship dossier: Orf6 -> RAE1, recovered by topology, confirmed by the experimental 7VPH structure](docs/demo_dossier.png)
 
 ## The one-screen demo (runs offline, reproducibly)
