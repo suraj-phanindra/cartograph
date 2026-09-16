@@ -4,7 +4,10 @@ Standing context for any coding agent working in this repo. Read it before writi
 anything. It is auto-loaded, so it stays short and points at the docs for depth.
 
 **Keep it current.** If a measured number or a priority changes, update this file in the
-same commit as the change. Last updated 2026-09-16.
+same commit as the change. This is not a formality: the "Current state" block below went
+stale within a day of being written, because a merged PR and a new dataset both changed it.
+If you are touching a number anywhere in this repo, check whether it also appears here.
+Last updated 2026-09-16.
 
 ## What this is
 
@@ -20,8 +23,8 @@ that adds product surface without adding evidence is the wrong change.
 
 ## Current state, 2026-09-16
 
-- PR #1 merged to `main` (8 commits). `main` is unprotected, so nothing gates a red merge.
-- 153 tests, about 23 seconds.
+- PR #1 and PR #2 both merged to `main`. `main` is unprotected, so nothing gates a red merge.
+- 154 tests, about 23 seconds.
 - Shipped: the explicit candidate universe with every metric carrying its denominator
   (`backend/bench/`), the STRING guilt-by-association control (`backend/predict/gba.py`),
   the pre-flight statistic (`backend/bench/sharing.py`), and the bake-off
@@ -29,6 +32,8 @@ that adds product surface without adding evidence is the wrong change.
 - Five interactomes loaded: Gordon 2020 SARS-CoV-2, Penn 2018 Mtb, Jager 2011 HIV-1,
   Haas 2023 influenza A, and BioPlex 3.0 293T (human-human, the out-of-regime test).
   See `evidence/multimap/MANIFEST.json` for provenance on each.
+- Reproduce the whole comparison with `python -m backend.bench.bakeoff` (about 100 seconds
+  at the default 40 seeds).
 
 ## Non-negotiable integrity rules. These are the product, not preferences.
 
