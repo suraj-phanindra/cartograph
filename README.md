@@ -58,37 +58,42 @@ benchmark exists to surface it.
 the same 17% held-out protocol over 20 seeds gives **mean 0.32, sd 0.10, range 0.15 to 0.55**,
 with only 2 of 20 draws reaching 0.45. Quote the distribution, not the draw.
 
-### When is L3 worth running at all?
+### Which scorer actually wins? Not this one.
 
-Measured across six interactomes, fifteen map variants, in three regimes
-(`docs/Cartograph_multimap_bakeoff.md`, reproduce with `python -m backend.bench.bakeoff`):
+**Retracted 2026-09-16.** This section previously claimed L3 beats a STRING lookup whenever
+preys are shared between baits, monotonically, across six interactomes. That was measured on
+`reach` -- positives given any non-zero score -- which is support-set size, not retrieval. A
+uniform random scorer reaches 100% of positives on every map. Re-derived on average
+precision, the claim does not hold. See `docs/Cartograph_multimap_bakeoff.md`.
 
-| map | shared preys | L3 reach | STRING-GBA reach | advantage | 40 paired seeds |
+Six maps, 20 seeds, primary endpoint average precision, full panel
+(reproduce with `python -m backend.bench.bakeoff`):
+
+| map | shared preys | best by AP | AP | L3 | L3 placing |
 |---|---|---|---|---|---|
-| Penn 2018 Mtb | 0.0% | 17.9% | 27.6% | **-9.7pp** | L3 wins 0/39 |
-| Gordon 2020 SARS-CoV-2 | 0.0% | 19.2% | 26.7% | **-7.4pp** | L3 wins 1/39 |
-| Jager 2011 HIV-1 | 14.9% | 47.5% | 37.8% | **+9.7pp** | L3 wins 40/0 |
-| Haas 2023 influenza A | 23.8% | 55.7% | 42.3% | **+13.4pp** | L3 wins 39/1 |
+| Penn 2018 Mtb | 0.0% | STRING-GBA | 0.277 | 0.079 | 5th of 8 |
+| Gordon 2020 SARS-CoV-2 | 0.0% | STRING-GBA | 0.185 | 0.072 | 5th of 8 |
+| Jager 2011 HIV-1 | 14.9% | Adamic-Adar | 0.151 | 0.126 | 5th of 8 |
+| BioPlex 3.0 293T | 22.2% | Adamic-Adar | 0.063 | 0.050 | 4th of 8 |
+| Haas 2023 influenza A | 23.8% | Resource allocation | 0.146 | 0.144 | 2nd, a tie |
+| HuRI (synthetic split) | 33.4% | L3 | 0.024 | 0.024 | 1st |
 
-And out of regime: human-human BioPlex 3.0 293T (no pathogen) gives +0.4pp at 4.3% sharing
-rising to **+10.3pp** at 22.2%. HuRI, where the bait/prey split had to be imposed synthetically
-because two-hybrid data is symmetric, gives +2.1pp at 8.1% rising to **+40.6pp** at 33.4% -
-which shows the mechanism is topological rather than an artefact of real bait/prey roles, but
-overstates the effect size, because HuRI's STRING-starved preys leave the lookup near its null.
+**L3 is best on one of six maps**, and that one has a starved STRING layer so every
+competing scorer sits near its null. On Haas it is inside the seed spread of two length-2
+indices. The simple neighbourhood methods dominate: Adamic-Adar is best on two maps and top
+three on four.
 
-Pearson r = 0.94 over all fifteen variants, monotonic within every dataset (though those
-fifteen are only six independent datasets, so read it as descriptive). Strict monotonicity
-does not survive the regime change: the pathogen-host curve runs above the human-human one at
-matched sharing, so prey sharing predicts the sign and the trend, not the magnitude. The mechanism is direct: shared preys
-open a `bait → prey → bait' → prey` route that is length-3 and therefore invisible to any
-length-2 method. Of the held-out edges L3 reaches that STRING-GBA cannot on Jager, **85%
-travel exactly that route**, 94% on HuRI and 72% on BioPlex. On Gordon the count is **zero**.
+What survives is a negative result, and it is clean. **On maps where no prey is shared, L3
+is beaten by simpler methods on every metric tested.** The reason is a degeneracy rather
+than a measurement: L3 scores a `source -> a -> b -> v` path, and with no shared prey `b`
+can never be a bait, so both middle hops lie in the STRING layer and L3 *is* a two-hop
+STRING walk while guilt-by-association is a one-hop lookup. Two hops of side information are
+noisier than one.
 
-So the deployment rule is a one-line pre-flight check (`backend/bench/sharing.py`): compute
-**mean prey degree** before scoring anything. At 1.000 the route does not exist and the
-STRING lookup wins. Above about 1.05 to 1.15, L3 becomes the best recall channel in the panel. Gordon
-sits at exactly 1.000, which is why this repo's flagship map is the one topology helps least
-on, and the built artifact says so in `eval.channel`.
+One thing worth keeping from the wreckage: on all three pathogen maps CN, RA, Adamic-Adar
+and STRING-GBA have **identical reach to the digit**, yet their average precision over that
+identical support spans 2.9x. Everything separating these methods is in how they weight a
+support set they share. A coverage metric is blind to all of it.
 
 Against an open-world background of the reviewed human proteome (UniProt release
 2026_03, 20,431 proteins) the universe is 531,206 pairs and prevalence falls to

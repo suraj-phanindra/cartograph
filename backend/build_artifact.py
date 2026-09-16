@@ -25,6 +25,7 @@ from backend.bench import report as bench_report
 from backend.bench import sharing as bench_sharing
 from backend.bench import universe as bench_universe
 from backend.predict.gba import predict_all as gba_predict_all
+from backend.predict.cobait import cobait_scores
 from backend.eval.freeze_split import load_frozen
 from backend.reason.hypothesis import read_edge, skeptic_review, DOSSIER
 from backend.reason import novelty
@@ -389,18 +390,35 @@ def build():
         open_world_source=config.OPEN_WORLD_SOURCE,
     )
 
-    # --- which channel is worth running on this map (backend/bench/sharing) --
-    # Measured across four interactomes: L3 only beats a one-line STRING lookup where
-    # preys are shared between baits. Gordon has none, so the honest default here is
-    # the lookup, and the L3 numbers above are published alongside it rather than
-    # instead of it. See docs/Cartograph_multimap_bakeoff.md.
+    # --- the baseline panel on the frozen split (backend/bench) ------------
+    # CORRECTED 2026-09-16. This block previously shipped a scorer RECOMMENDATION derived
+    # from mean prey degree. That rule was measured on `reach`, which is support-set size
+    # rather than retrieval, and does not survive re-derivation on average precision. It is
+    # replaced by the measured panel, unranked opinion removed: L3 placed 5th of 8 by AP on
+    # this map. Publishing the table instead of a verdict is the honest form.
     _gba_scores = {(p["bait"], p["candidate"]): p["score"]
                    for p in gba_predict_all(_train)}
-    channel = bench_sharing.recommended_channel(enriched_graph())
-    channel["gba_baseline"] = bench_report.full_universe_report(
-        {pair: _gba_scores.get(pair, 0.0) for pair in _uni},
-        {tuple(e) for e in frozen["held_out"]},
-    )
+    _cobait = cobait_scores(_train, _uni)
+    _held = {tuple(e) for e in frozen["held_out"]}
+    panel_scores = {
+        "L3": _reached,
+        "STRING-GBA": _gba_scores,
+        "co-bait": _cobait,
+        "Random": {pair: 0.0 for pair in _uni},
+    }
+    channel = {
+        "primary_endpoint": "average_precision",
+        "mean_prey_degree": round(bench_sharing.mean_prey_degree(enriched_graph()), 4),
+        "is_star_map": bench_sharing.is_star_map(enriched_graph()),
+        "note": ("`reach` is a diagnostic, not a performance metric: a random scorer reaches "
+                 "100% of positives. Ranked by average precision. See "
+                 "docs/Cartograph_multimap_bakeoff.md for the six-map panel."),
+        "panel": {
+            name: bench_report.full_universe_report(
+                {pair: sc.get(pair, 0.0) for pair in _uni}, _held)["metrics"]
+            for name, sc in panel_scores.items()
+        },
+    }
 
     # --- dossiers -----------------------------------------------------------
     dossiers = {e: _build_dossier(e, ranked_by_bait, structure_facts, frozen, interface_counts)

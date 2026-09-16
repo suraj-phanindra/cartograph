@@ -124,20 +124,56 @@
       }
     },
     "channel": {
-      "channel": "STRING-GBA",
-      "l3_applicable": false,
+      "primary_endpoint": "average_precision",
       "mean_prey_degree": 1.0,
-      "crossover": 1.05,
-      "basis": "Four-map bakeoff, 2026-09-15: L3 beats STRING guilt-by-association only where preys are shared between baits, monotonically in the amount of sharing (r = 0.91, 6 variants). See docs/Cartograph_multimap_bakeoff.md.",
-      "gba_baseline": {
-        "candidate_set": "closed_world",
-        "universe_size": 8357,
-        "n_targets": 57,
-        "n_targets_reachable": 20,
-        "reachable_definition": "the scorer assigns a nonzero score",
-        "prevalence": 0.00682062941246859,
-        "tie_handling": "midrank",
-        "metrics": {
+      "is_star_map": true,
+      "note": "`reach` is a diagnostic, not a performance metric: a random scorer reaches 100% of positives. Ranked by average precision. See docs/Cartograph_multimap_bakeoff.md for the six-map panel.",
+      "panel": {
+        "L3": {
+          "precision_at_10": {
+            "value": 0.3,
+            "max_attainable": 1.0,
+            "enrichment": 43.98
+          },
+          "recall_at_10": {
+            "value": 0.0526,
+            "max_attainable": 0.1754,
+            "enrichment": null
+          },
+          "precision_at_20": {
+            "value": 0.45,
+            "max_attainable": 1.0,
+            "enrichment": 65.98
+          },
+          "recall_at_20": {
+            "value": 0.1579,
+            "max_attainable": 0.3509,
+            "enrichment": null
+          },
+          "precision_at_50": {
+            "value": 0.26,
+            "max_attainable": 1.0,
+            "enrichment": 38.12
+          },
+          "recall_at_50": {
+            "value": 0.2281,
+            "max_attainable": 0.8772,
+            "enrichment": null
+          },
+          "roc_auc": {
+            "value": 0.6178,
+            "max_attainable": 1.0,
+            "null_value": 0.5,
+            "enrichment": null
+          },
+          "average_precision": {
+            "value": 0.1039,
+            "max_attainable": 1.0,
+            "null_value": 0.006821,
+            "enrichment": null
+          }
+        },
+        "STRING-GBA": {
           "precision_at_10": {
             "value": 0.8,
             "max_attainable": 1.0,
@@ -176,6 +212,94 @@
           },
           "average_precision": {
             "value": 0.2516,
+            "max_attainable": 1.0,
+            "null_value": 0.006821,
+            "enrichment": null
+          }
+        },
+        "co-bait": {
+          "precision_at_10": {
+            "value": 0.0,
+            "max_attainable": 1.0,
+            "enrichment": 0.0
+          },
+          "recall_at_10": {
+            "value": 0.0,
+            "max_attainable": 0.1754,
+            "enrichment": null
+          },
+          "precision_at_20": {
+            "value": 0.0,
+            "max_attainable": 1.0,
+            "enrichment": 0.0
+          },
+          "recall_at_20": {
+            "value": 0.0,
+            "max_attainable": 0.3509,
+            "enrichment": null
+          },
+          "precision_at_50": {
+            "value": 0.0,
+            "max_attainable": 1.0,
+            "enrichment": 0.0
+          },
+          "recall_at_50": {
+            "value": 0.0,
+            "max_attainable": 0.8772,
+            "enrichment": null
+          },
+          "roc_auc": {
+            "value": 0.5,
+            "max_attainable": 1.0,
+            "null_value": 0.5,
+            "enrichment": null
+          },
+          "average_precision": {
+            "value": 0.0086,
+            "max_attainable": 1.0,
+            "null_value": 0.006821,
+            "enrichment": null
+          }
+        },
+        "Random": {
+          "precision_at_10": {
+            "value": 0.0,
+            "max_attainable": 1.0,
+            "enrichment": 0.0
+          },
+          "recall_at_10": {
+            "value": 0.0,
+            "max_attainable": 0.1754,
+            "enrichment": null
+          },
+          "precision_at_20": {
+            "value": 0.0,
+            "max_attainable": 1.0,
+            "enrichment": 0.0
+          },
+          "recall_at_20": {
+            "value": 0.0,
+            "max_attainable": 0.3509,
+            "enrichment": null
+          },
+          "precision_at_50": {
+            "value": 0.0,
+            "max_attainable": 1.0,
+            "enrichment": 0.0
+          },
+          "recall_at_50": {
+            "value": 0.0,
+            "max_attainable": 0.8772,
+            "enrichment": null
+          },
+          "roc_auc": {
+            "value": 0.5,
+            "max_attainable": 1.0,
+            "null_value": 0.5,
+            "enrichment": null
+          },
+          "average_precision": {
+            "value": 0.0086,
             "max_attainable": 1.0,
             "null_value": 0.006821,
             "enrichment": null

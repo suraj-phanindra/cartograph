@@ -77,23 +77,26 @@ def test_a_training_graph_deflates_the_statistic():
     assert train < sharing.mean_prey_degree(enriched_graph())
 
 
-def test_star_map_recommends_the_string_lookup():
-    rec = sharing.recommended_channel(_star_map())
-    assert rec["channel"] == "STRING-GBA"
+def test_a_star_map_is_recognised_as_one():
+    assert sharing.is_star_map(_star_map()) is True
 
 
-def test_shared_map_recommends_l3():
-    rec = sharing.recommended_channel(_shared_map())
-    assert rec["channel"] == "L3"
+def test_a_shared_prey_map_is_not_a_star_map():
+    assert sharing.is_star_map(_shared_map()) is False
 
 
-def test_recommendation_carries_the_evidence_not_just_a_verdict():
-    """A bare channel name is unauditable. The record states the measured value, the
-    crossover it was compared against, and where that crossover came from."""
-    rec = sharing.recommended_channel(_star_map())
-    assert rec["mean_prey_degree"] == 1.0
-    assert rec["crossover"] == pytest.approx(1.05)
-    assert "bakeoff" in rec["basis"].lower() or "shared" in rec["basis"].lower()
+def test_gordon_is_a_star_map():
+    assert sharing.is_star_map(enriched_graph()) is True
+
+
+def test_the_scorer_recommendation_is_gone_and_stays_gone():
+    """RETRACTED 2026-09-16. `recommended_channel` claimed mean prey degree predicts
+    whether L3 beats a one-hop STRING lookup. It was measured on `reach`, which is
+    support-set size rather than retrieval, and does not survive re-derivation on average
+    precision: L3 placed 5th of 8 on Gordon. No corrected rule replaced it, because this
+    evidence does not contain one. This test exists so the rule is not quietly restored."""
+    assert not hasattr(sharing, "recommended_channel")
+    assert not hasattr(sharing, "CROSSOVER")
 
 
 def test_map_with_no_preys_raises_rather_than_guessing():

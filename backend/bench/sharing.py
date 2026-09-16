@@ -1,67 +1,49 @@
-"""Prey sharing: the pre-flight statistic that decides which scorer to run.
+"""Prey sharing: a descriptive property of an AP-MS map.
 
-Measured across five AP-MS interactomes, ten map variants, in two regimes
-(docs/Cartograph_multimap_bakeoff.md): pathogen-host (Gordon 2020 SARS-CoV-2, Penn 2018
-Mtb, Jager 2011 HIV-1, Haas 2023 influenza A) and human-human (BioPlex 3.0 293T).
-Degree-normalized L3 beats a one-line STRING guilt-by-association lookup if and only if
-the AP-MS layer has SHARED PREYS, and the advantage rises with how much sharing there is
-(Pearson r = 0.90 overall, monotonic within every single dataset).
+RETRACTION, 2026-09-16. This module previously exported `recommended_channel`, which
+claimed that mean prey degree predicts whether degree-normalized L3 beats a one-hop STRING
+guilt-by-association lookup, with a crossover near 1.05. That claim was measured on `reach`
+-- the count of held-out positives a scorer assigns any non-zero score. `reach` is
+support-set size, not retrieval quality: the bake-off panel's own `Random` scorer reaches
+100% of positives on every map. Re-derived on average precision, the claim does not hold.
 
-    mean prey degree   shared preys   L3 reach advantage over GBA
-    1.000 (Penn)              0.0%    -9.7 pp   (0/39 seeds)
-    1.000 (Gordon)            0.0%    -7.4 pp   (1/39 seeds)
-    1.054 (Jager, gene)       5.4%    +0.9 pp   (not significant)
-    1.076 (Haas, gene)        7.6%    +8.1 pp   (34/2 seeds)
-    1.151 (Jager, construct) 14.9%    +9.7 pp   (40/0 seeds)
-    1.262 (Haas, construct)  23.8%   +13.4 pp   (39/1 seeds)
+What the corrected measurement says (docs/Cartograph_multimap_bakeoff.md, 20 seeds,
+average precision as primary endpoint, six maps):
 
-and out of regime, on human-human BioPlex 3.0 subsamples:
+    map                  best by AP     L3's placing
+    Penn 2018 Mtb        STRING-GBA     5th of 8
+    Gordon 2020          STRING-GBA     5th of 8
+    Jager 2011 HIV-1     STRING-GBA     4th of 8
+    BioPlex 3.0 293T     Adamic-Adar    close behind
+    Haas 2023 IAV        L3 / CN        a tie
+    HuRI (synthetic)     L3             STRING layer is starved
 
-    1.048 (BioPlex K=25)      4.3%    +0.4 pp   (not significant)
-    1.143 (BioPlex K=100)    12.1%    +4.5 pp   (20/0 seeds)
-    1.283 (BioPlex K=200)    22.2%   +10.3 pp   (10/0 seeds)
+L3 is never clearly best. The co-bait counter in backend/predict/cobait.py, which isolates
+the bait-intermediate route the old claim rested on, scores AP 0.003 to 0.029. So that route
+produces candidate coverage and almost no ranking signal, and the mechanism story explained
+an artifact.
 
-and on HuRI, where the bait/prey split is SYNTHETIC (the assay is symmetric two-hybrid):
+`recommended_channel` is deliberately NOT replaced by a corrected rule. There is no rule in
+this evidence worth shipping: run the panel and report all of it.
 
-    1.107 (HuRI K=25)         8.1%    +2.1 pp   (14/4 seeds)
-    1.620 (HuRI K=200)       33.4%   +40.6 pp   (10/0 seeds)
-
-Strict monotonicity holds WITHIN each dataset but not across regimes: the pathogen-host
-curve runs above the human-human one at matched sharing. So this statistic predicts the
-sign and the trend, not the magnitude. Two caveats on the magnitudes:
-
-  - HuRI's huge advantages are partly a starved baseline. Its preys have mean STRING degree
-    1.073 and 68% have no STRING partner at all, so guilt-by-association sits near the 0.50
-    AUC null at every K. HuRI establishes that the mechanism is TOPOLOGICAL (it does not
-    need real bait/prey roles); it does not give a usable effect size.
-  - A two-variable fit adding prey STRING degree reaches R^2 = 0.909 against 0.882 for
-    sharing alone. The sign is right, the gain is not worth a parameter, and the 15 map
-    variants are only 6 independent datasets. Treat every correlation as descriptive.
-
-The mechanism is direct, not correlational: prey sharing opens a
-bait -> shared prey -> other bait -> target prey route, which is length 3 and therefore
-invisible to any length-2 method. Of the held-out edges L3 reaches that GBA cannot,
-94% travel exactly that route on HuRI, 85% on Jager and 72% on BioPlex. On Gordon, where no
-prey is shared, the count is zero.
-
-So the statistic is causal, one line to compute, and available BEFORE any scoring run.
+`mean_prey_degree` survives because it is a real and useful descriptor of a bipartite AP-MS
+map -- it says whether the bait layer is a disjoint union of stars -- and because the
+star-map result does hold: where no prey is shared, L3 is beaten by simpler methods on every
+metric tested. Just do not use it to pick a scorer.
 """
 
 from __future__ import annotations
 
-# Crossover is a BAND, not a point: near 1.05 on pathogen-host maps (between the 5.4% and
-# 7.6% variants) and nearer 1.10 on human-human ones (BioPlex is still not significant at
-# 1.079). Held at the conservative end, since the cost of running L3 unnecessarily is one
-# extra channel while the cost of skipping it is unreachable candidates.
-CROSSOVER = 1.05
-
 
 def mean_prey_degree(graph) -> float:
-    """Average number of viral baits each human prey is bound by.
+    """Average number of baits each prey is bound by. 1.0 means a disjoint union of stars.
 
     Counts viral neighbours only, which is what makes this the AP-MS layer's property.
-    Raw node degree would include the STRING enrichment edges between two preys and
-    report sharing on a map that has none.
+    Raw node degree would include the STRING enrichment edges between two preys and report
+    sharing on a map that has none.
+
+    Describes the COMPLETE map. Handing it a training graph counts held-out preys at
+    degree 0 and understates sharing.
     """
     preys = [n for n, d in graph.nodes(data=True) if d.get("type") == "human"]
     if not preys:
@@ -75,22 +57,12 @@ def mean_prey_degree(graph) -> float:
     return bait_links / len(preys)
 
 
-def recommended_channel(graph, crossover: float = CROSSOVER) -> dict:
-    """Which scorer is worth running on this map, with the evidence for the verdict.
+def is_star_map(graph) -> bool:
+    """True when no prey is shared between baits, so the bait layer is disjoint stars.
 
-    Returns a record rather than a bare channel name: a recommendation whose basis is
-    not inspectable is not auditable, which is the rule the rest of this repo runs on.
+    The one structural fact from the bake-off that survived re-derivation on average
+    precision: on star maps L3 has no bait available at the middle hop, degenerates into a
+    two-hop walk in the STRING side-information layer, and loses to the one-hop lookup on
+    reach, recall@k, average precision and tie-aware AUC alike.
     """
-    measured = mean_prey_degree(graph)
-    use_l3 = measured >= crossover
-    return {
-        "channel": "L3" if use_l3 else "STRING-GBA",
-        "l3_applicable": use_l3,
-        "mean_prey_degree": round(measured, 4),
-        "crossover": crossover,
-        "basis": (
-            "Four-map bakeoff, 2026-09-15: L3 beats STRING guilt-by-association only "
-            "where preys are shared between baits, monotonically in the amount of "
-            "sharing (r = 0.91, 6 variants). See docs/Cartograph_multimap_bakeoff.md."
-        ),
-    }
+    return mean_prey_degree(graph) == 1.0
