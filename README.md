@@ -60,7 +60,7 @@ with only 2 of 20 draws reaching 0.45. Quote the distribution, not the draw.
 
 ### When is L3 worth running at all?
 
-Measured across four pathogen-host interactomes, six map variants
+Measured across five AP-MS interactomes, ten map variants, in two regimes
 (`docs/Cartograph_multimap_bakeoff.md`, reproduce with `python -m backend.bench.bakeoff`):
 
 | map | shared preys | L3 reach | STRING-GBA reach | advantage | 40 paired seeds |
@@ -70,14 +70,19 @@ Measured across four pathogen-host interactomes, six map variants
 | Jager 2011 HIV-1 | 14.9% | 47.5% | 37.8% | **+9.7pp** | L3 wins 40/0 |
 | Haas 2023 influenza A | 23.8% | 55.7% | 42.3% | **+13.4pp** | L3 wins 39/1 |
 
-Strictly monotonic in prey sharing, Pearson r = 0.91. The mechanism is direct: shared preys
+And out of regime, on human-human BioPlex 3.0 293T subsamples (no pathogen at all):
+4.3% sharing gives +0.4pp (not significant), 12.1% gives +4.5pp, 22.2% gives **+10.3pp**.
+
+Pearson r = 0.90 over all ten variants, monotonic within every dataset. Strict monotonicity
+does not survive the regime change: the pathogen-host curve runs above the human-human one at
+matched sharing, so prey sharing predicts the sign and the trend, not the magnitude. The mechanism is direct: shared preys
 open a `bait → prey → bait' → prey` route that is length-3 and therefore invisible to any
 length-2 method. Of the held-out edges L3 reaches that STRING-GBA cannot on Jager, **85%
-travel exactly that route**. On Gordon the same count is **zero**.
+travel exactly that route**, and 72% on BioPlex. On Gordon the count is **zero**.
 
 So the deployment rule is a one-line pre-flight check (`backend/bench/sharing.py`): compute
 **mean prey degree** before scoring anything. At 1.000 the route does not exist and the
-STRING lookup wins. Above about 1.05, L3 becomes the best recall channel in the panel. Gordon
+STRING lookup wins. Above about 1.05 to 1.15, L3 becomes the best recall channel in the panel. Gordon
 sits at exactly 1.000, which is why this repo's flagship map is the one topology helps least
 on, and the built artifact says so in `eval.channel`.
 

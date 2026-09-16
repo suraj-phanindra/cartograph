@@ -1,10 +1,11 @@
-# Four-map baseline bake-off: when does L3 earn its place?
+# Five-map baseline bake-off: when does L3 earn its place?
 
-Run 2026-09-15. The first multi-dataset experiment in this project.
+Run 2026-09-15, extended out of regime 2026-09-16.
 
 **Result in one line:** L3 beats a one-line STRING lookup if and only if the AP-MS map has
 shared preys, the advantage scales monotonically with how much sharing there is
-(Pearson r = 0.91 over six map variants from four datasets), and the mechanism is a
+(Pearson r = 0.90 over ten map variants from five datasets, spanning pathogen-host AND
+human-human AP-MS), and the mechanism is a
 bait -> prey -> bait' -> prey route that no length-2 method can see.
 
 ## Protocol
@@ -87,12 +88,65 @@ The law was derived on two maps and then survived three independent tests.
    from a different lab and a different assay year, and has 0% prey sharing. The law predicts
    it should sit alongside Gordon at roughly -7pp. Observed **-9.7pp, 0/39 seeds.**
 
+
+## Out of regime: does this survive outside pathogen-host maps?
+
+The load-bearing caveat of the four-map run was that every map was pathogen-host bipartite.
+BioPlex 3.0 293T (Huttlin et al. 2021) is the opposite regime: human-human AP-MS, no
+pathogen, a different lab and a different decade, 118,162 edges over 8,995 baits with 81.5%
+of preys shared and a mean prey degree of 11.341.
+
+The full network is a ~93 million pair universe, so a nested random sample of 400 baits was
+drawn and the sweep run on prefixes of it. Nesting means one STRING cache serves every K, and
+varying K sweeps prey sharing WITHIN a single dataset, which is a second controlled
+manipulation of the predicted cause.
+
+| K baits | shared preys | universe | positives | L3 reach | GBA reach | advantage | sign p |
+|---|---|---|---|---|---|---|---|
+| 25 | 4.3% | 10,014 | 74 | 24.1% | 23.6% | **+0.4pp** | 0.27 n.s. |
+| 50 | 7.2% | 29,856 | 112 | 22.9% | 21.8% | **+1.1pp** | 0.096 n.s. |
+| 100 | 12.1% | 103,509 | 203 | 24.8% | 20.3% | **+4.5pp** | 1.9e-06 |
+| 200 | 22.2% | 381,818 | 421 | 36.1% | 25.7% | **+10.3pp** | 2.0e-03 |
+
+Monotonic within BioPlex, and the mechanism transfers: of the held-out edges L3 reaches that
+guilt-by-association cannot, **72% route through a second bait** (Jager 85%, Gordon 0%). The
+same length-3 route is doing the work in a regime the rule was never fitted to.
+
+### The combined picture, and where it is not clean
+
+Ten map variants, five datasets, two regimes:
+
+| shared preys | advantage | dataset |
+|---|---|---|
+| 0.0% | -9.7pp | Penn 2018 Mtb |
+| 0.0% | -7.4pp | Gordon 2020 SARS-CoV-2 |
+| 4.3% | +0.4pp | BioPlex K=25 |
+| 5.4% | +0.9pp | Jager [gene] |
+| 7.2% | +1.1pp | BioPlex K=50 |
+| 7.6% | +8.1pp | Haas [gene] |
+| 12.1% | +4.5pp | BioPlex K=100 |
+| 14.9% | +9.7pp | Jager [construct] |
+| 22.2% | +10.3pp | BioPlex K=200 |
+| 23.8% | +13.4pp | Haas [construct] |
+
+**Pearson r = 0.9023, and strict monotonicity does NOT survive the regime change.** Haas
+[gene] at 7.6% sharing returns +8.1pp while BioPlex at 12.1% returns +4.5pp. The pathogen-host
+curve runs consistently above the human-human curve at matched sharing, so prey sharing
+predicts the sign and the trend but is not a sufficient statistic for the magnitude.
+
+The honest statement is therefore weaker than the four-map version and better tested:
+prey sharing decides WHETHER L3 beats guilt-by-association, monotonically within any one
+dataset, with a crossover in the 5 to 12 percent band. It does not by itself decide by how
+much, and the gap between regimes is unexplained.
+
 ## The deployment rule
 
 > L3 contributes over guilt-by-association exactly when the AP-MS map has shared preys.
 > Compute mean prey degree before running anything. At 1.000 the bait-intermediate route does
-> not exist and L3 is strictly worse than a one-line STRING lookup. Above roughly 1.05 it
-> becomes the best recall channel in the panel, and the advantage grows with sharing.
+> not exist and L3 is strictly worse than a one-line STRING lookup. Above roughly 1.05 to 1.15
+> it becomes the best recall channel in the panel, and the advantage grows with sharing within
+> a dataset. Treat the crossover as a band, not a point: it sits near 1.05 on pathogen-host
+> maps and nearer 1.10 on human-human ones.
 
 One line of code, computable on any new map in advance, and it decides which scorer to run.
 
@@ -120,5 +174,11 @@ One line of code, computable on any new map in advance, and it decides which sco
   a clean single-variable experiment. The bait-route path audit is what separates them: 85% of
   L3's unique reach on Jager goes through a bait, which STRING density cannot explain.
 - Held-out fraction fixed at 17% throughout. Not varied.
-- All four maps are pathogen-host bipartite. No dense human-human map (HuRI, BioPlex) tested,
-  so nothing here generalises to that regime.
+- BioPlex is subsampled, not whole: STRING's API rejects more than 2000 identifiers, so K
+  caps at 200 of a 400-bait draw. A full-network run needs the bulk STRING download and ENSP
+  identifier mapping.
+- HuRI is still untested. It is Y2H and symmetric, with no bait/prey asymmetry, so the
+  bait-intermediate route is not even defined there. That is a different question, not a
+  bigger version of this one.
+- The magnitude gap between the pathogen-host and human-human curves at matched sharing is
+  unexplained. Prey sharing predicts sign and trend, not size.
