@@ -60,7 +60,7 @@ with only 2 of 20 draws reaching 0.45. Quote the distribution, not the draw.
 
 ### When is L3 worth running at all?
 
-Measured across five AP-MS interactomes, ten map variants, in two regimes
+Measured across six interactomes, fifteen map variants, in three regimes
 (`docs/Cartograph_multimap_bakeoff.md`, reproduce with `python -m backend.bench.bakeoff`):
 
 | map | shared preys | L3 reach | STRING-GBA reach | advantage | 40 paired seeds |
@@ -70,15 +70,19 @@ Measured across five AP-MS interactomes, ten map variants, in two regimes
 | Jager 2011 HIV-1 | 14.9% | 47.5% | 37.8% | **+9.7pp** | L3 wins 40/0 |
 | Haas 2023 influenza A | 23.8% | 55.7% | 42.3% | **+13.4pp** | L3 wins 39/1 |
 
-And out of regime, on human-human BioPlex 3.0 293T subsamples (no pathogen at all):
-4.3% sharing gives +0.4pp (not significant), 12.1% gives +4.5pp, 22.2% gives **+10.3pp**.
+And out of regime: human-human BioPlex 3.0 293T (no pathogen) gives +0.4pp at 4.3% sharing
+rising to **+10.3pp** at 22.2%. HuRI, where the bait/prey split had to be imposed synthetically
+because two-hybrid data is symmetric, gives +2.1pp at 8.1% rising to **+40.6pp** at 33.4% -
+which shows the mechanism is topological rather than an artefact of real bait/prey roles, but
+overstates the effect size, because HuRI's STRING-starved preys leave the lookup near its null.
 
-Pearson r = 0.90 over all ten variants, monotonic within every dataset. Strict monotonicity
+Pearson r = 0.94 over all fifteen variants, monotonic within every dataset (though those
+fifteen are only six independent datasets, so read it as descriptive). Strict monotonicity
 does not survive the regime change: the pathogen-host curve runs above the human-human one at
 matched sharing, so prey sharing predicts the sign and the trend, not the magnitude. The mechanism is direct: shared preys
 open a `bait → prey → bait' → prey` route that is length-3 and therefore invisible to any
 length-2 method. Of the held-out edges L3 reaches that STRING-GBA cannot on Jager, **85%
-travel exactly that route**, and 72% on BioPlex. On Gordon the count is **zero**.
+travel exactly that route**, 94% on HuRI and 72% on BioPlex. On Gordon the count is **zero**.
 
 So the deployment rule is a one-line pre-flight check (`backend/bench/sharing.py`): compute
 **mean prey degree** before scoring anything. At 1.000 the route does not exist and the

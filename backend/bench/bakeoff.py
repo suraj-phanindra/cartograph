@@ -1,4 +1,4 @@
-"""The five-map bake-off. Reproduces docs/Cartograph_multimap_bakeoff.md.
+"""The six-map bake-off. Reproduces docs/Cartograph_multimap_bakeoff.md.
 
 Runs one scorer panel, one split protocol and one set of tie-aware metrics across
 every AP-MS map in evidence/multimap/ plus the committed Gordon map, and reports the
@@ -9,6 +9,10 @@ except the training-graph builder, and it never reads the frozen split.
 
     python -m backend.bench.bakeoff            # all maps, 40 seeds, STRING >= 0.700
     python -m backend.bench.bakeoff 20 0.4     # 20 seeds, STRING >= 0.400
+
+The full default run takes about four minutes: the two subsampled human maps have
+candidate universes of roughly 380,000 pairs each, against 8,357 for Gordon. Pass a
+smaller seed count while iterating.
 """
 
 from __future__ import annotations
@@ -188,7 +192,11 @@ def compare(key, seeds=40, threshold=0.700):
 # Ordered by prey sharing, which is the variable the result turns on. BioPlex is the
 # out-of-regime entry: human-human, no pathogen, subsampled to K=200 baits because
 # STRING's API rejects more than 2000 identifiers. See evidence/multimap/MANIFEST.json.
-MAPS = ("penn2018_mtb", "gordon", "jager2011_hiv", "haas2023_iav", "bioplex3_293t_k200")
+MAPS = ("penn2018_mtb", "gordon", "jager2011_hiv", "bioplex3_293t_k200", "haas2023_iav",
+        "huri2020_k200_synthbaits")
+# huri2020_k200_synthbaits is a SYNTHETIC bipartition of a symmetric two-hybrid network, and
+# its STRING-starved preys leave the GBA baseline near its null. It belongs here because it
+# shows the mechanism is topological, but its advantage is not a usable effect size.
 
 
 def main(seeds=40, threshold=0.700):

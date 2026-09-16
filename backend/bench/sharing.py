@@ -21,14 +21,28 @@ and out of regime, on human-human BioPlex 3.0 subsamples:
     1.143 (BioPlex K=100)    12.1%    +4.5 pp   (20/0 seeds)
     1.283 (BioPlex K=200)    22.2%   +10.3 pp   (10/0 seeds)
 
-Strict monotonicity holds WITHIN each dataset but not across the regime change: the
-pathogen-host curve runs above the human-human one at matched sharing. So this statistic
-predicts the sign and the trend, not the magnitude.
+and on HuRI, where the bait/prey split is SYNTHETIC (the assay is symmetric two-hybrid):
+
+    1.107 (HuRI K=25)         8.1%    +2.1 pp   (14/4 seeds)
+    1.620 (HuRI K=200)       33.4%   +40.6 pp   (10/0 seeds)
+
+Strict monotonicity holds WITHIN each dataset but not across regimes: the pathogen-host
+curve runs above the human-human one at matched sharing. So this statistic predicts the
+sign and the trend, not the magnitude. Two caveats on the magnitudes:
+
+  - HuRI's huge advantages are partly a starved baseline. Its preys have mean STRING degree
+    1.073 and 68% have no STRING partner at all, so guilt-by-association sits near the 0.50
+    AUC null at every K. HuRI establishes that the mechanism is TOPOLOGICAL (it does not
+    need real bait/prey roles); it does not give a usable effect size.
+  - A two-variable fit adding prey STRING degree reaches R^2 = 0.909 against 0.882 for
+    sharing alone. The sign is right, the gain is not worth a parameter, and the 15 map
+    variants are only 6 independent datasets. Treat every correlation as descriptive.
 
 The mechanism is direct, not correlational: prey sharing opens a
 bait -> shared prey -> other bait -> target prey route, which is length 3 and therefore
 invisible to any length-2 method. Of the held-out edges L3 reaches that GBA cannot,
-85% travel exactly that route on Jager and 72% on BioPlex. On Gordon the count is zero.
+94% travel exactly that route on HuRI, 85% on Jager and 72% on BioPlex. On Gordon, where no
+prey is shared, the count is zero.
 
 So the statistic is causal, one line to compute, and available BEFORE any scoring run.
 """
